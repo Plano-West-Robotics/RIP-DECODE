@@ -1,5 +1,11 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
-public class Hardware {
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
+public class Hardware
+{
+    public Hardware(HardwareMap hardwareMap)
+    {
+
+    }
 }
