@@ -5,6 +5,9 @@ repositories {
     // Needed for Pedro Pathing
     maven { url = 'https://maven.pedropathing.com' }
     maven { url = "https://mymaven.bylazar.com/releases" }
+
+    // Needed for FTC Dashboard
+    maven { url = 'https://maven.brott.dev/' }
 }
 
 dependencies {
@@ -22,5 +25,8 @@ dependencies {
     implementation 'com.pedropathing:ftc:2.0.1'
     implementation 'com.pedropathing:telemetry:0.0.6'
     implementation 'com.bylazar:fullpanels:1.0.2'
+
+    // Needed for FTC Dashboard
+    implementation 'com.acmerobotics.dashboard:dashboard:0.5.0'
 }
 
