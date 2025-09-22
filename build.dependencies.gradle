@@ -8,6 +8,9 @@ repositories {
 
     // Needed for FTC Dashboard
     maven { url = 'https://maven.brott.dev/' }
+
+    // Needed for State Factory
+    maven { url = 'https://jitpack.io' }
 }
 
 dependencies {
@@ -28,5 +31,8 @@ dependencies {
 
     // Needed for FTC Dashboard
     implementation 'com.acmerobotics.dashboard:dashboard:0.5.0'
+
+    // Needed for State Factory
+    implementation 'com.github.StateFactory-Dev:StateFactory:0.3.9'
 }
 
