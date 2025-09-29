@@ -6,22 +6,23 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp(name="FlywheelTest")
 public class FlywheelTest extends OpMode {
-    DcMotor flyL = hardwareMap.get(DcMotor.class, "flyL");
-    DcMotor flyR = hardwareMap.get(DcMotor.class, "flyR");
+    DcMotor flyL;
+    DcMotor flyR;
     @Override
     public void init() {
-
+        flyL = hardwareMap.get(DcMotor.class, "flyL");
+        flyR = hardwareMap.get(DcMotor.class, "flyR");
     }
 
     @Override
     public void loop() {
         if (gamepad1.a) {
             flyL.setPower(1);
-            flyR.setPower(1);
+            flyR.setPower(-1);
         }
         else if (gamepad1.b) {
             flyL.setPower(-1);
-            flyR.setPower(-1);
+            flyR.setPower(1);
         }
         else {
             flyL.setPower(0);
