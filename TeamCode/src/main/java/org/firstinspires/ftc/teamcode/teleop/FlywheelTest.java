@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp(name="FlywheelTest")
-public class FlywheelTestTeleOp extends OpMode
+public class FlywheelTest extends OpMode
 {
     public DcMotor leftFlywheel;
     public DcMotor rightFlywheel;
