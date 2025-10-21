@@ -2,13 +2,13 @@ package org.firstinspires.ftc.teamcode.hardware.templates;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.hardware.base.Servo;
+import org.firstinspires.ftc.teamcode.hardware.base.ServoWrapper;
 
 import java.util.EnumMap;
 
 public abstract class StageServoMono<T extends Enum<T>> extends StageServo<T>
 {
-    public Servo inner;
+    public ServoWrapper inner;
 
     public static class StageServoMonoBuilder<T extends Enum<T>>
     {
@@ -37,10 +37,10 @@ public abstract class StageServoMono<T extends Enum<T>> extends StageServo<T>
     public StageServoMono(StageServoMonoBuilder<T> builder)
     {
         super(builder.positionMap);
-        inner = new Servo(builder.hardwareMap, builder.servoName);
+        inner = new ServoWrapper(builder.hardwareMap, builder.servoName);
     }
 
-    public Servo getServo()
+    public ServoWrapper getServo()
     {
         return inner;
     }

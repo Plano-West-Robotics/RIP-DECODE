@@ -3,7 +3,7 @@
  * loop(); init() and loop() should not be overridden, but init_loop() and start() can be.
  */
 
-package org.firstinspires.ftc.teamcode.base;
+package org.firstinspires.ftc.teamcode.teleop;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;

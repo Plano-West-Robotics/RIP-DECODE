@@ -4,14 +4,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class ServoPair
 {
-    public Servo left, right;
+    public ServoWrapper left, right;
     public double positionDiff;
 
     public ServoPair(HardwareMap hardwareMap, String leftServoName, String rightServoName,
                      double positionDiff)
     {
-        left = new Servo(hardwareMap, leftServoName);
-        right = new Servo(hardwareMap, rightServoName);
+        left = new ServoWrapper(hardwareMap, leftServoName);
+        right = new ServoWrapper(hardwareMap, rightServoName);
 
         /*
         This value means the servo pair is synced up when [left=positionDiff, right=1], or
@@ -40,12 +40,12 @@ public class ServoPair
         right.setPosition(rightPosition);
     }
 
-    public Servo getLeft()
+    public ServoWrapper getLeft()
     {
         return left;
     }
 
-    public Servo getRight()
+    public ServoWrapper getRight()
     {
         return right;
     }

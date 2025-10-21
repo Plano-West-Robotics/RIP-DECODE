@@ -5,12 +5,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class MotorPair
 {
-    public Motor left, right;
+    public MotorWrapper left, right;
 
     public MotorPair(HardwareMap hardwareMap, String leftMotorName, String rightMotorName)
     {
-        left = new Motor(hardwareMap, leftMotorName);
-        right = new Motor(hardwareMap, rightMotorName);
+        left = new MotorWrapper(hardwareMap, leftMotorName);
+        right = new MotorWrapper(hardwareMap, rightMotorName);
     }
 
     public void zeroPower()
@@ -129,12 +129,12 @@ public class MotorPair
         return new int[] {left.getPosition(), right.getPosition()};
     }
 
-    public Motor getLeft()
+    public MotorWrapper getLeft()
     {
         return left;
     }
 
-    public Motor getRight()
+    public MotorWrapper getRight()
     {
         return right;
     }

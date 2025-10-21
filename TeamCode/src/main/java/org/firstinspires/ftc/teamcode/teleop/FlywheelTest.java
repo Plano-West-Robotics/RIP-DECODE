@@ -5,20 +5,20 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp(name="FlywheelTest")
-public class FlywheelTest extends OpMode
+public class FlywheelTest extends BaseTeleOp
 {
     public DcMotor leftFlywheel;
     public DcMotor rightFlywheel;
 
     @Override
-    public void init()
+    public void setup()
     {
         leftFlywheel = hardwareMap.get(DcMotor.class, "flyL");
         rightFlywheel = hardwareMap.get(DcMotor.class, "flyR");
     }
 
     @Override
-    public void loop()
+    public void run()
     {
         if (gamepad1.a)
         {
