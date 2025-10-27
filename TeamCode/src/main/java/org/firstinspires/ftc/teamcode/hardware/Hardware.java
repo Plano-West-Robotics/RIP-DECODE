@@ -6,10 +6,10 @@ import org.firstinspires.ftc.teamcode.hardware.templates.StageServoMono;
 
 public class Hardware
 {
-    public Revolver revolver;
+    public Drivetrain drivetrain;
 
     public Hardware(HardwareMap hardwareMap)
     {
-        revolver = new Revolver(hardwareMap);
+        drivetrain = new Drivetrain(hardwareMap);
     }
 }
