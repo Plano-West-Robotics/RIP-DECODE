@@ -3,11 +3,11 @@ package org.firstinspires.ftc.teamcode.hardware.base;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class MotorPair
+public class MotorPairWrapper
 {
     public MotorWrapper left, right;
 
-    public MotorPair(HardwareMap hardwareMap, String leftMotorName, String rightMotorName)
+    public MotorPairWrapper(HardwareMap hardwareMap, String leftMotorName, String rightMotorName)
     {
         left = new MotorWrapper(hardwareMap, leftMotorName);
         right = new MotorWrapper(hardwareMap, rightMotorName);

@@ -2,13 +2,13 @@ package org.firstinspires.ftc.teamcode.hardware.base;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class ServoPair
+public class ServoPairWrapper
 {
     public ServoWrapper left, right;
     public double positionDiff;
 
-    public ServoPair(HardwareMap hardwareMap, String leftServoName, String rightServoName,
-                     double positionDiff)
+    public ServoPairWrapper(HardwareMap hardwareMap, String leftServoName, String rightServoName,
+                            double positionDiff)
     {
         left = new ServoWrapper(hardwareMap, leftServoName);
         right = new ServoWrapper(hardwareMap, rightServoName);

@@ -2,13 +2,13 @@ package org.firstinspires.ftc.teamcode.hardware.templates;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.hardware.base.ServoPair;
+import org.firstinspires.ftc.teamcode.hardware.base.ServoPairWrapper;
 
 import java.util.EnumMap;
 
 public abstract class StageServoPair<T extends Enum<T>> extends StageServo<T>
 {
-    public ServoPair inner;
+    public ServoPairWrapper inner;
 
     public static class StageServoPairBuilder<T extends Enum<T>>
     {
@@ -41,13 +41,13 @@ public abstract class StageServoPair<T extends Enum<T>> extends StageServo<T>
     public StageServoPair(StageServoPairBuilder<T> builder)
     {
         super(builder.positionMap);
-        inner = new ServoPair(
+        inner = new ServoPairWrapper(
                 builder.hardwareMap, builder.leftServoName, builder.rightServoName,
                 builder.positionDiff
         );
     }
 
-    public ServoPair getServoPair()
+    public ServoPairWrapper getServoPair()
     {
         return inner;
     }
