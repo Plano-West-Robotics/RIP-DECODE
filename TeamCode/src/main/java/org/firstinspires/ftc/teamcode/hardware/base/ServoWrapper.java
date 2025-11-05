@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware.base;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public class ServoWrapper
 {
@@ -8,17 +9,17 @@ public class ServoWrapper
 
     public ServoWrapper(HardwareMap hardwareMap, String name)
     {
-        servo = hardwareMap.get(com.qualcomm.robotcore.hardware.Servo.class, name);
+        servo = hardwareMap.get(Servo.class, name);
     }
 
     public void forward()
     {
-        setDirection(com.qualcomm.robotcore.hardware.Servo.Direction.FORWARD);
+        setDirection(Servo.Direction.FORWARD);
     }
 
     public void reverse()
     {
-        setDirection(com.qualcomm.robotcore.hardware.Servo.Direction.REVERSE);
+        setDirection(Servo.Direction.REVERSE);
     }
 
     /**
@@ -35,12 +36,12 @@ public class ServoWrapper
         servo.setPosition(position);
     }
 
-    public com.qualcomm.robotcore.hardware.Servo.Direction getDirection()
+    public Servo.Direction getDirection()
     {
         return servo.getDirection();
     }
 
-    public void setDirection(com.qualcomm.robotcore.hardware.Servo.Direction direction)
+    public void setDirection(Servo.Direction direction)
     {
         servo.setDirection(direction);
     }
