@@ -9,9 +9,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.Utils;
-import org.firstinspires.ftc.teamcode.hardware.base.MotorPair;
+import org.firstinspires.ftc.teamcode.hardware.base.MotorPairWrapper;
 
-public abstract class Extendo extends MotorPair
+public abstract class Extendo extends MotorPairWrapper
 {
     public final PIDFController controller;
 
