@@ -24,7 +24,7 @@ public class DashboardCRServoByPortTuner extends OpMode {
 
                 db.addConfigVariable(this.getClass().getSimpleName(), name, new ValueProvider<String>() {
                     final CRServoImplEx servo = s;
-                    double pow = 0.5;
+                    double pow = 0;
                     String verbatimInput = "";
 
                     @Override
