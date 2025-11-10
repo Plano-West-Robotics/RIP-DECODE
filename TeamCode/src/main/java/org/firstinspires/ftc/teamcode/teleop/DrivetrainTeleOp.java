@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.hardware.templates.Drive;
 import org.firstinspires.ftc.teamcode.subsystems.RobotCentricDrive;
 
-@TeleOp(name = "DrivetrainTeleOp")
+@TeleOp
 public class DrivetrainTeleOp extends BaseTeleOp
 {
     public Drive drive;
