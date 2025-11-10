@@ -7,9 +7,8 @@ import org.firstinspires.ftc.teamcode.hardware.base.MotorWrapper;
 
 public class Intake
 {
-    public double power = 0.5;
-
     public MotorWrapper motor;
+    public double power = 0.5;
     public boolean isSpinning;
 
     public Intake(Hardware hardware)
@@ -20,16 +19,8 @@ public class Intake
 
     public void update(Gamepads gamepads)
     {
-        if (gamepads.justPressed(Button.GP1_A))
-        {
-            isSpinning = !isSpinning;
-        }
-
-        if (gamepads.justPressed(Button.GP1_B))
-        {
-            power *= -1;
-        }
-
+        if (gamepads.justPressed(Button.GP1_A)) isSpinning = !isSpinning;
+        if (gamepads.justPressed(Button.GP1_B)) power *= -1;
         motor.setPower(isSpinning ? power : 0);
     }
 }

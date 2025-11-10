@@ -22,7 +22,6 @@ public class Outtake
     public void update(Gamepads gamepads)
     {
         isSpinning = gamepads.exceedsThreshold(Analog.GP1_RIGHT_TRIGGER, TRIGGER_THRESHOLD);
-
         motor.setPower(isSpinning ? POWER : 0);
     }
 }
