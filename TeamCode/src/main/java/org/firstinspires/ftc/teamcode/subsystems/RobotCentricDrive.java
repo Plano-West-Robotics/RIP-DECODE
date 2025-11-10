@@ -1,32 +1,41 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import org.firstinspires.ftc.teamcode.control.Button;
+import org.firstinspires.ftc.teamcode.control.Gamepads;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
-import org.firstinspires.ftc.teamcode.hardware.templates.Drive;
 
-public class RobotCentricDrive extends Drive
+public class RobotCentricDrive extends AbstractDrive
 {
     public RobotCentricDrive(Hardware hardware)
     {
         super(hardware);
     }
 
-    public void drive(double drive, double strafe, double turn)
+    @Override
+    public void update(Gamepads gamepads)
     {
-        double frPower = drive - strafe;
-        double flPower = drive + strafe;
-        double brPower = drive + strafe;
-        double blPower = drive - strafe;
+        if (gamepads.justPressed(Button.GP1_RIGHT_BUMPER)) toggleSlowMode();
+        super.update(gamepads);
+    }
 
-        frPower -= turn * turnSpeed;
-        brPower -= turn * turnSpeed;
-        flPower += turn * turnSpeed;
-        blPower += turn * turnSpeed;
+    @Override
+    protected void drive(double y, double x, double rx)
+    {
+        double frPower = y - x;
+        double flPower = y + x;
+        double brPower = y + x;
+        double blPower = y - x;
+
+        frPower -= rx * turnSpeed;
+        brPower -= rx * turnSpeed;
+        flPower += rx * turnSpeed;
+        blPower += rx * turnSpeed;
 
         frPower *= speed;
         flPower *= speed;
         brPower *= speed;
         blPower *= speed;
 
-        drivetrain.setPower(frPower, flPower, brPower, blPower);
+        drivetrainMotors.setPower(frPower, flPower, brPower, blPower);
     }
 }

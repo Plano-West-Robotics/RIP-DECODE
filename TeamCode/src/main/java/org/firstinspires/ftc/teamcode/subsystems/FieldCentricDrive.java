@@ -3,13 +3,11 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.control.Analog;
 import org.firstinspires.ftc.teamcode.control.Button;
 import org.firstinspires.ftc.teamcode.control.Gamepads;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
-import org.firstinspires.ftc.teamcode.hardware.templates.Drive;
 
-public class FieldCentricDrive extends Drive
+public class FieldCentricDrive extends AbstractDrive
 {
     public IMU imu;
 
@@ -19,7 +17,15 @@ public class FieldCentricDrive extends Drive
         imu = hardware.imu;
     }
 
-    public void drive(double y, double x, double rx)
+    @Override
+    public void update(Gamepads gamepads)
+    {
+        if (gamepads.isPressed(Button.GP1_DPAD_RIGHT)) imu.resetYaw();
+        super.update(gamepads);
+    }
+
+    @Override
+    protected void drive(double y, double x, double rx)
     {
         double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
@@ -33,17 +39,6 @@ public class FieldCentricDrive extends Drive
         double brPower = (rotY + rotX - rx) / denominator;
         double blPower = (rotY - rotX + rx) / denominator;
 
-        drivetrain.setPower(frPower, flPower, brPower, blPower);
-    }
-
-    @Override
-    public void update(Gamepads gamepads)
-    {
-        if (gamepads.isPressed(Button.GP1_DPAD_RIGHT)) imu.resetYaw();
-
-        double drive = gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_Y);
-        double strafe = gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_X);
-        double turn = gamepads.getAnalogValue(Analog.GP1_RIGHT_STICK_X);
-        drive(strafe, drive, turn);
+        drivetrainMotors.setPower(frPower, flPower, brPower, blPower);
     }
 }
