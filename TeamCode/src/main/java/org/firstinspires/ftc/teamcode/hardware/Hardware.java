@@ -4,12 +4,15 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.hardware.base.MotorWrapper;
 
 public class Hardware
 {
     public IMU imu;
     public IMU.Parameters imuParameters;
+
+    public WebcamName webcam;
 
     public DrivetrainMotors drivetrainMotors;
     public MotorWrapper intakeMotor, outtakeMotor;
@@ -22,6 +25,8 @@ public class Hardware
             RevHubOrientationOnRobot.UsbFacingDirection.UP
         ));
         imu.initialize(imuParameters);
+
+        webcam = hardwareMap.get(WebcamName.class, "Webcam 1");
 
         drivetrainMotors = new DrivetrainMotors(hardwareMap);
 

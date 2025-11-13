@@ -7,12 +7,13 @@ import org.firstinspires.ftc.teamcode.hardware.base.MotorWrapper;
 
 public class Outtake
 {
-    public static final double TICKS_PER_REV = 9.3333333333; // not been tested
+    public static final double TICKS_PER_REV = 28;
     public static final double TICKS_PER_RADIAN = TICKS_PER_REV / (2 * Math.PI);
     public static final double HALF_GRAVITY = 4.9;
     public static final double LAUNCH_ANGLE = Math.PI / 3;
     public static final double Y_DELTA = 0.6345428; // goal height - outtake height (meters)
     public static final double FLYWHEEL_RADIUS = 0.0508; // meters
+    public static final double EFFICIENCY_FACTOR = 2.7; // higher value = faster flywheel
 
     public static final double POWER = 0.55;
     public static final double TRIGGER_THRESHOLD = 0.5;
@@ -38,7 +39,7 @@ public class Outtake
      */
     public static double calculateIdealTangentialVelocity(double dx)
     {
-        return Math.sqrt(
+        return EFFICIENCY_FACTOR * Math.sqrt(
             (-HALF_GRAVITY * Math.pow(dx, 2))
             /
             (Math.pow(Math.cos(LAUNCH_ANGLE), 2) * Y_DELTA - Math.sin(LAUNCH_ANGLE) * Math.cos(LAUNCH_ANGLE) * dx)
