@@ -16,6 +16,8 @@ public class Hardware
     public DrivetrainMotors drivetrainMotors;
     public MotorWrapper intakeMotor, outtakeMotor;
 
+    public Paddle paddle;
+
     public Hardware(HardwareMap hardwareMap)
     {
 //        imu = hardwareMap.get(IMU.class, "imu");
@@ -33,5 +35,7 @@ public class Hardware
 //        intakeMotor.reverse();
 //
         outtakeMotor = new MotorWrapper(hardwareMap, "o");
+
+        paddle = new Paddle(hardwareMap);
     }
 }

@@ -5,8 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.subsystems.AbstractDrive;
 import org.firstinspires.ftc.teamcode.subsystems.RobotCentricDrive;
 
-import java.util.List;
-
 @TeleOp(group = "Test")
 public class DrivetrainTest extends BaseTeleOp
 {
