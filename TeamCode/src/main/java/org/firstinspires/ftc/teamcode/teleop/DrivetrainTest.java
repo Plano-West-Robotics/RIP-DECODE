@@ -5,8 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.subsystems.AbstractDrive;
 import org.firstinspires.ftc.teamcode.subsystems.RobotCentricDrive;
 
-@TeleOp
-public class DrivetrainTeleOp extends BaseTeleOp
+import java.util.List;
+
+@TeleOp(group = "Test")
+public class DrivetrainTest extends BaseTeleOp
 {
     public AbstractDrive drive;
 
@@ -14,11 +16,7 @@ public class DrivetrainTeleOp extends BaseTeleOp
     public void setup()
     {
         drive = new RobotCentricDrive(hardware);
-    }
 
-    @Override
-    public void run()
-    {
-        drive.update(gamepads);
+        subsystems.add(drive);
     }
 }

@@ -5,7 +5,7 @@ import org.firstinspires.ftc.teamcode.control.Gamepads;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.hardware.base.MotorWrapper;
 
-public class Outtake
+public class Outtake implements Subsystem
 {
     public static final double POWER = 0.55;
     public static final double TRIGGER_THRESHOLD = 0.5;
@@ -32,6 +32,7 @@ public class Outtake
         isSpinning = true;
     }
 
+    @Override
     public void update(Gamepads gamepads)
     {
         isSpinning = gamepads.exceedsThreshold(Analog.GP1_RIGHT_TRIGGER, TRIGGER_THRESHOLD);

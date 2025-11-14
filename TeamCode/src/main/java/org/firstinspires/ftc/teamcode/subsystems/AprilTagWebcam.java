@@ -1,0 +1,117 @@
+package org.firstinspires.ftc.teamcode.subsystems;
+
+import android.util.Size;
+
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.control.Gamepads;
+import org.firstinspires.ftc.teamcode.hardware.Hardware;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class AprilTagWebcam implements Subsystem
+{
+    public static final class LensIntrinsics
+    {
+        public static final double FX = 1.453997581683918270e3;
+        public static final double FY = 1.453134172682236340e3;
+        public static final double CX = 9.585666329357671884e2;
+        public static final double CY = 5.290669725844288678e2;
+    }
+
+    /**
+     * Adjust Image Decimation to trade-off detection-range for detection-rate.
+     * <p>
+     * e.g. Some typical detection data using a Logitech C920 WebCam
+     * <p>
+     * Decimation = 1 ..  Detect 2" Tag from 10 feet away at 10 Frames per second
+     * <p>
+     * Decimation = 2 ..  Detect 2" Tag from 6  feet away at 22 Frames per second
+     * <p>
+     * Decimation = 3 ..  Detect 2" Tag from 4  feet away at 30 Frames Per Second
+     * <p>
+     * Decimation = 3 ..  Detect 5" Tag from 10 feet away at 30 Frames Per Second
+     * <p>
+     * Note: Decimation can be changed on-the-fly to adapt during a match.
+     */
+    public static final int DECIMATION = 3;
+
+    public static final int RESOLUTION_WIDTH = 640;
+    public static final int RESOLUTION_HEIGHT = 480;
+    public static final int EXPOSURE = 6; // milliseconds
+    public static final int GAIN = 250;
+
+    public WebcamName camera;
+    public AprilTagProcessor processor;
+    public VisionPortal portal;
+    public List<AprilTagDetection> detections;
+
+    public AprilTagWebcam(Hardware hardware)
+    {
+        camera = hardware.webcam;
+
+        processor = new AprilTagProcessor.Builder()
+            .setLensIntrinsics(
+                LensIntrinsics.FX,
+                LensIntrinsics.FY,
+                LensIntrinsics.CX,
+                LensIntrinsics.CY
+            )
+            .setDrawTagID(true)
+            .setDrawTagOutline(true)
+            .setDrawAxes(true)
+            .setDrawCubeProjection(true)
+            .setOutputUnits(DistanceUnit.METER, AngleUnit.RADIANS)
+            .build();
+
+        processor.setDecimation(DECIMATION);
+
+        // Create the vision portal by using a builder.
+        portal = new VisionPortal.Builder()
+            .setCamera(camera)
+            .setCameraResolution(new Size(RESOLUTION_WIDTH, RESOLUTION_HEIGHT))
+            .addProcessor(processor)
+            .build();
+
+        detections = new ArrayList<>();
+    }
+
+    @Override
+    public void update(Gamepads gamepads)
+    {
+        detections = processor.getDetections();
+    }
+
+    public List<AprilTagDetection> getDetections()
+    {
+        return detections;
+    }
+
+    public AprilTagDetection getDetectionById(int id)
+    {
+        for (AprilTagDetection detection : detections)
+        {
+            if (detection.id == id)
+            {
+                return detection;
+            }
+        }
+
+        return null;
+    }
+
+    public void stopStreaming()
+    {
+        portal.stopStreaming();
+    }
+
+    public void resumeStreaming()
+    {
+        portal.resumeStreaming();
+    }
+}

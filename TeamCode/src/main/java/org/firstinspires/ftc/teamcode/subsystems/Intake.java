@@ -5,7 +5,7 @@ import org.firstinspires.ftc.teamcode.control.Gamepads;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.hardware.base.MotorWrapper;
 
-public class Intake
+public class Intake implements Subsystem
 {
     public MotorWrapper motor;
     public double power = 0.5;
@@ -17,6 +17,7 @@ public class Intake
         isSpinning = true;
     }
 
+    @Override
     public void update(Gamepads gamepads)
     {
         if (gamepads.justPressed(Button.GP1_A)) isSpinning = !isSpinning;

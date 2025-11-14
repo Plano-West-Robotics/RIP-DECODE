@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
@@ -19,20 +18,20 @@ public class Hardware
 
     public Hardware(HardwareMap hardwareMap)
     {
-        imu = hardwareMap.get(IMU.class, "imu");
-        imuParameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-            RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
-            RevHubOrientationOnRobot.UsbFacingDirection.UP
-        ));
-        imu.initialize(imuParameters);
+//        imu = hardwareMap.get(IMU.class, "imu");
+//        imuParameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+//            RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
+//            RevHubOrientationOnRobot.UsbFacingDirection.UP
+//        ));
+//        imu.initialize(imuParameters);
 
         webcam = hardwareMap.get(WebcamName.class, "Webcam 1");
 
-        drivetrainMotors = new DrivetrainMotors(hardwareMap);
-
-        intakeMotor = new MotorWrapper(hardwareMap, "i");
-        intakeMotor.reverse();
-
+//        drivetrainMotors = new DrivetrainMotors(hardwareMap);
+//
+//        intakeMotor = new MotorWrapper(hardwareMap, "i");
+//        intakeMotor.reverse();
+//
         outtakeMotor = new MotorWrapper(hardwareMap, "o");
     }
 }

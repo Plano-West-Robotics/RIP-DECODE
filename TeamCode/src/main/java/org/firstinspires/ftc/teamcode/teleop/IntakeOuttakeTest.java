@@ -5,8 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 
-@TeleOp
-public class IntakeOuttakeTeleOp extends BaseTeleOp
+import java.util.List;
+
+@TeleOp(group = "Test")
+public class IntakeOuttakeTest extends BaseTeleOp
 {
     public Intake intake;
     public Outtake outtake;
@@ -16,12 +18,7 @@ public class IntakeOuttakeTeleOp extends BaseTeleOp
     {
         intake = new Intake(hardware);
         outtake = new Outtake(hardware);
-    }
 
-    @Override
-    public void run()
-    {
-        intake.update(gamepads);
-        outtake.update(gamepads);
+        subsystems.addAll(List.of(intake, outtake));
     }
 }
