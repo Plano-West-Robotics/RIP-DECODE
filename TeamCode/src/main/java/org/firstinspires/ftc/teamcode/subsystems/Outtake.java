@@ -7,16 +7,21 @@ import org.firstinspires.ftc.teamcode.hardware.base.MotorWrapper;
 
 public class Outtake
 {
-    public static final double TICKS_PER_REV = 28;
-    public static final double TICKS_PER_RADIAN = TICKS_PER_REV / (2 * Math.PI);
-    public static final double HALF_GRAVITY = 4.9;
-    public static final double LAUNCH_ANGLE = Math.PI / 3;
-    public static final double Y_DELTA = 0.6345428; // goal height - outtake height (meters)
-    public static final double FLYWHEEL_RADIUS = 0.0508; // meters
-    public static final double EFFICIENCY_FACTOR = 2.7; // higher value = faster flywheel
-
     public static final double POWER = 0.55;
     public static final double TRIGGER_THRESHOLD = 0.5;
+
+    public static final double TICKS_PER_REVOLUTION = 28;
+    public static final double TICKS_PER_RADIAN = TICKS_PER_REVOLUTION / (2 * Math.PI);
+    public static final double FLYWHEEL_RADIUS = 0.0508; // meters
+
+    public static final double HALF_GRAVITY = 4.903325; // meters per second squared
+    public static final double LAUNCH_ANGLE = Math.PI / 3; // radians
+    public static final double DELTA_Y = 0.6345428; // meters; final height - initial height
+    /**
+     * Scales the theoretically required velocity to account for inefficient energy transfer. This
+     * is tested empirically.
+     */
+    public static final double VELOCITY_MULTIPLIER = 2.7;
 
     public MotorWrapper motor;
     public boolean isSpinning;
@@ -37,20 +42,17 @@ public class Outtake
      * @param dx robot's distance from the goal (meters)
      * @return ideal tangential speed of the outtake flywheel (meters per second)
      */
-    public static double calculateIdealTangentialVelocity(double dx)
+    public static double calculateIdealFlywheelTangentialVelocity(double dx)
     {
-        return EFFICIENCY_FACTOR * Math.sqrt(
-            (-HALF_GRAVITY * Math.pow(dx, 2))
-            /
-            (Math.pow(Math.cos(LAUNCH_ANGLE), 2) * Y_DELTA - Math.sin(LAUNCH_ANGLE) * Math.cos(LAUNCH_ANGLE) * dx)
-        );
+        double numerator = -HALF_GRAVITY * Math.pow(dx, 2);
+        double denominator = Math.pow(Math.cos(LAUNCH_ANGLE), 2) * DELTA_Y - Math.sin(LAUNCH_ANGLE) * Math.cos(LAUNCH_ANGLE) * dx;
+        return VELOCITY_MULTIPLIER * Math.sqrt(numerator / denominator);
     }
 
     /**
-     * Calculates the equivalent angular rate given a tangential velocity and the flywheels radius.
-     * Return value is meant to be passed to {@code DcMotorEx}'s {@code setVelocity()}
-     * @param velocity the tangential velocity (meters per second)
-     * @return the angular rate (ticks per second)
+     * Converts a given flywheel tangential velocity to an angular rate.
+     * @param velocity tangential velocity (meters per second)
+     * @return angular rate (ticks per second); should be passed into {@code DcMotorEx}'s {@code setVelocity()}
      */
     public static double toAngularRate(double velocity)
     {
