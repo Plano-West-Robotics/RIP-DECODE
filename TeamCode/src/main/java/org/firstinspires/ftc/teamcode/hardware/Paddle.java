@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.hardware.templates.StageServoPair;
 
 public class Paddle extends StageServoPair<Paddle.Stage>
 {
-    public static final double POSITION_DIFF = 0.01;
+    public static final double POSITION_DIFF = 0;
 
     public enum Stage
     {
@@ -19,13 +19,13 @@ public class Paddle extends StageServoPair<Paddle.Stage>
         super(
             new StageServoPairBuilder<>(
             hardwareMap,
-            "pL",
-            "pR",
+            "pl",
+            "pr",
             Stage.class,
             POSITION_DIFF
             )
-            .add(Stage.STANDBY, 0.01)
-            .add(Stage.READY, 0.02)
+            .add(Stage.STANDBY, 0.54)
+            .add(Stage.READY, 0.98)
         );
     }
 

@@ -46,12 +46,16 @@ public class AprilTagWebcam implements Subsystem
     public static final int EXPOSURE = 6; // milliseconds
     public static final int GAIN = 250;
 
+    public static final int BLUE_GOAL_ID = 20;
+    public static final int RED_GOAL_ID = 24;
+
     public WebcamName camera;
     public AprilTagProcessor processor;
     public VisionPortal portal;
     public List<AprilTagDetection> detections;
+    public int goalId;
 
-    public AprilTagWebcam(Hardware hardware)
+    public AprilTagWebcam(Hardware hardware, int goalId)
     {
         camera = hardware.webcam;
 
@@ -76,9 +80,14 @@ public class AprilTagWebcam implements Subsystem
             .setCamera(camera)
             .setCameraResolution(new Size(RESOLUTION_WIDTH, RESOLUTION_HEIGHT))
             .addProcessor(processor)
+            .enableLiveView(true)
+            .setAutoStartStreamOnBuild(true)
+            .setAutoStopLiveView(true)
             .build();
 
         detections = new ArrayList<>();
+
+        this.goalId = goalId;
     }
 
     @Override
@@ -105,6 +114,11 @@ public class AprilTagWebcam implements Subsystem
         return null;
     }
 
+    public AprilTagDetection getGoalDetection()
+    {
+        return getDetectionById(goalId);
+    }
+
     public void stopStreaming()
     {
         portal.stopStreaming();
@@ -113,5 +127,15 @@ public class AprilTagWebcam implements Subsystem
     public void resumeStreaming()
     {
         portal.resumeStreaming();
+    }
+
+    public void toggleGoalId()
+    {
+        goalId = goalId == BLUE_GOAL_ID ? RED_GOAL_ID : BLUE_GOAL_ID;
+    }
+
+    public int getGoalId()
+    {
+        return goalId;
     }
 }

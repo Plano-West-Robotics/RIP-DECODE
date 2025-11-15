@@ -1,12 +1,20 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import org.firstinspires.ftc.teamcode.control.Analog;
+import org.firstinspires.ftc.teamcode.control.Button;
 import org.firstinspires.ftc.teamcode.control.Gamepads;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
+import org.firstinspires.ftc.teamcode.hardware.Paddle;
 import org.firstinspires.ftc.teamcode.hardware.base.MotorWrapper;
 
 public class Outtake implements Subsystem
 {
+    public enum ControlMode
+    {
+        MANUAL_CONTROL,
+        WEBCAM_CONTROL
+    }
+
     public static final double POWER = 0.55;
     public static final double TRIGGER_THRESHOLD = 0.5;
 
@@ -17,6 +25,7 @@ public class Outtake implements Subsystem
     public static final double HALF_GRAVITY = 4.903325; // meters per second squared
     public static final double LAUNCH_ANGLE = Math.PI / 3; // radians
     public static final double DELTA_Y = 0.6345428; // meters; final height - initial height
+    public static final double EXTRA_DISTANCE = 0.1905; // the distance from the april tag to the center of the goal from a bird's-eye' view
     /**
      * Scales the theoretically required velocity to account for inefficient energy transfer. This
      * is tested empirically.
@@ -24,19 +33,44 @@ public class Outtake implements Subsystem
     public static final double VELOCITY_MULTIPLIER = 2.7;
 
     public MotorWrapper motor;
-    public boolean isSpinning;
+    public Paddle paddle;
+    public ControlMode mode;
 
     public Outtake(Hardware hardware)
     {
         motor = hardware.outtakeMotor;
-        isSpinning = true;
+        paddle = hardware.paddle;
+        mode = ControlMode.MANUAL_CONTROL;
     }
 
     @Override
     public void update(Gamepads gamepads)
     {
-        isSpinning = gamepads.exceedsThreshold(Analog.GP1_RIGHT_TRIGGER, TRIGGER_THRESHOLD);
-        motor.setPower(isSpinning ? POWER : 0);
+        boolean triggerActivated = gamepads.exceedsThreshold(Analog.GP2_RIGHT_TRIGGER, TRIGGER_THRESHOLD);
+
+        if (mode == ControlMode.MANUAL_CONTROL)
+        {
+            motor.setPower(triggerActivated ? POWER : 0);
+        }
+
+        if (gamepads.justPressed(Button.GP2_B))
+        {
+            mode = mode == ControlMode.MANUAL_CONTROL ? ControlMode.WEBCAM_CONTROL : ControlMode.MANUAL_CONTROL;
+        }
+
+        if (gamepads.isPressed(Button.GP2_A))
+        {
+            paddle.ready();
+        }
+        else
+        {
+            paddle.standby();
+        }
+    }
+
+    public ControlMode getMode()
+    {
+        return mode;
     }
 
     /**
@@ -45,6 +79,7 @@ public class Outtake implements Subsystem
      */
     public static double calculateIdealFlywheelTangentialVelocity(double dx)
     {
+        dx += EXTRA_DISTANCE;
         double numerator = -HALF_GRAVITY * Math.pow(dx, 2);
         double denominator = Math.pow(Math.cos(LAUNCH_ANGLE), 2) * DELTA_Y - Math.sin(LAUNCH_ANGLE) * Math.cos(LAUNCH_ANGLE) * dx;
         return VELOCITY_MULTIPLIER * Math.sqrt(numerator / denominator);
