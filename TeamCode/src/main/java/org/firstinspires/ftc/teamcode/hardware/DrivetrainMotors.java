@@ -11,10 +11,10 @@ public class DrivetrainMotors
 
     public DrivetrainMotors(HardwareMap hardwareMap)
     {
-        fr = new MotorWrapper(hardwareMap, "fr");
-        fl = new MotorWrapper(hardwareMap, "fl");
-        br = new MotorWrapper(hardwareMap, "br");
-        bl = new MotorWrapper(hardwareMap, "bl");
+        fr = new MotorWrapper(hardwareMap, "fr", true);
+        fl = new MotorWrapper(hardwareMap, "fl", true);
+        br = new MotorWrapper(hardwareMap, "br", true);
+        bl = new MotorWrapper(hardwareMap, "bl", true);
 
         fl.reverse();
         bl.reverse();

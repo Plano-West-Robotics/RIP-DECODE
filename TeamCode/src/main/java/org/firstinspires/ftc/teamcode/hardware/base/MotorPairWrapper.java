@@ -9,8 +9,8 @@ public class MotorPairWrapper
 
     public MotorPairWrapper(HardwareMap hardwareMap, String leftMotorName, String rightMotorName)
     {
-        left = new MotorWrapper(hardwareMap, leftMotorName);
-        right = new MotorWrapper(hardwareMap, rightMotorName);
+        left = new MotorWrapper(hardwareMap, leftMotorName, true);
+        right = new MotorWrapper(hardwareMap, rightMotorName, true);
     }
 
     public void zeroPower()

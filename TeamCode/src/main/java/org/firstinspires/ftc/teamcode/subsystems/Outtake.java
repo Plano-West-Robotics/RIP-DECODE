@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+
 import org.firstinspires.ftc.teamcode.control.Analog;
 import org.firstinspires.ftc.teamcode.control.Button;
 import org.firstinspires.ftc.teamcode.control.Gamepads;
@@ -24,7 +26,7 @@ public class Outtake implements Subsystem
 
     public static final double HALF_GRAVITY = 4.903325; // meters per second squared
     public static final double LAUNCH_ANGLE = Math.PI / 3; // radians
-    public static final double DELTA_Y = 0.6345428; // meters; final height - initial height
+    public static final double DELTA_Y = 0.4345428; // meters; final height - initial height
     public static final double EXTRA_DISTANCE = 0.1905; // the distance from the april tag to the center of the goal from a bird's-eye' view
     /**
      * Scales the theoretically required velocity to account for inefficient energy transfer. This
@@ -50,7 +52,12 @@ public class Outtake implements Subsystem
 
         if (mode == ControlMode.MANUAL_CONTROL)
         {
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             motor.setPower(triggerActivated ? POWER : 0);
+        }
+        else
+        {
+            motor.useEncoder();
         }
 
         if (gamepads.justPressed(Button.GP2_B))
@@ -79,6 +86,7 @@ public class Outtake implements Subsystem
      */
     public static double calculateIdealFlywheelTangentialVelocity(double dx)
     {
+        dx += EXTRA_DISTANCE;
         double numerator = -HALF_GRAVITY * Math.pow(dx, 2);
         double denominator = Math.pow(Math.cos(LAUNCH_ANGLE), 2) * DELTA_Y - Math.sin(LAUNCH_ANGLE) * Math.cos(LAUNCH_ANGLE) * dx;
         return VELOCITY_MULTIPLIER * Math.sqrt(numerator / denominator);

@@ -8,10 +8,10 @@ public class MotorWrapper
 {
     public DcMotor motor;
 
-    public MotorWrapper(HardwareMap hardwareMap, String name)
+    public MotorWrapper(HardwareMap hardwareMap, String name, boolean encoder)
     {
         motor = hardwareMap.get(DcMotor.class, name);
-        resetEncoder(true);
+        resetEncoder(encoder);
         setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         zeroPower();
     }

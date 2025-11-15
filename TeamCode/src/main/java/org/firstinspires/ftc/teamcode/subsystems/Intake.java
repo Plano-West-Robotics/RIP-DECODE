@@ -10,7 +10,7 @@ public class Intake implements Subsystem
 {
     public MotorWrapper motor;
     public CRServoWrapper transfer;
-    public double motorPower = 1;
+    public double motorPower = 0.4;
     public double servoPower = 1;
     public boolean isSpinning;
 
@@ -30,6 +30,11 @@ public class Intake implements Subsystem
             motorPower *= -1;
             servoPower *= -1;
         }
+
+        //if (gamepads.justPressed(Button.GP1_DPAD_UP)) motorPower += 0.1;
+        //if (gamepads.justPressed(Button.GP1_DPAD_DOWN)) motorPower -= 0.1;
+        //if (motorPower < 0) motorPower = 0;
+        //if (motorPower > 1) motorPower = 1;
         motor.setPower(isSpinning ? motorPower : 0);
         transfer.setPower(isSpinning ? servoPower : 0);
     }

@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.hardware.base.CRServoWrapper;
+import org.firstinspires.ftc.teamcode.hardware.base.Encoder;
 import org.firstinspires.ftc.teamcode.hardware.base.MotorWrapper;
 
 public class Hardware
@@ -17,6 +19,8 @@ public class Hardware
 
     public DrivetrainMotors drivetrainMotors;
     public MotorWrapper intakeMotor, outtakeMotor;
+
+//    public Encoder rightOdo, frontOdo;
 
     public Paddle paddle;
     public CRServoWrapper transfer;
@@ -34,13 +38,16 @@ public class Hardware
 
         drivetrainMotors = new DrivetrainMotors(hardwareMap);
 
-        intakeMotor = new MotorWrapper(hardwareMap, "i");
+        intakeMotor = new MotorWrapper(hardwareMap, "i", false);
         intakeMotor.reverse();
 
-        outtakeMotor = new MotorWrapper(hardwareMap, "o");
+        outtakeMotor = new MotorWrapper(hardwareMap, "o", false);
 
         transfer = new CRServoWrapper(hardwareMap, "t");
         transfer.reverse();
+
+//        frontOdo = new Encoder((DcMotorEx) drivetrainMotors.br);
+//        rightOdo = new Encoder((DcMotorEx) drivetrainMotors.fl);
 
         paddle = new Paddle(hardwareMap);
     }
