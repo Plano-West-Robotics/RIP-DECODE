@@ -38,7 +38,9 @@ public class Hardware
         intakeMotor.reverse();
 
         outtakeMotor = new MotorWrapper(hardwareMap, "o");
+
         transfer = new CRServoWrapper(hardwareMap, "t");
+        transfer.reverse();
 
         paddle = new Paddle(hardwareMap);
     }

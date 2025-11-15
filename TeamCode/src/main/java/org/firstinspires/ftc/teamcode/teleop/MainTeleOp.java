@@ -89,6 +89,10 @@ public class MainTeleOp extends BaseTeleOp
                         ((DcMotorEx) outtake.motor.motor).setVelocity(angularRate);
                     }
                 }
+                else
+                {
+                    outtake.motor.setPower(0);
+                }
                 webcamTimer.reset();
             }
         }

@@ -24,8 +24,8 @@ public class Paddle extends StageServoPair<Paddle.Stage>
             Stage.class,
             POSITION_DIFF
             )
-            .add(Stage.STANDBY, 0.54)
-            .add(Stage.READY, 0.98)
+            .add(Stage.STANDBY, 0.5)
+            .add(Stage.READY, 1)
         );
     }
 

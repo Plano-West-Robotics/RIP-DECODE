@@ -79,7 +79,6 @@ public class Outtake implements Subsystem
      */
     public static double calculateIdealFlywheelTangentialVelocity(double dx)
     {
-        dx += EXTRA_DISTANCE;
         double numerator = -HALF_GRAVITY * Math.pow(dx, 2);
         double denominator = Math.pow(Math.cos(LAUNCH_ANGLE), 2) * DELTA_Y - Math.sin(LAUNCH_ANGLE) * Math.cos(LAUNCH_ANGLE) * dx;
         return VELOCITY_MULTIPLIER * Math.sqrt(numerator / denominator);

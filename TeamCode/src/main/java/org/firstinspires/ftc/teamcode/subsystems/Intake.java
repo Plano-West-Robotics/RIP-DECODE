@@ -10,7 +10,7 @@ public class Intake implements Subsystem
 {
     public MotorWrapper motor;
     public CRServoWrapper transfer;
-    public double motorPower = 0.5;
+    public double motorPower = 1;
     public double servoPower = 1;
     public boolean isSpinning;
 
