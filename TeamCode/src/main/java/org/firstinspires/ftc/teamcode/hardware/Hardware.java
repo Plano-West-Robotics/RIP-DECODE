@@ -4,7 +4,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.hardware.base.CRServoWrapper;
 import org.firstinspires.ftc.teamcode.hardware.base.MotorWrapper;
+import org.firstinspires.ftc.teamcode.hardware.base.ServoWrapper;
 
 public class Hardware
 {
@@ -17,6 +19,7 @@ public class Hardware
     public MotorWrapper intakeMotor, outtakeMotor;
 
     public Paddle paddle;
+    public CRServoWrapper transfer;
 
     public Hardware(HardwareMap hardwareMap)
     {
@@ -35,6 +38,7 @@ public class Hardware
 //        intakeMotor.reverse();
 //
         outtakeMotor = new MotorWrapper(hardwareMap, "o");
+        transfer = new CRServoWrapper(hardwareMap, "t");
 
         paddle = new Paddle(hardwareMap);
     }

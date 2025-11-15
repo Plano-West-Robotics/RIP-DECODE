@@ -10,8 +10,8 @@ public class Paddle extends StageServoPair<Paddle.Stage>
 
     public enum Stage
     {
-        A,
-        B,
+        STANDBY,
+        READY,
     }
 
     public Paddle(HardwareMap hardwareMap)
@@ -19,23 +19,23 @@ public class Paddle extends StageServoPair<Paddle.Stage>
         super(
             new StageServoPairBuilder<>(
             hardwareMap,
-            "paddleL",
-            "paddleR",
+            "pL",
+            "pR",
             Stage.class,
             POSITION_DIFF
             )
-            .add(Stage.A, 0.01)
-            .add(Stage.B, 0.02)
+            .add(Stage.STANDBY, 0.01)
+            .add(Stage.READY, 0.02)
         );
     }
 
-    public void A()
+    public void standby()
     {
-        setStage(Stage.A);
+        setStage(Stage.STANDBY);
     }
 
-    public void B()
+    public void ready()
     {
-        setStage(Stage.B);
+        setStage(Stage.READY);
     }
 }
