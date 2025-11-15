@@ -17,7 +17,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import java.util.List;
 
 @TeleOp
-public class MainTeleOp extends BaseTeleOp
+public class StableCompTeleOp extends BaseTeleOp
 {
     public static final int WEBCAM_DEBOUNCE_TIME = 20; // milliseconds
     public static final int RUMBLE_DURATION = 500; // milliseconds
