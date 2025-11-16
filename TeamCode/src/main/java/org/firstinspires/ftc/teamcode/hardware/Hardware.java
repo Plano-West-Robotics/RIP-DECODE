@@ -1,13 +1,11 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.core.wrappers.CRServoWrapper;
-import org.firstinspires.ftc.teamcode.core.wrappers.EncoderWrapper;
 import org.firstinspires.ftc.teamcode.core.wrappers.MotorWrapper;
 
 public class Hardware

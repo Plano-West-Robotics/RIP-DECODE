@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.auton.comp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.subsystems.AbstractDrive;
 import org.firstinspires.ftc.teamcode.subsystems.RobotCentricDrive;
 
-//@Autonomous(group = "Comp")
+@Autonomous(group = "Comp")
 public class BluePark extends LinearOpMode
 {
     public Hardware hardware;
