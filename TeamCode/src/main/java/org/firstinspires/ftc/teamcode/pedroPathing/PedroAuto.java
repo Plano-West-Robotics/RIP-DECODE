@@ -1,23 +1,16 @@
 package org.firstinspires.ftc.teamcode.pedroPathing;
 
 import com.pedropathing.follower.Follower;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
-import com.pedropathing.paths.PathChain;
-import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
-import org.firstinspires.ftc.teamcode.subsystems.Subsystem;
-
-import java.util.List;
 
 @Autonomous
 public class PedroAuto extends OpMode {
@@ -60,7 +53,7 @@ public class PedroAuto extends OpMode {
                 intake.motor.setPower(Intake.REGULAR_POWER);
                 intake.transfer.setPower(1);
                 outtake.motor.setPower(0.55);
-                outtake.paddle.standby();
+                outtake.paddles.standby();
                 break;
             case START_TO_SCORE:
                 if (!follower.isBusy()) {
@@ -69,7 +62,7 @@ public class PedroAuto extends OpMode {
                 }
                 break;
             case AT_SCORE:
-                outtake.paddle.ready();
+                outtake.paddles.ready();
                 if (pathTimer.milliseconds() > 1500)
                 {
                     pathState = PathState.SCORED;

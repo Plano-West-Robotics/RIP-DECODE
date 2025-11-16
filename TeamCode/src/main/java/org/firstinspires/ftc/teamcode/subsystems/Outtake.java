@@ -2,12 +2,12 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.control.Analog;
-import org.firstinspires.ftc.teamcode.control.Button;
-import org.firstinspires.ftc.teamcode.control.Gamepads;
+import org.firstinspires.ftc.teamcode.core.control.Analog;
+import org.firstinspires.ftc.teamcode.core.control.Button;
+import org.firstinspires.ftc.teamcode.core.control.Gamepads;
+import org.firstinspires.ftc.teamcode.core.wrappers.MotorWrapper;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
-import org.firstinspires.ftc.teamcode.hardware.Paddle;
-import org.firstinspires.ftc.teamcode.hardware.base.MotorWrapper;
+import org.firstinspires.ftc.teamcode.hardware.PaddlesServoPair;
 
 public class Outtake implements Subsystem
 {
@@ -35,13 +35,13 @@ public class Outtake implements Subsystem
     public static final double VELOCITY_MULTIPLIER = 2.7;
 
     public MotorWrapper motor;
-    public Paddle paddle;
+    public PaddlesServoPair paddles;
     public ControlMode mode;
 
     public Outtake(Hardware hardware)
     {
         motor = hardware.outtakeMotor;
-        paddle = hardware.paddle;
+        paddles = hardware.paddles;
         mode = ControlMode.MANUAL_CONTROL;
     }
 
@@ -67,11 +67,11 @@ public class Outtake implements Subsystem
 
         if (gamepads.isPressed(Button.GP2_A))
         {
-            paddle.ready();
+            paddles.ready();
         }
         else
         {
-            paddle.standby();
+            paddles.standby();
         }
     }
 

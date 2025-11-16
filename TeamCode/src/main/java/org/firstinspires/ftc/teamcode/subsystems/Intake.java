@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import org.firstinspires.ftc.teamcode.control.Button;
-import org.firstinspires.ftc.teamcode.control.Gamepads;
+import org.firstinspires.ftc.teamcode.core.control.Button;
+import org.firstinspires.ftc.teamcode.core.control.Gamepads;
+import org.firstinspires.ftc.teamcode.core.wrappers.CRServoWrapper;
+import org.firstinspires.ftc.teamcode.core.wrappers.MotorWrapper;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
-import org.firstinspires.ftc.teamcode.hardware.base.CRServoWrapper;
-import org.firstinspires.ftc.teamcode.hardware.base.MotorWrapper;
 
 public class Intake implements Subsystem
 {

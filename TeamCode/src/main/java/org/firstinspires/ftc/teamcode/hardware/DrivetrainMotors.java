@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.hardware.base.MotorWrapper;
+import org.firstinspires.ftc.teamcode.core.wrappers.MotorWrapper;
 
 public class DrivetrainMotors
 {

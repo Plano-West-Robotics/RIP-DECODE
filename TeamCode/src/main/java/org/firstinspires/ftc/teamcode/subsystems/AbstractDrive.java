@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import org.firstinspires.ftc.teamcode.control.Analog;
-import org.firstinspires.ftc.teamcode.control.Gamepads;
+import org.firstinspires.ftc.teamcode.core.control.Analog;
+import org.firstinspires.ftc.teamcode.core.control.Gamepads;
 import org.firstinspires.ftc.teamcode.hardware.DrivetrainMotors;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 

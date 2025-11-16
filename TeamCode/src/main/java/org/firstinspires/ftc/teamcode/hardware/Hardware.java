@@ -6,24 +6,20 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.hardware.base.CRServoWrapper;
-import org.firstinspires.ftc.teamcode.hardware.base.Encoder;
-import org.firstinspires.ftc.teamcode.hardware.base.MotorWrapper;
+import org.firstinspires.ftc.teamcode.core.wrappers.CRServoWrapper;
+import org.firstinspires.ftc.teamcode.core.wrappers.Encoder;
+import org.firstinspires.ftc.teamcode.core.wrappers.MotorWrapper;
 
 public class Hardware
 {
     public IMU imu;
     public IMU.Parameters imuParameters;
-
     public WebcamName webcam;
-
     public DrivetrainMotors drivetrainMotors;
     public MotorWrapper intakeMotor, outtakeMotor;
-
-//    public Encoder rightOdo, frontOdo;
-
-    public Paddle paddle;
+    public PaddlesServoPair paddles;
     public CRServoWrapper transfer;
+//    public Encoder rightOdo, frontOdo;
 
     public Hardware(HardwareMap hardwareMap)
     {
@@ -46,9 +42,9 @@ public class Hardware
         transfer = new CRServoWrapper(hardwareMap, "t");
         transfer.reverse();
 
+        paddles = new PaddlesServoPair(hardwareMap);
+
 //        frontOdo = new Encoder((DcMotorEx) drivetrainMotors.br);
 //        rightOdo = new Encoder((DcMotorEx) drivetrainMotors.fl);
-
-        paddle = new Paddle(hardwareMap);
     }
 }
