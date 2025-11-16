@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.teleop;
+package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.subsystems.AbstractDrive;
 import org.firstinspires.ftc.teamcode.subsystems.RobotCentricDrive;
 
 @TeleOp(group = "Test")
-public class DrivetrainTest extends BaseTeleOp
+public class RobotCentricTest extends BaseTeleOp
 {
     public AbstractDrive drive;
 

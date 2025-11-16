@@ -8,9 +8,12 @@ import org.firstinspires.ftc.teamcode.hardware.base.MotorWrapper;
 
 public class Intake implements Subsystem
 {
+    public static final double REGULAR_POWER = 0.5;
+    public static final double SLOW_POWER = 0.25;
+
     public MotorWrapper motor;
     public CRServoWrapper transfer;
-    public double motorPower = 0.4;
+    public double motorPower = REGULAR_POWER;
     public double servoPower = 1;
     public boolean isSpinning;
 
@@ -29,6 +32,17 @@ public class Intake implements Subsystem
         {
             motorPower *= -1;
             servoPower *= -1;
+        }
+        if (gamepads.justPressed(Button.GP1_X))
+        {
+            if (Math.abs(motorPower) == REGULAR_POWER)
+            {
+                motorPower = Math.signum(motorPower) * SLOW_POWER;
+            }
+            else if (Math.abs(motorPower) == SLOW_POWER)
+            {
+                motorPower = Math.signum(motorPower) * REGULAR_POWER;
+            }
         }
 
         //if (gamepads.justPressed(Button.GP1_DPAD_UP)) motorPower += 0.1;

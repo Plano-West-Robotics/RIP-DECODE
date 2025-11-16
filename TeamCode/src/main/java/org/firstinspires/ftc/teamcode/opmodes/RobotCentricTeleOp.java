@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.teleop;
+package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -16,8 +16,8 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 import java.util.List;
 
-@TeleOp
-public class WIPCompTeleOp extends BaseTeleOp
+@TeleOp(group = "Comp")
+public class RobotCentricTeleOp extends BaseTeleOp
 {
     public static final int WEBCAM_DEBOUNCE_TIME = 20; // milliseconds
     public static final int RUMBLE_DURATION = 500; // milliseconds

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.teleop;
+package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -8,16 +8,16 @@ import org.firstinspires.ftc.teamcode.control.Analog;
 import org.firstinspires.ftc.teamcode.control.Button;
 import org.firstinspires.ftc.teamcode.subsystems.AbstractDrive;
 import org.firstinspires.ftc.teamcode.subsystems.AprilTagWebcam;
+import org.firstinspires.ftc.teamcode.subsystems.FieldCentricDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
-import org.firstinspires.ftc.teamcode.subsystems.RobotCentricDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 import java.util.List;
 
-@TeleOp
-public class StableCompTeleOp extends BaseTeleOp
+@TeleOp(group = "Comp")
+public class FieldCentricTeleOp extends BaseTeleOp
 {
     public static final int WEBCAM_DEBOUNCE_TIME = 20; // milliseconds
     public static final int RUMBLE_DURATION = 500; // milliseconds
@@ -31,7 +31,7 @@ public class StableCompTeleOp extends BaseTeleOp
     @Override
     public void setup()
     {
-        drive = new RobotCentricDrive(hardware);
+        drive = new FieldCentricDrive(hardware);
         intake = new Intake(hardware);
         outtake = new Outtake(hardware);
         webcam = new AprilTagWebcam(hardware, AprilTagWebcam.RED_GOAL_ID);
