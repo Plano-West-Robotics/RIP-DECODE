@@ -22,4 +22,10 @@ public class IntakeOuttakeTest extends BaseTeleOp
 
         subsystems.addAll(List.of(intake, outtake));
     }
+
+    @Override
+    public void run()
+    {
+        telemetry.addData("Outtake Control Mode", outtake.getMode());
+    }
 }
