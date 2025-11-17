@@ -20,10 +20,10 @@ public class AprilTagWebcam implements Subsystem
 {
     public static final class LensIntrinsics
     {
-        public static final double FX = 1.453997581683918270e3;
-        public static final double FY = 1.453134172682236340e3;
-        public static final double CX = 9.585666329357671884e2;
-        public static final double CY = 5.290669725844288678e2;
+        public static final double FX = 6.501905436046564546e2;
+        public static final double FY = 6.527525718349902490e2;
+        public static final double CX = 3.208106928325781837e2;
+        public static final double CY = 2.438054456685325704e2;
     }
 
     /**
