@@ -9,8 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.Utils;
-import org.firstinspires.ftc.teamcode.core.control.Gamepads;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.subsystems.AbstractDrive;
 import org.firstinspires.ftc.teamcode.subsystems.FieldCentricDrive;
@@ -19,10 +17,10 @@ import org.firstinspires.ftc.teamcode.subsystems.FieldCentricDrive;
 @TeleOp(group = "Tune")
 public class DashboardAngularPIDFTuner extends OpMode
 {
-    public static double p = 0;
-    public static double i = 0;
-    public static double d = 0;
-    public static double f = 0;
+    public static double P = 0;
+    public static double I = 0;
+    public static double D = 0;
+    public static double F = 0;
     public static double targetAngle = 0;
 
     public Hardware hardware;
@@ -34,7 +32,7 @@ public class DashboardAngularPIDFTuner extends OpMode
     {
         hardware = new Hardware(hardwareMap);
         drive = new FieldCentricDrive(hardware);
-        controller = new PIDFController(p, i, d, f);
+        controller = new PIDFController(P, I, D, F);
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         ((FieldCentricDrive) drive).imu.resetYaw();
@@ -43,7 +41,7 @@ public class DashboardAngularPIDFTuner extends OpMode
     @Override
     public void loop()
     {
-        controller.setPIDF(p, i, d, f);
+        controller.setPIDF(P, I, D, F);
 
         /*
         Although FTCDashboard receives targetAngle in degrees, both currentAngle and targetAngle get
