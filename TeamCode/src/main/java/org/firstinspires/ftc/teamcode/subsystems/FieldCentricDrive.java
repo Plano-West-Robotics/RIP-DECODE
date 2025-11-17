@@ -25,7 +25,7 @@ public class FieldCentricDrive extends AbstractDrive implements Subsystem
     }
 
     @Override
-    protected void drive(double y, double x, double rx)
+    public void drive(double y, double x, double rx)
     {
         double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 

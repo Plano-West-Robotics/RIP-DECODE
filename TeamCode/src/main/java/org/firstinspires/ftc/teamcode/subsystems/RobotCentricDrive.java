@@ -19,7 +19,7 @@ public class RobotCentricDrive extends AbstractDrive implements Subsystem
     }
 
     @Override
-    protected void drive(double y, double x, double rx)
+    public void drive(double y, double x, double rx)
     {
         double frPower = y - x;
         double flPower = y + x;

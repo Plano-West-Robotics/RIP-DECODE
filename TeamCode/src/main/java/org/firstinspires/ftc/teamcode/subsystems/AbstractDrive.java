@@ -42,7 +42,7 @@ public abstract class AbstractDrive implements Subsystem
      * <p>
      * Should NOT be called in an OpMode's {@code loop()} method! Use {@code update()} instead.
      */
-    protected abstract void drive(double x, double y, double rx);
+    public abstract void drive(double x, double y, double rx);
 
     public void toggleSlowMode()
     {
