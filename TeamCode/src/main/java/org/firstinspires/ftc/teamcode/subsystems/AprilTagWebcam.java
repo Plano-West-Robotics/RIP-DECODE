@@ -14,6 +14,8 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 public class AprilTagWebcam implements Subsystem
 {
     public static final class LensIntrinsics
@@ -101,6 +103,7 @@ public class AprilTagWebcam implements Subsystem
         return detections;
     }
 
+    @Nullable
     public AprilTagDetection getDetectionById(int id)
     {
         for (AprilTagDetection detection : detections)
@@ -114,6 +117,7 @@ public class AprilTagWebcam implements Subsystem
         return null;
     }
 
+    @Nullable
     public AprilTagDetection getGoalDetection()
     {
         return getDetectionById(goalId);
