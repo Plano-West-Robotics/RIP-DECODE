@@ -52,7 +52,7 @@ public class Outtake implements Subsystem
 
         if (mode == ControlMode.MANUAL_CONTROL)
         {
-            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            motor.noEncoder();
             motor.setPower(triggerActivated ? POWER : 0);
         }
         else
