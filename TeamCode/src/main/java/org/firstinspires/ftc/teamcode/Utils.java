@@ -15,11 +15,6 @@ public final class Utils
         if (!condition) throw new RuntimeException(message);
     }
 
-    public static double inRadians(double degrees)
-    {
-        return Math.toRadians(degrees);
-    }
-
     public static Action getTimedAction(Runnable action, int timeInMilliseconds)
     {
         return new Action()
