@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.core.control.Button;
-import org.firstinspires.ftc.teamcode.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.subsystems.AbstractDrive;
 import org.firstinspires.ftc.teamcode.subsystems.AprilTagWebcam;
 import org.firstinspires.ftc.teamcode.subsystems.FieldCentricDrive;
@@ -20,7 +19,6 @@ public class AutoAimTest extends BaseTeleOp
 {
     public static int webcamDebounceTime = 20; // milliseconds
 
-    public Hardware hardware;
     public AbstractDrive drive;
     public PIDFController controller;
     public AprilTagWebcam webcam;
@@ -32,7 +30,6 @@ public class AutoAimTest extends BaseTeleOp
     @Override
     public void setup()
     {
-        hardware = new Hardware(hardwareMap);
         drive = new FieldCentricDrive(hardware);
         controller = new PIDFController(
             DashboardAngularPIDFTuner.P,
