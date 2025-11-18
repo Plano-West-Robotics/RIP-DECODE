@@ -56,6 +56,13 @@ public class AutoAimTest extends BaseTeleOp
     @Override
     public void run()
     {
+        controller.setPIDF(
+            DashboardAngularPIDFTuner.P,
+            DashboardAngularPIDFTuner.I,
+            DashboardAngularPIDFTuner.D,
+            DashboardAngularPIDFTuner.F
+        );
+
         telemetry.addData("Goal ID", webcam.getGoalId());
         telemetry.addData("Control Mode", manualControl ? "Manual" : "Webcam Auto Aim");
 
