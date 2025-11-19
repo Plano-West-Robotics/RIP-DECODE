@@ -36,7 +36,7 @@ public class FieldCentricComp extends BaseTeleOp
         intake = new Intake(hardware);
         outtake = new Outtake(hardware);
         webcam = new AprilTagWebcam(hardware, AprilTagWebcam.RED_GOAL_ID);
-        subsystems.addAll(List.of(drive, intake, outtake, webcam));
+        subsystems.addAll(List.of(drive, intake, outtake));
         webcamTimer = new ElapsedTime();
     }
 

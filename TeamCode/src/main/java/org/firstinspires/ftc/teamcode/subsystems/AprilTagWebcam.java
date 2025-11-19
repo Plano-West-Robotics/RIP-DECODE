@@ -16,7 +16,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-public class AprilTagWebcam implements Subsystem
+public class AprilTagWebcam
 {
     public static final class LensIntrinsics
     {
@@ -54,7 +54,6 @@ public class AprilTagWebcam implements Subsystem
     public WebcamName camera;
     public AprilTagProcessor processor;
     public VisionPortal portal;
-    public List<AprilTagDetection> detections;
     public int goalId;
 
     public AprilTagWebcam(Hardware hardware, int goalId)
@@ -68,45 +67,37 @@ public class AprilTagWebcam implements Subsystem
                 LensIntrinsics.CX,
                 LensIntrinsics.CY
             )
-            .setDrawTagID(true)
-            .setDrawTagOutline(true)
+            .setOutputUnits(DistanceUnit.METER, AngleUnit.RADIANS)
             .setDrawAxes(true)
             .setDrawCubeProjection(true)
-            .setOutputUnits(DistanceUnit.METER, AngleUnit.RADIANS)
+            .setDrawTagOutline(true)
+            .setDrawTagID(true)
             .build();
-
         processor.setDecimation(DECIMATION);
 
         // Create the vision portal by using a builder.
         portal = new VisionPortal.Builder()
             .setCamera(camera)
+            .enableLiveView(true)
+            .setAutoStopLiveView(true)
             .setCameraResolution(new Size(RESOLUTION_WIDTH, RESOLUTION_HEIGHT))
             .addProcessor(processor)
-            .enableLiveView(true)
             .setAutoStartStreamOnBuild(true)
-            .setAutoStopLiveView(true)
+            .setShowStatsOverlay(true)
             .build();
-
-        detections = new ArrayList<>();
 
         this.goalId = goalId;
     }
 
-    @Override
-    public void update(Gamepads gamepads)
-    {
-        detections = processor.getDetections();
-    }
-
     public List<AprilTagDetection> getDetections()
     {
-        return detections;
+        return processor.getDetections();
     }
 
     @Nullable
     public AprilTagDetection getDetectionById(int id)
     {
-        for (AprilTagDetection detection : detections)
+        for (AprilTagDetection detection : processor.getDetections())
         {
             if (detection.id == id)
             {
@@ -133,13 +124,13 @@ public class AprilTagWebcam implements Subsystem
         portal.resumeStreaming();
     }
 
-    public void toggleGoalId()
-    {
-        goalId = goalId == BLUE_GOAL_ID ? RED_GOAL_ID : BLUE_GOAL_ID;
-    }
-
     public int getGoalId()
     {
         return goalId;
+    }
+
+    public void toggleGoalId()
+    {
+        goalId = goalId == BLUE_GOAL_ID ? RED_GOAL_ID : BLUE_GOAL_ID;
     }
 }
