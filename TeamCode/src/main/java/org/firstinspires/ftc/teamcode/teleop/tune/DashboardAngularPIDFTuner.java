@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.core.control.Button;
+import org.firstinspires.ftc.teamcode.core.control.Gamepads;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.subsystems.AbstractDrive;
 import org.firstinspires.ftc.teamcode.subsystems.FieldCentricDrive;
@@ -21,9 +23,10 @@ public class DashboardAngularPIDFTuner extends OpMode
     public static double I = 0;
     public static double D = 0;
     public static double F = 0;
-    public static double targetAngle = 0;
+    public static double targetAngle = 0; // degrees
 
     public Hardware hardware;
+    public Gamepads gamepads;
     public AbstractDrive drive;
     public PIDFController controller;
 
@@ -31,6 +34,7 @@ public class DashboardAngularPIDFTuner extends OpMode
     public void init()
     {
         hardware = new Hardware(hardwareMap);
+        gamepads = new Gamepads(gamepad1, gamepad2);
         drive = new FieldCentricDrive(hardware);
         controller = new PIDFController(P, I, D, F);
 
@@ -41,15 +45,15 @@ public class DashboardAngularPIDFTuner extends OpMode
     @Override
     public void loop()
     {
+        if (gamepads.justPressed(Button.GP1_DPAD_RIGHT))
+        {
+            ((FieldCentricDrive) drive).imu.resetYaw();
+        }
+
         controller.setPIDF(P, I, D, F);
 
-        /*
-        Although FTCDashboard receives targetAngle in degrees, both currentAngle and targetAngle get
-        converted to radians. This ensures the PIDF constants from this tuner will work in our
-        competition opmodes, as the processor in AprilTagWebcam reads angles in radians.
-         */
-        double currentAngle = ((FieldCentricDrive) drive).imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        targetAngle = Math.toRadians(Range.clip(targetAngle, -180, 180));
+        double currentAngle = ((FieldCentricDrive) drive).imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        targetAngle = Range.clip(targetAngle, -180, 180);
 
         double rx = -controller.calculate(currentAngle, targetAngle);
         drive.drive(0, 0, rx);
@@ -63,6 +67,7 @@ public class DashboardAngularPIDFTuner extends OpMode
         telemetry.addData("BR Power", drive.drivetrainMotors.br.getPower());
         telemetry.addData("BL Power", drive.drivetrainMotors.bl.getPower());
 
+        gamepads.update(gamepad1, gamepad2);
         telemetry.update();
     }
 }

@@ -67,7 +67,7 @@ public class AprilTagWebcam
                 LensIntrinsics.CX,
                 LensIntrinsics.CY
             )
-            .setOutputUnits(DistanceUnit.METER, AngleUnit.RADIANS)
+            .setOutputUnits(DistanceUnit.METER, AngleUnit.DEGREES)
             .setDrawAxes(true)
             .setDrawCubeProjection(true)
             .setDrawTagOutline(true)
