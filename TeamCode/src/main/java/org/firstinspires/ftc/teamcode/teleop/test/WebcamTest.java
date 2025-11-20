@@ -1,15 +1,18 @@
 package org.firstinspires.ftc.teamcode.teleop.test;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.core.control.Button;
 import org.firstinspires.ftc.teamcode.subsystems.AprilTagWebcam;
 import org.firstinspires.ftc.teamcode.teleop.BaseTeleOp;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
+@Config
 @TeleOp(group = "Test")
 public class WebcamTest extends BaseTeleOp
 {
+    public static boolean useRedGoalId = true;
+
     public AprilTagWebcam webcam;
     public AprilTagDetection detection;
 
@@ -22,11 +25,7 @@ public class WebcamTest extends BaseTeleOp
     @Override
     public void run()
     {
-        if (gamepads.justPressed(Button.GP1_A))
-        {
-            webcam.toggleGoalId();
-            detection = null;
-        }
+        webcam.goalId = useRedGoalId ? AprilTagWebcam.RED_GOAL_ID : AprilTagWebcam.BLUE_GOAL_ID;
 
         detection = webcam.getGoalDetection();
 
