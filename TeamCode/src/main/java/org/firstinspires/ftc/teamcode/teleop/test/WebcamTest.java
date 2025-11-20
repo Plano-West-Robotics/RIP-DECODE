@@ -32,13 +32,8 @@ public class WebcamTest extends BaseTeleOp
         telemetry.addData("Goal Color", webcam.getGoalId() == AprilTagWebcam.RED_GOAL_ID ? "RED" : "BLUE");
         if (detection != null)
         {
-            telemetry.addLine("AprilTag Detected!");
-            telemetry.addData("Yaw", detection.ftcPose.yaw);
-            telemetry.addData("Pitch", detection.ftcPose.pitch);
-            telemetry.addData("Roll", detection.ftcPose.roll);
             telemetry.addData("Range", detection.ftcPose.range);
             telemetry.addData("Bearing", detection.ftcPose.bearing);
-            telemetry.addData("Elevation", detection.ftcPose.elevation);
         }
     }
 }
