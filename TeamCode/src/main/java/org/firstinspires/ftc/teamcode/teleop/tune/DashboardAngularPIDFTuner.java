@@ -9,8 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.core.control.Button;
-import org.firstinspires.ftc.teamcode.core.control.Gamepads;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.subsystems.AbstractDrive;
 import org.firstinspires.ftc.teamcode.subsystems.FieldCentricDrive;
@@ -19,14 +17,14 @@ import org.firstinspires.ftc.teamcode.subsystems.FieldCentricDrive;
 @TeleOp(group = "Tune")
 public class DashboardAngularPIDFTuner extends OpMode
 {
-    public static double P = 0;
+    public static double P = 0.0675;
     public static double I = 0;
-    public static double D = 0;
+    public static double D = 0.0035;
     public static double F = 0;
     public static double targetAngle = 0; // degrees
+    public static boolean resetImuYaw = false;
 
     public Hardware hardware;
-    public Gamepads gamepads;
     public AbstractDrive drive;
     public PIDFController controller;
 
@@ -34,7 +32,6 @@ public class DashboardAngularPIDFTuner extends OpMode
     public void init()
     {
         hardware = new Hardware(hardwareMap);
-        gamepads = new Gamepads(gamepad1, gamepad2);
         drive = new FieldCentricDrive(hardware);
         controller = new PIDFController(P, I, D, F);
 
@@ -45,7 +42,8 @@ public class DashboardAngularPIDFTuner extends OpMode
     @Override
     public void loop()
     {
-        if (gamepads.justPressed(Button.GP1_DPAD_RIGHT))
+        // You probably want to set targetAngle=0 before setting resetImuYaw=true
+        if (resetImuYaw)
         {
             ((FieldCentricDrive) drive).imu.resetYaw();
         }
@@ -58,8 +56,8 @@ public class DashboardAngularPIDFTuner extends OpMode
         double rx = -controller.calculate(currentAngle, targetAngle);
         drive.drive(0, 0, rx);
 
-        telemetry.addData("Current Angle (degrees)", Math.toDegrees(currentAngle));
-        telemetry.addData("Target Angle (degrees)", Math.toDegrees(targetAngle));
+        telemetry.addData("Current Angle (degrees)", currentAngle);
+        telemetry.addData("Target Angle (degrees)", targetAngle);
         telemetry.addData("RX", rx);
 
         telemetry.addData("FR Power", drive.drivetrainMotors.fr.getPower());
@@ -67,7 +65,6 @@ public class DashboardAngularPIDFTuner extends OpMode
         telemetry.addData("BR Power", drive.drivetrainMotors.br.getPower());
         telemetry.addData("BL Power", drive.drivetrainMotors.bl.getPower());
 
-        gamepads.update(gamepad1, gamepad2);
         telemetry.update();
     }
 }
