@@ -7,12 +7,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.core.control.Analog;
 import org.firstinspires.ftc.teamcode.core.control.Button;
 import org.firstinspires.ftc.teamcode.subsystems.AbstractDrive;
+import org.firstinspires.ftc.teamcode.subsystems.AprilTagTelemetry;
 import org.firstinspires.ftc.teamcode.subsystems.AprilTagWebcam;
 import org.firstinspires.ftc.teamcode.subsystems.FieldCentricDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.teleop.BaseTeleOp;
-import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 import java.util.List;
@@ -43,16 +43,8 @@ public class FieldCentricComp extends BaseTeleOp
     @Override
     public void init_loop()
     {
-        if (gamepads.justPressed(Button.GP2_A))
-        {
-            webcam.toggleGoalId();
-        }
-        telemetry.addData("Goal ID", webcam.getGoalId());
-
-        boolean webcamIsReady = webcam.portal.getCameraState() == VisionPortal.CameraState.STREAMING;
-        telemetry.addData("Camera", webcamIsReady ? "Ready" : "Not Ready");
-
-        telemetry.update();
+        if (gamepads.justPressed(Button.GP2_A)) webcam.toggleGoalId();
+        AprilTagTelemetry.init_loop_telemetry(telemetry, webcam);
     }
 
     @Override
@@ -80,11 +72,7 @@ public class FieldCentricComp extends BaseTeleOp
                     }
                     else
                     {
-                        telemetry.addData("ID", "%d", detection.metadata.id);
-                        telemetry.addData("Range", "%5.5f", detection.ftcPose.range);
-                        telemetry.addData("Bearing", "%5.5f", detection.ftcPose.bearing);
-                        telemetry.addData("Elevation", "%5.5f", detection.ftcPose.elevation);
-
+                        AprilTagTelemetry.loop_telemetry(telemetry, detection);
                         double velocity = Outtake.calculateIdealFlywheelTangentialVelocity(detection.ftcPose.range);
                         double angularRate = Outtake.toAngularRate(velocity);
                         ((DcMotorEx) outtake.motor.motor).setVelocity(angularRate);
