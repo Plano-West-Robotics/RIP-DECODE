@@ -16,7 +16,6 @@ public class Hardware
     public DrivetrainMotors drivetrainMotors;
     public MotorWrapper intakeMotor, outtakeMotor;
     public PaddlesServoPair paddles;
-    public CRServoWrapper transfer;
 //    public EncoderWrapper rightOdo, frontOdo;
 
     public Hardware(HardwareMap hardwareMap)
@@ -36,9 +35,6 @@ public class Hardware
         intakeMotor.reverse();
 
         outtakeMotor = new MotorWrapper(hardwareMap, "o", false);
-
-        transfer = new CRServoWrapper(hardwareMap, "t");
-        transfer.reverse();
 
         paddles = new PaddlesServoPair(hardwareMap);
 

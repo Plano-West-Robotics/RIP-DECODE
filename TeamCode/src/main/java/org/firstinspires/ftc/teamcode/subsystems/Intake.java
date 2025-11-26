@@ -12,7 +12,6 @@ public class Intake implements Subsystem
     public static final double SLOW_POWER = 0.25;
 
     public MotorWrapper motor;
-    public CRServoWrapper transfer;
     public double motorPower = REGULAR_POWER;
     public double servoPower = 1;
     public boolean isSpinning;
@@ -20,7 +19,6 @@ public class Intake implements Subsystem
     public Intake(Hardware hardware)
     {
         motor = hardware.intakeMotor;
-        transfer = hardware.transfer;
         isSpinning = false;
     }
 
@@ -45,11 +43,10 @@ public class Intake implements Subsystem
             }
         }
 
-        //if (gamepads.justPressed(Button.GP1_DPAD_UP)) motorPower += 0.1;
-        //if (gamepads.justPressed(Button.GP1_DPAD_DOWN)) motorPower -= 0.1;
+        if (gamepads.justPressed(Button.GP1_DPAD_UP)) motorPower += 0.05;
+        if (gamepads.justPressed(Button.GP1_DPAD_DOWN)) motorPower -= 0.05;
         //if (motorPower < 0) motorPower = 0;
         //if (motorPower > 1) motorPower = 1;
         motor.setPower(isSpinning ? motorPower : 0);
-        transfer.setPower(isSpinning ? servoPower : 0);
     }
 }
