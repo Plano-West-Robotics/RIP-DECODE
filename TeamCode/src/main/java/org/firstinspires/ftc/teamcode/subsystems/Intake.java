@@ -8,12 +8,11 @@ import org.firstinspires.ftc.teamcode.hardware.Hardware;
 
 public class Intake implements Subsystem
 {
+    public static final double LAUNCH_POWER = 1;
     public static final double REGULAR_POWER = 0.5;
-    public static final double SLOW_POWER = 0.25;
 
     public MotorWrapper motor;
-    public double motorPower = REGULAR_POWER;
-    public double servoPower = 1;
+    public double motorPower = LAUNCH_POWER;
     public boolean isSpinning;
 
     public Intake(Hardware hardware)
@@ -29,17 +28,16 @@ public class Intake implements Subsystem
         if (gamepads.justPressed(Button.GP1_B))
         {
             motorPower *= -1;
-            servoPower *= -1;
         }
         if (gamepads.justPressed(Button.GP1_X))
         {
-            if (Math.abs(motorPower) == REGULAR_POWER)
-            {
-                motorPower = Math.signum(motorPower) * SLOW_POWER;
-            }
-            else if (Math.abs(motorPower) == SLOW_POWER)
+            if (Math.abs(motorPower) == LAUNCH_POWER)
             {
                 motorPower = Math.signum(motorPower) * REGULAR_POWER;
+            }
+            else if (Math.abs(motorPower) == REGULAR_POWER)
+            {
+                motorPower = Math.signum(motorPower) * LAUNCH_POWER;
             }
         }
 

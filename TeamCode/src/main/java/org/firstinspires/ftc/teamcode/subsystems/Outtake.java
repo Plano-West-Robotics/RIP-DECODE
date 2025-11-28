@@ -52,6 +52,7 @@ public class Outtake implements Subsystem
         {
             motor.noEncoder();
             motor.setPower(triggerActivated ? POWER : 0);
+
         }
         else
         {
@@ -63,14 +64,7 @@ public class Outtake implements Subsystem
             mode = mode == ControlMode.MANUAL_CONTROL ? ControlMode.WEBCAM_CONTROL : ControlMode.MANUAL_CONTROL;
         }
 
-        if (gamepads.isPressed(Button.GP2_A))
-        {
-            paddles.ready();
-        }
-        else
-        {
-            paddles.standby();
-        }
+
     }
 
     public ControlMode getMode()
