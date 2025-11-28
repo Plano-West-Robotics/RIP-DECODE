@@ -5,7 +5,7 @@ import org.firstinspires.ftc.teamcode.core.control.Button;
 import org.firstinspires.ftc.teamcode.core.control.Gamepads;
 import org.firstinspires.ftc.teamcode.core.wrappers.MotorWrapper;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
-import org.firstinspires.ftc.teamcode.hardware.PaddlesServoPair;
+import org.firstinspires.ftc.teamcode.hardware.StoppersServoPair;
 
 public class Outtake implements Subsystem
 {
@@ -33,13 +33,13 @@ public class Outtake implements Subsystem
     public static final double VELOCITY_MULTIPLIER = 2.7;
 
     public MotorWrapper motor;
-    public PaddlesServoPair paddles;
+    public StoppersServoPair stoppers;
     public ControlMode mode;
 
     public Outtake(Hardware hardware)
     {
         motor = hardware.outtakeMotor;
-        paddles = hardware.paddles;
+        stoppers = hardware.stoppers;
         mode = ControlMode.MANUAL_CONTROL;
     }
 
@@ -70,6 +70,11 @@ public class Outtake implements Subsystem
     public ControlMode getMode()
     {
         return mode;
+    }
+
+    public void setMode(ControlMode newMode)
+    {
+        mode = newMode;
     }
 
     /**

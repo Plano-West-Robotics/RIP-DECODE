@@ -4,17 +4,17 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.core.templates.StageServoPair;
 
-public class PaddlesServoPair extends StageServoPair<PaddlesServoPair.Stage>
+public class StoppersServoPair extends StageServoPair<StoppersServoPair.Stage>
 {
     public static final double POSITION_DIFF = 0;
 
     public enum Stage
     {
         STANDBY,
-        READY,
+        STOP,
     }
 
-    public PaddlesServoPair(HardwareMap hardwareMap)
+    public StoppersServoPair(HardwareMap hardwareMap)
     {
         super(
             new StageServoPairBuilder<>(
@@ -25,7 +25,7 @@ public class PaddlesServoPair extends StageServoPair<PaddlesServoPair.Stage>
             POSITION_DIFF
             )
             .add(Stage.STANDBY, 0.5)
-            .add(Stage.READY, 1)
+            .add(Stage.STOP, 1)
         );
     }
 
@@ -34,8 +34,8 @@ public class PaddlesServoPair extends StageServoPair<PaddlesServoPair.Stage>
         setStage(Stage.STANDBY);
     }
 
-    public void ready()
+    public void stop()
     {
-        setStage(Stage.READY);
+        setStage(Stage.STOP);
     }
 }

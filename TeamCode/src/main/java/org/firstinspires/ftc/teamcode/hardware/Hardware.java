@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.core.wrappers.CRServoWrapper;
 import org.firstinspires.ftc.teamcode.core.wrappers.MotorWrapper;
 
 public class Hardware
@@ -15,7 +14,7 @@ public class Hardware
     public WebcamName webcam;
     public DrivetrainMotors drivetrainMotors;
     public MotorWrapper intakeMotor, outtakeMotor;
-    public PaddlesServoPair paddles;
+    public StoppersServoPair stoppers;
 //    public EncoderWrapper rightOdo, frontOdo;
 
     public Hardware(HardwareMap hardwareMap)
@@ -36,7 +35,7 @@ public class Hardware
 
         outtakeMotor = new MotorWrapper(hardwareMap, "o", false);
 
-        paddles = new PaddlesServoPair(hardwareMap);
+        stoppers = new StoppersServoPair(hardwareMap);
 
 //        frontOdo = new EncoderWrapper((DcMotorEx) drivetrainMotors.br);
 //        rightOdo = new EncoderWrapper((DcMotorEx) drivetrainMotors.fl);
