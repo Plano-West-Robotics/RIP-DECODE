@@ -5,7 +5,7 @@ import org.firstinspires.ftc.teamcode.core.control.Gamepads;
 import org.firstinspires.ftc.teamcode.hardware.DrivetrainMotors;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 
-public abstract class AbstractDrive implements Subsystem
+public abstract class AbstractDrive
 {
     public DrivetrainMotors drivetrainMotors;
 
@@ -27,7 +27,6 @@ public abstract class AbstractDrive implements Subsystem
         regularSpeed();
     }
 
-    @Override
     public void update(Gamepads gamepads)
     {
         double drive = gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_Y);

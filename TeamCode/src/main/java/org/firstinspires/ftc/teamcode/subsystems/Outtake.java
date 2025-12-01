@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.core.wrappers.MotorWrapper;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.hardware.StoppersServoPair;
 
-public class Outtake implements Subsystem
+public class Outtake
 {
     public enum ControlMode
     {
@@ -43,7 +43,6 @@ public class Outtake implements Subsystem
         mode = ControlMode.MANUAL_CONTROL;
     }
 
-    @Override
     public void update(Gamepads gamepads)
     {
         boolean triggerActivated = gamepads.exceedsThreshold(Analog.GP2_RIGHT_TRIGGER, TRIGGER_THRESHOLD);

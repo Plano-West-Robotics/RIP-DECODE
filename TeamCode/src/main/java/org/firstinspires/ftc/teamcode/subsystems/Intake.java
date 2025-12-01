@@ -2,11 +2,10 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import org.firstinspires.ftc.teamcode.core.control.Button;
 import org.firstinspires.ftc.teamcode.core.control.Gamepads;
-import org.firstinspires.ftc.teamcode.core.wrappers.CRServoWrapper;
 import org.firstinspires.ftc.teamcode.core.wrappers.MotorWrapper;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 
-public class Intake implements Subsystem
+public class Intake
 {
     public static final double LAUNCH_POWER = 1;
     public static final double REGULAR_POWER = 0.5;
@@ -21,7 +20,6 @@ public class Intake implements Subsystem
         isSpinning = false;
     }
 
-    @Override
     public void update(Gamepads gamepads)
     {
         if (gamepads.justPressed(Button.GP1_A)) isSpinning = !isSpinning;

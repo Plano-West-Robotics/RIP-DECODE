@@ -4,7 +4,7 @@ import org.firstinspires.ftc.teamcode.core.control.Button;
 import org.firstinspires.ftc.teamcode.core.control.Gamepads;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 
-public class RobotCentricDrive extends AbstractDrive implements Subsystem
+public class RobotCentricDrive extends AbstractDrive
 {
     public RobotCentricDrive(Hardware hardware)
     {

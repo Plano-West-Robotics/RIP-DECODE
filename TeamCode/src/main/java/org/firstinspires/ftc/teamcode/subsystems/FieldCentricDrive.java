@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.core.control.Button;
 import org.firstinspires.ftc.teamcode.core.control.Gamepads;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 
-public class FieldCentricDrive extends AbstractDrive implements Subsystem
+public class FieldCentricDrive extends AbstractDrive
 {
     public IMU imu;
 
