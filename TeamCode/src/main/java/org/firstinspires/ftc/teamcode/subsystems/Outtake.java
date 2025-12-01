@@ -33,13 +33,11 @@ public class Outtake
     public static final double VELOCITY_MULTIPLIER = 2.7;
 
     public MotorWrapper motor;
-    public StoppersServoPair stoppers;
     public ControlMode mode;
 
     public Outtake(Hardware hardware)
     {
         motor = hardware.outtakeMotor;
-        stoppers = hardware.stoppers;
         mode = ControlMode.MANUAL_CONTROL;
     }
 
