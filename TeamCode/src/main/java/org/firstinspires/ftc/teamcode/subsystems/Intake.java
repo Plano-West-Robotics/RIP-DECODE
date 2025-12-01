@@ -11,13 +11,58 @@ public class Intake
     public static final double REGULAR_POWER = 0.5;
 
     public MotorWrapper motor;
-    public double motorPower = LAUNCH_POWER;
+    public double motorPower = REGULAR_POWER;
     public boolean isSpinning;
 
     public Intake(Hardware hardware)
     {
         motor = hardware.intakeMotor;
         isSpinning = false;
+    }
+
+    public void forwardRegular()
+    {
+        motorPower = REGULAR_POWER;
+        isSpinning = true;
+        updateMotor();
+    }
+
+    public void forwardLaunch()
+    {
+        motorPower = LAUNCH_POWER;
+        isSpinning = true;
+        updateMotor();
+    }
+
+    public void reverseRegular()
+    {
+        motorPower = -REGULAR_POWER;
+        isSpinning = true;
+        updateMotor();
+    }
+
+    public void reverseLaunch()
+    {
+        motorPower = -LAUNCH_POWER;
+        isSpinning = true;
+        updateMotor();
+    }
+
+    public void start()
+    {
+        isSpinning = true;
+        updateMotor();
+    }
+
+    public void stop()
+    {
+        isSpinning = false;
+        updateMotor();
+    }
+
+    public void updateMotor()
+    {
+        motor.setPower(isSpinning ? motorPower : 0);
     }
 
     public void update(Gamepads gamepads)
@@ -39,10 +84,6 @@ public class Intake
             }
         }
 
-        if (gamepads.justPressed(Button.GP1_DPAD_UP)) motorPower += 0.05;
-        if (gamepads.justPressed(Button.GP1_DPAD_DOWN)) motorPower -= 0.05;
-        //if (motorPower < 0) motorPower = 0;
-        //if (motorPower > 1) motorPower = 1;
-        motor.setPower(isSpinning ? motorPower : 0);
+        updateMotor();
     }
 }
