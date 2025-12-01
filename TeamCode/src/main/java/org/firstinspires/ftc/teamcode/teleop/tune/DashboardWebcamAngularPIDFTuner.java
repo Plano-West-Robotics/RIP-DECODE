@@ -14,9 +14,9 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 @TeleOp(group = "Tune")
 public class DashboardWebcamAngularPIDFTuner extends BaseTeleOp
 {
-    public static double P = 0;
+    public static double P = 0.05;
     public static double I = 0;
-    public static double D = 0;
+    public static double D = 0.0035;
     public static double F = 0;
     public static boolean useRedGoalId = true;
     public static boolean manualDrive = false;
