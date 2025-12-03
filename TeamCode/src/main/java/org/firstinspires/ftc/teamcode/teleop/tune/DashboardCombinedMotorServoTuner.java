@@ -18,7 +18,7 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.ServoConfigu
 import java.util.ArrayList;
 
 @TeleOp(group = "Tune")
-public class MotorandServoTuner extends OpMode {
+public class DashboardCombinedMotorServoTuner extends OpMode {
     ArrayList<Pair<String, DcMotorEx>> motors = new ArrayList<>();
 
     @Override
