@@ -67,14 +67,14 @@ public class Intake
 
     public void update(Gamepads gamepads)
     {
-        if (gamepads.justPressed(Button.GP1_A)) isSpinning = !isSpinning;
+        if (gamepads.justPressed(Button.GP2_A)) isSpinning = !isSpinning;
 
-        if (gamepads.justPressed(Button.GP1_B))
+        if (gamepads.justPressed(Button.GP2_B))
         {
             motorPower *= -1;
         }
 
-        if (gamepads.justPressed(Button.GP1_X))
+        if (gamepads.justPressed(Button.GP2_X))
         {
             if (Math.abs(motorPower) == LAUNCH_POWER)
             {

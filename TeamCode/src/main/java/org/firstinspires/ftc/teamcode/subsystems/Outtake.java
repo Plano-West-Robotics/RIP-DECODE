@@ -63,12 +63,12 @@ public class Outtake
 
     public void update(Gamepads gamepads)
     {
-        if (gamepads.justPressed(Button.GP2_B)) toggleMode();
+        if (gamepads.justPressed(Button.GP1_B)) toggleMode();
 
         if (mode == ControlMode.MANUAL_CONTROL) motor.noEncoder();
         else motor.useEncoder();
 
-        boolean triggerActivated = gamepads.exceedsThreshold(Analog.GP2_RIGHT_TRIGGER, TRIGGER_THRESHOLD);
+        boolean triggerActivated = gamepads.exceedsThreshold(Analog.GP1_RIGHT_TRIGGER, TRIGGER_THRESHOLD);
         // This if statement ensures no motor.setPower() calls are made when the outtake is in webcam mode.
         if (mode == ControlMode.MANUAL_CONTROL)
         {
