@@ -53,7 +53,7 @@ public class PedroAuto extends OpMode {
                 intake.motor.setPower(Intake.REGULAR_POWER);
                 intake.transfer.setPower(1);
                 outtake.motor.setPower(0.55);
-                outtake.paddles.standby();
+                outtake.stoppers.standby();
                 break;
             case START_TO_SCORE:
                 if (!follower.isBusy()) {
@@ -62,7 +62,7 @@ public class PedroAuto extends OpMode {
                 }
                 break;
             case AT_SCORE:
-                outtake.paddles.ready();
+                outtake.stoppers.stop();
                 if (pathTimer.milliseconds() > 1500)
                 {
                     pathState = PathState.SCORED;

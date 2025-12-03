@@ -5,7 +5,6 @@ import org.firstinspires.ftc.teamcode.core.control.Button;
 import org.firstinspires.ftc.teamcode.core.control.Gamepads;
 import org.firstinspires.ftc.teamcode.core.wrappers.MotorWrapper;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
-import org.firstinspires.ftc.teamcode.hardware.StoppersServoPair;
 
 public class Outtake
 {
@@ -15,10 +14,10 @@ public class Outtake
         WEBCAM_CONTROL
     }
 
-    public static final double POWER = 0.55;
+    public static final double MANUAL_POWER = 0.55;
     public static final double TRIGGER_THRESHOLD = 0.5;
 
-    public static final double TICKS_PER_REVOLUTION = 28;
+    public static final double TICKS_PER_REVOLUTION = 28; // TODO: Update
     public static final double TICKS_PER_RADIAN = TICKS_PER_REVOLUTION / (2 * Math.PI);
     public static final double FLYWHEEL_RADIUS = 0.0508; // meters
 
@@ -41,37 +40,41 @@ public class Outtake
         mode = ControlMode.MANUAL_CONTROL;
     }
 
-    public void update(Gamepads gamepads)
-    {
-        boolean triggerActivated = gamepads.exceedsThreshold(Analog.GP2_RIGHT_TRIGGER, TRIGGER_THRESHOLD);
-
-        if (mode == ControlMode.MANUAL_CONTROL)
-        {
-            motor.noEncoder();
-            motor.setPower(triggerActivated ? POWER : 0);
-
-        }
-        else
-        {
-            motor.useEncoder();
-        }
-
-        if (gamepads.justPressed(Button.GP2_B))
-        {
-            mode = mode == ControlMode.MANUAL_CONTROL ? ControlMode.WEBCAM_CONTROL : ControlMode.MANUAL_CONTROL;
-        }
-
-
-    }
-
     public ControlMode getMode()
     {
         return mode;
     }
 
-    public void setMode(ControlMode newMode)
+    public void manualMode()
     {
-        mode = newMode;
+        mode = ControlMode.MANUAL_CONTROL;
+    }
+
+    public void webcamMode()
+    {
+        mode = ControlMode.WEBCAM_CONTROL;
+    }
+
+    public void toggleMode()
+    {
+        if (mode == ControlMode.MANUAL_CONTROL) webcamMode();
+        else manualMode();
+    }
+
+    public void update(Gamepads gamepads)
+    {
+        if (gamepads.justPressed(Button.GP2_B)) toggleMode();
+
+        if (mode == ControlMode.MANUAL_CONTROL) motor.noEncoder();
+        else motor.useEncoder();
+
+        boolean triggerActivated = gamepads.exceedsThreshold(Analog.GP2_RIGHT_TRIGGER, TRIGGER_THRESHOLD);
+        // This if statement ensures no motor.setPower() calls are made when the outtake is in webcam mode.
+        if (mode == ControlMode.MANUAL_CONTROL)
+        {
+            if (triggerActivated) motor.setPower(MANUAL_POWER);
+            else motor.setPower(0);
+        }
     }
 
     /**
