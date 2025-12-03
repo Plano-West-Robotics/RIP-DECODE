@@ -70,6 +70,7 @@ public class DashboardMotorByPortTuner extends OpMode {
     public void loop() {
         for (Pair<String, DcMotorEx> pair : this.motors) {
             telemetry.addData(pair.first, pair.second.getCurrentPosition());
+            telemetry.addData(pair.first, pair.second.getVelocity());
         }
         telemetry.update();
     }
