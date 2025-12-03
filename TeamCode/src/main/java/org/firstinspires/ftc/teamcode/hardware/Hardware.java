@@ -14,8 +14,6 @@ public class Hardware
     public WebcamName webcam;
     public DrivetrainMotors drivetrainMotors;
     public MotorWrapper intakeMotor, outtakeMotor;
-    public StoppersServoPair stoppers;
-//    public EncoderWrapper rightOdo, frontOdo;
 
     public Hardware(HardwareMap hardwareMap)
     {
@@ -34,10 +32,5 @@ public class Hardware
         intakeMotor.reverse();
 
         outtakeMotor = new MotorWrapper(hardwareMap, "o", false);
-
-        stoppers = new StoppersServoPair(hardwareMap);
-
-//        frontOdo = new EncoderWrapper((DcMotorEx) drivetrainMotors.br);
-//        rightOdo = new EncoderWrapper((DcMotorEx) drivetrainMotors.fl);
     }
 }

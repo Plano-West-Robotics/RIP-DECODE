@@ -3,19 +3,23 @@ package org.firstinspires.ftc.teamcode.teleop.test;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.subsystems.AbstractDrive;
-import org.firstinspires.ftc.teamcode.subsystems.RobotCentricDrive;
+import org.firstinspires.ftc.teamcode.subsystems.FieldCentricDrive;
 import org.firstinspires.ftc.teamcode.teleop.BaseTeleOp;
 
 @TeleOp(group = "Test")
-public class RobotCentricTest extends BaseTeleOp
+public class FieldCentricDriveTest extends BaseTeleOp
 {
     public AbstractDrive drive;
 
     @Override
     public void setup()
     {
-        drive = new RobotCentricDrive(hardware);
+        drive = new FieldCentricDrive(hardware);
+    }
 
-        subsystems.add(drive);
+    @Override
+    public void run()
+    {
+        drive.update(gamepads);
     }
 }

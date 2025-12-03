@@ -2,17 +2,16 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import org.firstinspires.ftc.teamcode.core.control.Button;
 import org.firstinspires.ftc.teamcode.core.control.Gamepads;
-import org.firstinspires.ftc.teamcode.core.wrappers.CRServoWrapper;
 import org.firstinspires.ftc.teamcode.core.wrappers.MotorWrapper;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 
-public class Intake implements Subsystem
+public class Intake
 {
     public static final double LAUNCH_POWER = 1;
     public static final double REGULAR_POWER = 0.5;
 
     public MotorWrapper motor;
-    public double motorPower = LAUNCH_POWER;
+    public double motorPower = REGULAR_POWER;
     public boolean isSpinning;
 
     public Intake(Hardware hardware)
@@ -21,15 +20,61 @@ public class Intake implements Subsystem
         isSpinning = false;
     }
 
-    @Override
+    public void forwardRegular()
+    {
+        motorPower = REGULAR_POWER;
+        isSpinning = true;
+        updateMotor();
+    }
+
+    public void forwardLaunch()
+    {
+        motorPower = LAUNCH_POWER;
+        isSpinning = true;
+        updateMotor();
+    }
+
+    public void reverseRegular()
+    {
+        motorPower = -REGULAR_POWER;
+        isSpinning = true;
+        updateMotor();
+    }
+
+    public void reverseLaunch()
+    {
+        motorPower = -LAUNCH_POWER;
+        isSpinning = true;
+        updateMotor();
+    }
+
+    public void start()
+    {
+        isSpinning = true;
+        updateMotor();
+    }
+
+    public void stop()
+    {
+        isSpinning = false;
+        updateMotor();
+    }
+
+    public void updateMotor()
+    {
+        motor.setPower(isSpinning ? motorPower : 0);
+    }
+
     public void update(Gamepads gamepads)
     {
-        if (gamepads.justPressed(Button.GP1_A)) isSpinning = !isSpinning;
-        if (gamepads.justPressed(Button.GP1_B))
+        if (gamepads.justPressed(Button.GP2_A)) isSpinning = !isSpinning;
+
+        if (gamepads.justPressed(Button.GP2_B))
         {
             motorPower *= -1;
         }
-        if (gamepads.justPressed(Button.GP1_X))
+
+        if (gamepads.justPressed(Button.GP2_X))
         {
             if (Math.abs(motorPower) == LAUNCH_POWER)
             {
@@ -41,10 +86,6 @@ public class Intake implements Subsystem
             }
         }
 
-        if (gamepads.justPressed(Button.GP1_DPAD_UP)) motorPower += 0.05;
-        if (gamepads.justPressed(Button.GP1_DPAD_DOWN)) motorPower -= 0.05;
-        //if (motorPower < 0) motorPower = 0;
-        //if (motorPower > 1) motorPower = 1;
-        motor.setPower(isSpinning ? motorPower : 0);
+        updateMotor();
     }
 }
