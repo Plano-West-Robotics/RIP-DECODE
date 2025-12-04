@@ -14,13 +14,15 @@ public class Outtake
         WEBCAM_CONTROL
     }
 
-    public static final double MANUAL_POWER = 0.55;
-    public static final double TRIGGER_THRESHOLD = 0.5;
-
     public static final double TICKS_PER_REVOLUTION = 28;
     public static final double TICKS_PER_RADIAN = TICKS_PER_REVOLUTION / (2 * Math.PI);
-    public static final double FLYWHEEL_RADIUS = 0.0508; // meters
+    public static final double MAX_ACHIEVABLE_TICKS_PER_SEC = 2800; // This is determined from OuttakeMaxVelocityTest
 
+    public static final double MANUAL_ANGULAR_RATE = 0.55 * MAX_ACHIEVABLE_TICKS_PER_SEC;
+    public static final double TRIGGER_THRESHOLD = 0.5;
+    public static final double ANGULAR_RATE_ERROR_TOLERANCE = 60; // ticks/sec
+
+    public static final double FLYWHEEL_RADIUS = 0.0508; // meters
     public static final double HALF_GRAVITY = 4.903325; // meters per second squared
     public static final double LAUNCH_ANGLE = Math.PI / 3; // radians
     public static final double DELTA_Y = 0.4345428; // meters; final height - initial height
@@ -37,7 +39,8 @@ public class Outtake
     public Outtake(Hardware hardware)
     {
         motor = hardware.outtakeMotor;
-        mode = ControlMode.MANUAL_CONTROL;
+        motor.useEncoder();
+        manualMode();
     }
 
     public ControlMode getMode()
@@ -64,17 +67,6 @@ public class Outtake
     public void update(Gamepads gamepads)
     {
         if (gamepads.justPressed(Button.GP1_B)) toggleMode();
-
-        if (mode == ControlMode.MANUAL_CONTROL) motor.noEncoder();
-        else motor.useEncoder();
-
-        boolean triggerActivated = gamepads.exceedsThreshold(Analog.GP1_RIGHT_TRIGGER, TRIGGER_THRESHOLD);
-        // This if statement ensures no motor.setPower() calls are made when the outtake is in webcam mode.
-        if (mode == ControlMode.MANUAL_CONTROL)
-        {
-            if (triggerActivated) motor.setPower(MANUAL_POWER);
-            else motor.setPower(0);
-        }
     }
 
     /**
