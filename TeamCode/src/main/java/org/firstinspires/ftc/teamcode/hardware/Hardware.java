@@ -29,7 +29,6 @@ public class Hardware
         drivetrainMotors = new DrivetrainMotors(hardwareMap);
 
         intakeMotor = new MotorWrapper(hardwareMap, "i", false);
-        intakeMotor.reverse();
 
         outtakeMotor = new MotorWrapper(hardwareMap, "o", false);
     }

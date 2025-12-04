@@ -17,6 +17,7 @@ public class Intake
     public Intake(Hardware hardware)
     {
         motor = hardware.intakeMotor;
+        motor.reverse();
         isSpinning = false;
     }
 
