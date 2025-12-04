@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import org.firstinspires.ftc.teamcode.core.control.Analog;
 import org.firstinspires.ftc.teamcode.core.control.Button;
 import org.firstinspires.ftc.teamcode.core.control.Gamepads;
 import org.firstinspires.ftc.teamcode.core.wrappers.MotorWrapper;
@@ -16,9 +15,9 @@ public class Outtake
 
     public static final double TICKS_PER_REVOLUTION = 28;
     public static final double TICKS_PER_RADIAN = TICKS_PER_REVOLUTION / (2 * Math.PI);
-    public static final double MAX_ACHIEVABLE_TICKS_PER_SEC = 2800; // This is determined from OuttakeMaxVelocityTest
+    public static final double MAX_ANGULAR_RATE = 2800; // ticks/sec; This is determined from OuttakeMaxVelocityTest
 
-    public static final double MANUAL_ANGULAR_RATE = 0.55 * MAX_ACHIEVABLE_TICKS_PER_SEC;
+    public static final double MANUAL_ANGULAR_RATE = 0.55 * MAX_ANGULAR_RATE;
     public static final double TRIGGER_THRESHOLD = 0.5;
     public static final double ANGULAR_RATE_ERROR_TOLERANCE = 60; // ticks/sec
 
