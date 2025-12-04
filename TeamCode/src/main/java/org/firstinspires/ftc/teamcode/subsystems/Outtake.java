@@ -17,7 +17,7 @@ public class Outtake
     public static final double MANUAL_POWER = 0.55;
     public static final double TRIGGER_THRESHOLD = 0.5;
 
-    public static final double TICKS_PER_REVOLUTION = 28; // TODO: Update
+    public static final double TICKS_PER_REVOLUTION = 28;
     public static final double TICKS_PER_RADIAN = TICKS_PER_REVOLUTION / (2 * Math.PI);
     public static final double FLYWHEEL_RADIUS = 0.0508; // meters
 
