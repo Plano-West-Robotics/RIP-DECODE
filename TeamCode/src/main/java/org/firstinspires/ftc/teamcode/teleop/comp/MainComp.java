@@ -189,5 +189,7 @@ public class MainComp extends BaseTeleOp
     {
         fsm.update();
         telemetry.addData("Current State", fsm.getState());
+        telemetry.addData("Outtake Mode", outtake.getMode());
+        telemetry.addData("Goal Color", webcam.getGoalId() == AprilTagWebcam.RED_GOAL_ID ? "RED" : "BLUE");
     }
 }
