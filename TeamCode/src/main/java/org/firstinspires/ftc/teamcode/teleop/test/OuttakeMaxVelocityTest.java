@@ -23,6 +23,8 @@ public class OuttakeMaxVelocityTest extends LinearOpMode
         motor = hardwareMap.get(DcMotorEx.class, "o");
 
         waitForStart();
+        
+        motor.setPower(1);
 
         while (opModeIsActive())
         {
