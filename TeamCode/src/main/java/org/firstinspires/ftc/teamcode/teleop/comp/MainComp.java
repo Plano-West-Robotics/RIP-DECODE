@@ -75,12 +75,12 @@ public class MainComp extends BaseTeleOp
             })
 
             .state(State.MANUAL_SHOOTING)
-            .onEnter(() -> ((DcMotorEx) outtake.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE))
+            .onEnter(() -> ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE))
             .loop(() -> {
                 drive.update(gamepads);
                 webcam.update(gamepads);
 
-                double error = ((DcMotorEx) outtake.motor).getVelocity() - Outtake.MANUAL_ANGULAR_RATE;
+                double error = ((DcMotorEx) outtake.motor.motor).getVelocity() - Outtake.MANUAL_ANGULAR_RATE;
 
                 if (gamepads.isPressed(Button.GP1_A))
                 {
@@ -129,9 +129,9 @@ public class MainComp extends BaseTeleOp
                     double targetAngularRate = Outtake.toAngularRate(Outtake.calculateIdealFlywheelTangentialVelocity(range));
 
                     drive.drive(0, 0, rx);
-                    ((DcMotorEx) outtake.motor).setVelocity(targetAngularRate);
+                    ((DcMotorEx) outtake.motor.motor).setVelocity(targetAngularRate);
 
-                    double error = ((DcMotorEx) outtake.motor).getVelocity() - targetAngularRate;
+                    double error = ((DcMotorEx) outtake.motor.motor).getVelocity() - targetAngularRate;
 
                     telemetry.addData("Range", range);
                     telemetry.addData("Bearing", bearing);
