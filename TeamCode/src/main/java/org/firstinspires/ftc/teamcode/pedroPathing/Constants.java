@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Constants {
     public static FollowerConstants followerConstants = new FollowerConstants().
-            mass(8.2)
+            mass(9.706876718)
             .forwardZeroPowerAcceleration(-62.7355128)
             .lateralZeroPowerAcceleration(-65.5597599)
             .translationalPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0.01, 0))
@@ -32,20 +32,20 @@ public class Constants {
             .leftRearMotorName("bl")
             .leftFrontMotorName("fl")
             .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
+            .leftRearMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
             .xVelocity(50.674863877)
             .yVelocity(43.081820267);
 
     public static TwoWheelConstants localizerConstants = new TwoWheelConstants()
-            .forwardEncoder_HardwareMapName("fr")
+            .forwardEncoder_HardwareMapName("br")
             .strafeEncoder_HardwareMapName("bl")
             .IMU_HardwareMapName("imu")
             .IMU_Orientation(
                     new RevHubOrientationOnRobot(
-                            RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
-                            RevHubOrientationOnRobot.UsbFacingDirection.UP
+                            RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                            RevHubOrientationOnRobot.UsbFacingDirection.LEFT
                     )
             )
             .strafePodX(7)
