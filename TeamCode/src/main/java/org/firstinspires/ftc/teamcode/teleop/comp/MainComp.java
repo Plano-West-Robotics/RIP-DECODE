@@ -83,7 +83,7 @@ public class MainComp extends BaseTeleOp
 
                 if (gamepads.isPressed(Button.GP1_A))
                 {
-                    if (Math.abs(error) < Outtake.ANGULAR_RATE_ERROR_TOLERANCE && error > 0)
+                    if (Math.abs(error) < Outtake.ANGULAR_RATE_ERROR_TOLERANCE && error >= 0)
                     {
                         intake.forwardLaunch();
                         gamepad1.stopRumble();
