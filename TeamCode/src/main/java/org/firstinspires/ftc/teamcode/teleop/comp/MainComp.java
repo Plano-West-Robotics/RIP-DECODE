@@ -25,13 +25,13 @@ public class MainComp extends BaseTeleOp
     {
         STANDBY,
         MANUAL_SHOOTING,
-        WEBCAM_SHOOTING
+//        WEBCAM_SHOOTING
     }
 
     public AbstractDrive drive;
     public Intake intake;
     public Outtake outtake;
-    public AprilTagWebcam webcam;
+//    public AprilTagWebcam webcam;
 
     public PIDFController controller;
     public StateMachine fsm;
@@ -42,7 +42,7 @@ public class MainComp extends BaseTeleOp
         drive = new FieldCentricDrive(hardware);
         intake = new Intake(hardware);
         outtake = new Outtake(hardware);
-        webcam = new AprilTagWebcam(hardware, AprilTagWebcam.RED_GOAL_ID);
+//        webcam = new AprilTagWebcam(hardware, AprilTagWebcam.RED_GOAL_ID);
 
         controller = new PIDFController(
             DashboardWebcamAngularPIDFTuner.P,
@@ -52,33 +52,35 @@ public class MainComp extends BaseTeleOp
         );
         fsm = new StateMachineBuilder()
             .state(State.STANDBY)
-            .onEnter(() -> ((FieldCentricDrive) drive).imu.resetYaw())
+            .onEnter(() ->
+            {
+                ((FieldCentricDrive) drive).imu.resetYaw();
+                outtake.motor.setPower(0);
+            })
             .loop(() -> {
                 drive.update(gamepads);
                 intake.update(gamepads);
                 outtake.update(gamepads);
-                webcam.update(gamepads);
+                outtake.motor.setPower(0);
+//                webcam.update(gamepads);
             })
             .transition(() ->
                 gamepads.exceedsThreshold(Analog.GP1_RIGHT_TRIGGER, Outtake.TRIGGER_THRESHOLD)
-                    && outtake.getMode() == Outtake.ControlMode.MANUAL_CONTROL,
+                && outtake.getMode() == Outtake.ControlMode.MANUAL_CONTROL,
                 State.MANUAL_SHOOTING
             )
-            .transition(() ->
-                gamepads.exceedsThreshold(Analog.GP1_RIGHT_TRIGGER, Outtake.TRIGGER_THRESHOLD)
-                    && outtake.getMode() == Outtake.ControlMode.WEBCAM_CONTROL,
-                State.WEBCAM_SHOOTING
-            )
-            .onExit(() -> {
-                intake.forwardLaunch();
-                intake.stop();
-            })
+//            .transition(() ->
+//                    gamepads.exceedsThreshold(Analog.GP1_RIGHT_TRIGGER, Outtake.TRIGGER_THRESHOLD)
+//                        && outtake.getMode() == Outtake.ControlMode.WEBCAM_CONTROL,
+//                State.WEBCAM_SHOOTING
+//            )
+            .onExit(() -> intake.stop())
 
             .state(State.MANUAL_SHOOTING)
             .onEnter(() -> ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE))
             .loop(() -> {
                 drive.update(gamepads);
-                webcam.update(gamepads);
+//                webcam.update(gamepads);
 
                 double error = ((DcMotorEx) outtake.motor.motor).getVelocity() - Outtake.MANUAL_ANGULAR_RATE;
 
@@ -86,13 +88,16 @@ public class MainComp extends BaseTeleOp
                 {
                     if (Math.abs(error) < Outtake.ANGULAR_RATE_ERROR_TOLERANCE)
                     {
-                        intake.start();
+                        intake.forwardLaunch();
                         gamepad1.stopRumble();
                     }
                     else
                     {
                         intake.stop();
-                        gamepad1.rumbleBlips(1);
+                        if (!gamepad1.isRumbling())
+                        {
+                            gamepad1.rumble(1000);
+                        }
                     }
                 }
                 else
@@ -102,7 +107,7 @@ public class MainComp extends BaseTeleOp
                 }
             })
             .transition(() ->
-                !gamepads.exceedsThreshold(Analog.GP1_RIGHT_TRIGGER, Outtake.TRIGGER_THRESHOLD),
+                    !gamepads.exceedsThreshold(Analog.GP1_RIGHT_TRIGGER, Outtake.TRIGGER_THRESHOLD),
                 State.STANDBY
             )
             .onExit(() -> {
@@ -111,70 +116,73 @@ public class MainComp extends BaseTeleOp
                 outtake.motor.setPower(0);
             })
 
-            .state(State.WEBCAM_SHOOTING)
-            .loop(() -> {
-                AprilTagDetection detection = webcam.getGoalDetection();
-                if (detection == null)
-                {
-                    gamepad1.rumbleBlips(1);
-                    drive.update(gamepads);
-                    outtake.motor.setPower(0);
-                }
-                else
-                {
-                    double bearing = detection.ftcPose.bearing;
-                    double range = detection.ftcPose.range;
-
-                    double rx = controller.calculate(bearing, 0);
-                    double targetAngularRate = Outtake.toAngularRate(Outtake.calculateIdealFlywheelTangentialVelocity(range));
-
-                    drive.drive(0, 0, rx);
-                    ((DcMotorEx) outtake.motor.motor).setVelocity(targetAngularRate);
-
-                    double error = ((DcMotorEx) outtake.motor.motor).getVelocity() - targetAngularRate;
-
-                    telemetry.addData("Range", range);
-                    telemetry.addData("Bearing", bearing);
-                    telemetry.addData("RX", rx);
-                    telemetry.addData("Target Angular Rate", targetAngularRate);
-
-                    if (gamepads.isPressed(Button.GP1_A))
-                    {
-                        if (Math.abs(error) < Outtake.ANGULAR_RATE_ERROR_TOLERANCE)
-                        {
-                            intake.start();
-                            gamepad1.stopRumble();
-                        }
-                        else
-                        {
-                            intake.stop();
-                            gamepad1.rumbleBlips(1);
-                        }
-                    }
-                    else
-                    {
-                        intake.stop();
-                        gamepad1.stopRumble();
-                    }
-                }
-            })
-            .transition(() ->
-                !gamepads.exceedsThreshold(Analog.GP1_RIGHT_TRIGGER, Outtake.TRIGGER_THRESHOLD),
-                State.STANDBY
-            )
-            .onExit(() -> {
-                intake.forwardRegular();
-                intake.stop();
-                outtake.motor.setPower(0);
-            })
+//            .state(State.WEBCAM_SHOOTING)
+//            .loop(() -> {
+//                AprilTagDetection detection = webcam.getGoalDetection();
+//                if (detection == null)
+//                {
+//                    if (!gamepad1.isRumbling())
+//                    {
+//                        gamepad1.rumble(1000);
+//                    }
+//                    drive.update(gamepads);
+//                    outtake.motor.setPower(0);
+//                }
+//                else
+//                {
+//                    double bearing = detection.ftcPose.bearing;
+//                    double range = detection.ftcPose.range;
+//
+//                    double rx = controller.calculate(bearing, 0);
+//                    double targetAngularRate = Outtake.toAngularRate(Outtake.calculateIdealFlywheelTangentialVelocity(range));
+//
+//                    drive.drive(0, 0, rx);
+//                    ((DcMotorEx) outtake.motor.motor).setVelocity(targetAngularRate);
+//
+//                    double error = ((DcMotorEx) outtake.motor.motor).getVelocity() - targetAngularRate;
+//
+//                    telemetry.addData("Range", range);
+//                    telemetry.addData("Bearing", bearing);
+//                    telemetry.addData("RX", rx);
+//                    telemetry.addData("Target Angular Rate", targetAngularRate);
+//
+//                    if (gamepads.isPressed(Button.GP1_A))
+//                    {
+//                        if (Math.abs(error) < Outtake.ANGULAR_RATE_ERROR_TOLERANCE)
+//                        {
+//                            intake.forwardLaunch();
+//                            gamepad1.stopRumble();
+//                        }
+//                        else
+//                        {
+//                            intake.stop();
+//                            gamepad1.rumbleBlips(1);
+//                        }
+//                    }
+//                    else
+//                    {
+//                        intake.stop();
+//                        gamepad1.stopRumble();
+//                    }
+//                }
+//            })
+//            .transition(() ->
+//                    !gamepads.exceedsThreshold(Analog.GP1_RIGHT_TRIGGER, Outtake.TRIGGER_THRESHOLD),
+//                State.STANDBY
+//            )
+//            .onExit(() -> {
+//                intake.forwardRegular();
+//                intake.stop();
+//                outtake.motor.setPower(0);
+//            })
             .build();
     }
 
     @Override
     public void init_loop()
     {
-        boolean cameraIsReady = webcam.portal.getCameraState() == VisionPortal.CameraState.STREAMING;
-        telemetry.addData("Camera Is Ready?", cameraIsReady);
+//        boolean cameraIsReady = webcam.portal.getCameraState() == VisionPortal.CameraState.STREAMING;
+//        telemetry.addData("Camera Is Ready?", cameraIsReady);
         telemetry.update();
     }
 
@@ -190,6 +198,8 @@ public class MainComp extends BaseTeleOp
         fsm.update();
         telemetry.addData("Current State", fsm.getState());
         telemetry.addData("Outtake Mode", outtake.getMode());
-        telemetry.addData("Goal Color", webcam.getGoalId() == AprilTagWebcam.RED_GOAL_ID ? "RED" : "BLUE");
+//        telemetry.addData("Goal Color", webcam.getGoalId() == AprilTagWebcam.RED_GOAL_ID ? "RED" : "BLUE");
+        telemetry.addData("Outtake Motor Angular Velocity (ticks/sec)", ((DcMotorEx) outtake.motor.motor).getVelocity());
+        telemetry.addData("Outtake Motor Angular Velocity (rev/min)", ((DcMotorEx) outtake.motor.motor).getVelocity() * 60 * (1 / Outtake.TICKS_PER_REVOLUTION));
     }
 }

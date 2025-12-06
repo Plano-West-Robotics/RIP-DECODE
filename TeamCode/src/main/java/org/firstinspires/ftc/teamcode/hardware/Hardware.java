@@ -24,7 +24,8 @@ public class Hardware
         ));
         imu.initialize(imuParameters);
 
-        webcam = hardwareMap.get(WebcamName.class, "Webcam 1");
+//        webcam = hardwareMap.get(WebcamName.class, "Webcam 1");
+        webcam = null;
 
         drivetrainMotors = new DrivetrainMotors(hardwareMap);
 
