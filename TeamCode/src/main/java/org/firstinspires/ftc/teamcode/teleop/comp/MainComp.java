@@ -83,6 +83,7 @@ public class MainComp extends BaseTeleOp
 //                webcam.update(gamepads);
 
                 double error = ((DcMotorEx) outtake.motor.motor).getVelocity() - Outtake.MANUAL_ANGULAR_RATE;
+                telemetry.addData("Error", error);
 
                 if (gamepads.isPressed(Button.GP1_A))
                 {

@@ -12,7 +12,7 @@ public class Gamepad1RumbleTest extends BaseTeleOp
 {
     public Gamepads gamepads;
     public static boolean rumbleGP1;
-    public boolean x = false;
+    public boolean pastRumble = false;
 
     @Override
     public void setup()
@@ -23,12 +23,12 @@ public class Gamepad1RumbleTest extends BaseTeleOp
     @Override
     public void run()
     {
-        if (rumbleGP1 && !gamepad1.isRumbling())
+
+        if (rumbleGP1 && !pastRumble && !gamepad1.isRumbling())
         {
             gamepad1.rumbleBlips(1);
-            x = true;
         }
 
-        telemetry.addData("X", x);
+        pastRumble = rumbleGP1;
     }
 }

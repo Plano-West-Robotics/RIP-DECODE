@@ -17,11 +17,11 @@ public class Outtake
 
     public static final double TICKS_PER_REVOLUTION = 28;
     public static final double TICKS_PER_RADIAN = TICKS_PER_REVOLUTION / (2 * Math.PI);
-    public static final double MAX_ANGULAR_RATE = 1420; // ticks/sec; This is determined from OuttakeMaxVelocityTest
+    public static final double MAX_ANGULAR_RATE = 2800; // ticks/sec; This is determined from OuttakeMaxVelocityTest
 
     public static final double MANUAL_ANGULAR_RATE = 0.55 * MAX_ANGULAR_RATE;
     public static final double TRIGGER_THRESHOLD = 0.5;
-    public static final double ANGULAR_RATE_ERROR_TOLERANCE = 60; // ticks/sec
+    public static final double ANGULAR_RATE_ERROR_TOLERANCE = 100; // ticks/sec
 
     public static final double FLYWHEEL_RADIUS = 0.0508; // meters
     public static final double HALF_GRAVITY = 4.903325; // meters per second squared
@@ -29,10 +29,12 @@ public class Outtake
     public static final double DELTA_Y = 0.4345428; // meters; final height - initial height
     public static final double EXTRA_DISTANCE = 0.1905; // the distance from the april tag to the center of the goal from a bird's-eye' view
 
+//    Values from tuning guide from 2019
     public static final double F = 32767 / MAX_ANGULAR_RATE;
     public static final double P = 0.1 * F;
-    public static final double  I = 0.1 * P;
+    public static final double I = 0.1 * P;
     public static final double D = 0;
+
     /**
      * Scales the theoretically required velocity to account for inefficient energy transfer. This
      * is tested empirically.
