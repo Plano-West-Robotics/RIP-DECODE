@@ -29,9 +29,9 @@ public class Outtake
     public static final double DELTA_Y = 0.4345428; // meters; final height - initial height
     public static final double EXTRA_DISTANCE = 0.1905; // the distance from the april tag to the center of the goal from a bird's-eye' view
 
-    public static final double F = 32767 + MAX_ANGULAR_RATE;
+    public static final double F = 32767 / MAX_ANGULAR_RATE;
     public static final double P = 0.1 * F;
-    public static final double I = 0.1 * P;
+    public static final double  I = 0.1 * P;
     public static final double D = 0;
     /**
      * Scales the theoretically required velocity to account for inefficient energy transfer. This
