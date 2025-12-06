@@ -12,9 +12,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.core.control.Gamepads;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public abstract class BaseTeleOp extends OpMode
 {
     public Hardware hardware;

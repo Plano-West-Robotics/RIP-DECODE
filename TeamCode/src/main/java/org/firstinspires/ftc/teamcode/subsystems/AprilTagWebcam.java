@@ -20,10 +20,10 @@ public class AprilTagWebcam
 {
     public static final class LensIntrinsics
     {
-        public static final double FX = 8.245077776187888503e2;
-        public static final double FY = 8.270054620332543891e2;
-        public static final double CX = 3.212181651421647643e2;
-        public static final double CY = 2.425865530229235674e2;
+        public static final double FX = 6.501905436046564546e2;
+        public static final double FY = 6.527525718349902490e2;
+        public static final double CX = 3.208106928325781837e2;
+        public static final double CY = 2.438054456685325704e2;
     }
 
     /**

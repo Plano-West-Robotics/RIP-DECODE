@@ -2,21 +2,20 @@ package org.firstinspires.ftc.teamcode.teleop.comp;
 
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.teamcode.core.control.Analog;
 import org.firstinspires.ftc.teamcode.core.control.Button;
 import org.firstinspires.ftc.teamcode.subsystems.AbstractDrive;
-import org.firstinspires.ftc.teamcode.subsystems.AprilTagWebcam;
 import org.firstinspires.ftc.teamcode.subsystems.FieldCentricDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.teleop.BaseTeleOp;
 import org.firstinspires.ftc.teamcode.teleop.tune.DashboardWebcamAngularPIDFTuner;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @TeleOp(group = "Comp")
 public class MainComp extends BaseTeleOp
@@ -52,11 +51,7 @@ public class MainComp extends BaseTeleOp
         );
         fsm = new StateMachineBuilder()
             .state(State.STANDBY)
-            .onEnter(() ->
-            {
-                ((FieldCentricDrive) drive).imu.resetYaw();
-                outtake.motor.setPower(0);
-            })
+            .onEnter(() -> outtake.motor.setPower(0))
             .loop(() -> {
                 drive.update(gamepads);
                 intake.update(gamepads);
@@ -80,6 +75,7 @@ public class MainComp extends BaseTeleOp
             .onEnter(() -> ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE))
             .loop(() -> {
                 drive.update(gamepads);
+                ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE);
 //                webcam.update(gamepads);
 
                 double error = ((DcMotorEx) outtake.motor.motor).getVelocity() - Outtake.MANUAL_ANGULAR_RATE;
@@ -191,6 +187,13 @@ public class MainComp extends BaseTeleOp
     public void start()
     {
         fsm.start();
+        ((FieldCentricDrive) drive).imu.resetYaw();
+        ((DcMotorEx) outtake.motor.motor).setVelocityPIDFCoefficients(
+                Outtake.P,
+                Outtake.I,
+                Outtake.D,
+                Outtake.F
+        );
     }
 
     @Override
@@ -202,5 +205,11 @@ public class MainComp extends BaseTeleOp
 //        telemetry.addData("Goal Color", webcam.getGoalId() == AprilTagWebcam.RED_GOAL_ID ? "RED" : "BLUE");
         telemetry.addData("Outtake Motor Angular Velocity (ticks/sec)", ((DcMotorEx) outtake.motor.motor).getVelocity());
         telemetry.addData("Outtake Motor Angular Velocity (rev/min)", ((DcMotorEx) outtake.motor.motor).getVelocity() * 60 * (1 / Outtake.TICKS_PER_REVOLUTION));
+        PIDFCoefficients coeffs = ((DcMotorEx) outtake.motor.motor).getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        telemetry.addData("P", coeffs.p);
+        telemetry.addData("I", coeffs.i);
+        telemetry.addData("D", coeffs.d);
+        telemetry.addData("F", coeffs.f);
     }
 }
