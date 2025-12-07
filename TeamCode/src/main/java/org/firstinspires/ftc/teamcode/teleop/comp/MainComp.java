@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.core.control.Analog;
 import org.firstinspires.ftc.teamcode.core.control.Button;
 import org.firstinspires.ftc.teamcode.subsystems.AbstractDrive;
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.teleop.BaseTeleOp;
 import org.firstinspires.ftc.teamcode.teleop.tune.DashboardWebcamAngularPIDFTuner;
+import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @TeleOp(group = "Comp")
@@ -83,7 +85,7 @@ public class MainComp extends BaseTeleOp
 
                 if (gamepads.isPressed(Button.GP1_A))
                 {
-                    if (Math.abs(error) < Outtake.ANGULAR_RATE_ERROR_TOLERANCE && error >= 0)
+                    if (Math.abs(error) < Outtake.ANGULAR_RATE_ERROR_TOLERANCE)
                     {
                         intake.forwardLaunch();
                         gamepad1.stopRumble();
@@ -142,6 +144,7 @@ public class MainComp extends BaseTeleOp
                     telemetry.addData("Bearing", bearing);
                     telemetry.addData("RX", rx);
                     telemetry.addData("Target Angular Rate", targetAngularRate);
+                    telemetry.addData("Error", error);
 
                     if (gamepads.isPressed(Button.GP1_A))
                     {
@@ -178,8 +181,8 @@ public class MainComp extends BaseTeleOp
     @Override
     public void init_loop()
     {
-//        boolean cameraIsReady = webcam.portal.getCameraState() == VisionPortal.CameraState.STREAMING;
-//        telemetry.addData("Camera Is Ready?", cameraIsReady);
+        boolean cameraIsReady = webcam.portal.getCameraState() == VisionPortal.CameraState.STREAMING;
+        telemetry.addData("Camera Is Ready?", cameraIsReady);
         telemetry.update();
     }
 
@@ -199,5 +202,7 @@ public class MainComp extends BaseTeleOp
 //        telemetry.addData("Goal Color", webcam.getGoalId() == AprilTagWebcam.RED_GOAL_ID ? "RED" : "BLUE");
         telemetry.addData("Outtake Motor Angular Velocity (ticks/sec)", ((DcMotorEx) outtake.motor.motor).getVelocity());
         telemetry.addData("Outtake Motor Angular Velocity (rev/min)", ((DcMotorEx) outtake.motor.motor).getVelocity() * 60 * (1 / Outtake.TICKS_PER_REVOLUTION));
+        telemetry.addData("IMU Yaw (Degrees", ((FieldCentricDrive) drive).imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        telemetry.addData("Goal Color", webcam.getGoalId() == AprilTagWebcam.RED_GOAL_ID ? "RED" : "BLUE");
     }
 }
