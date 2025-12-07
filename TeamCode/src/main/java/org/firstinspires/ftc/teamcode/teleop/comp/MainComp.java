@@ -134,6 +134,7 @@ public class MainComp extends BaseTeleOp
                     double rx = controller.calculate(bearing, 0);
                     double targetAngularRate = Outtake.toAngularRate(Outtake.calculateIdealFlywheelTangentialVelocity(range));
 
+                    // TODO: See if we can allow for driving and strafing with webcam heading correction by replacing the line below with "drive.drive(gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_Y), gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_X), rx);"
                     drive.drive(0, 0, rx);
                     ((DcMotorEx) outtake.motor.motor).setVelocity(targetAngularRate);
 
