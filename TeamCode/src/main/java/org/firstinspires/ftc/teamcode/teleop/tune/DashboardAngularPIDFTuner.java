@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
-import org.firstinspires.ftc.teamcode.subsystems.AbstractDrive;
 import org.firstinspires.ftc.teamcode.subsystems.FieldCentricDrive;
 
 @Config
@@ -25,7 +24,7 @@ public class DashboardAngularPIDFTuner extends OpMode
     public static boolean resetImuYaw = false;
 
     public Hardware hardware;
-    public AbstractDrive drive;
+    public FieldCentricDrive drive;
     public PIDFController controller;
 
     @Override
@@ -36,21 +35,18 @@ public class DashboardAngularPIDFTuner extends OpMode
         controller = new PIDFController(P, I, D, F);
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        ((FieldCentricDrive) drive).imu.resetYaw();
+        drive.resetHeading();
     }
 
     @Override
     public void loop()
     {
         // You probably want to set targetAngle=0 before setting resetImuYaw=true
-        if (resetImuYaw)
-        {
-            ((FieldCentricDrive) drive).imu.resetYaw();
-        }
+        if (resetImuYaw) drive.resetHeading();
 
         controller.setPIDF(P, I, D, F);
 
-        double currentAngle = ((FieldCentricDrive) drive).imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        double currentAngle = drive.getHeading(AngleUnit.DEGREES);
         targetAngle = Range.clip(targetAngle, -180, 180);
 
         double rx = -controller.calculate(currentAngle, targetAngle);

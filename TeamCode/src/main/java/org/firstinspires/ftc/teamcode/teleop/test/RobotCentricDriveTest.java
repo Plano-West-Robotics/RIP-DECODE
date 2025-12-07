@@ -2,14 +2,13 @@ package org.firstinspires.ftc.teamcode.teleop.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.subsystems.AbstractDrive;
 import org.firstinspires.ftc.teamcode.subsystems.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.teleop.BaseTeleOp;
 
 @TeleOp(group = "Test")
 public class RobotCentricDriveTest extends BaseTeleOp
 {
-    public AbstractDrive drive;
+    public RobotCentricDrive drive;
 
     @Override
     public void setup()
