@@ -4,7 +4,6 @@ import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.subsystems.AbstractDrive;
 import org.firstinspires.ftc.teamcode.subsystems.AprilTagWebcam;
 import org.firstinspires.ftc.teamcode.subsystems.FieldCentricDrive;
 import org.firstinspires.ftc.teamcode.teleop.BaseTeleOp;
@@ -22,7 +21,7 @@ public class DashboardWebcamAngularPIDFTuner extends BaseTeleOp
     public static boolean manualDrive = false;
 
     public AprilTagWebcam webcam;
-    public AbstractDrive drive;
+    public FieldCentricDrive drive;
     public PIDFController controller;
 
     @Override

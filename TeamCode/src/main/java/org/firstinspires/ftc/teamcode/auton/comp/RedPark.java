@@ -4,14 +4,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
-import org.firstinspires.ftc.teamcode.subsystems.AbstractDrive;
 import org.firstinspires.ftc.teamcode.subsystems.RobotCentricDrive;
 
 @Autonomous(group = "Comp")
 public class RedPark extends LinearOpMode
 {
     public Hardware hardware;
-    public AbstractDrive drive;
+    public RobotCentricDrive drive;
 
     @Override
     public void runOpMode() throws InterruptedException

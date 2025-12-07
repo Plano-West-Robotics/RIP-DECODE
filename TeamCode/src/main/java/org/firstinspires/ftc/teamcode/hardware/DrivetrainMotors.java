@@ -6,6 +6,9 @@ import org.firstinspires.ftc.teamcode.core.wrappers.MotorWrapper;
 
 public class DrivetrainMotors
 {
+    public static final double SPEED = 0.85;
+    public static final double TURN_SPEED = 0.7;
+
     public MotorWrapper fr, fl, br, bl;
     public MotorWrapper[] motors;
 

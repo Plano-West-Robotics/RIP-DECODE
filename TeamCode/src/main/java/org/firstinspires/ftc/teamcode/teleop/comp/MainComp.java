@@ -9,7 +9,6 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.core.control.Analog;
 import org.firstinspires.ftc.teamcode.core.control.Button;
-import org.firstinspires.ftc.teamcode.subsystems.AbstractDrive;
 import org.firstinspires.ftc.teamcode.subsystems.AprilTagWebcam;
 import org.firstinspires.ftc.teamcode.subsystems.FieldCentricDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -29,7 +28,7 @@ public class MainComp extends BaseTeleOp
         WEBCAM_SHOOTING
     }
 
-    public AbstractDrive drive;
+    public FieldCentricDrive drive;
     public Intake intake;
     public Outtake outtake;
     public AprilTagWebcam webcam;
@@ -190,7 +189,7 @@ public class MainComp extends BaseTeleOp
     public void start()
     {
         fsm.start();
-        ((FieldCentricDrive) drive).imu.resetYaw();
+        drive.resetHeading();
     }
 
     @Override
@@ -199,10 +198,9 @@ public class MainComp extends BaseTeleOp
         fsm.update();
         telemetry.addData("Current State", fsm.getState());
         telemetry.addData("Outtake Mode", outtake.getMode());
-//        telemetry.addData("Goal Color", webcam.getGoalId() == AprilTagWebcam.RED_GOAL_ID ? "RED" : "BLUE");
+        telemetry.addData("Goal Color", webcam.getGoalId() == AprilTagWebcam.RED_GOAL_ID ? "RED" : "BLUE");
         telemetry.addData("Outtake Motor Angular Velocity (ticks/sec)", ((DcMotorEx) outtake.motor.motor).getVelocity());
         telemetry.addData("Outtake Motor Angular Velocity (rev/min)", ((DcMotorEx) outtake.motor.motor).getVelocity() * 60 * (1 / Outtake.TICKS_PER_REVOLUTION));
-        telemetry.addData("IMU Yaw (Degrees", ((FieldCentricDrive) drive).imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-        telemetry.addData("Goal Color", webcam.getGoalId() == AprilTagWebcam.RED_GOAL_ID ? "RED" : "BLUE");
+        telemetry.addData("IMU Yaw (Degrees", drive.getHeading(AngleUnit.DEGREES));
     }
 }

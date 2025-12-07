@@ -1,24 +1,27 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import org.firstinspires.ftc.teamcode.core.control.Button;
+import org.firstinspires.ftc.teamcode.core.control.Analog;
 import org.firstinspires.ftc.teamcode.core.control.Gamepads;
+import org.firstinspires.ftc.teamcode.hardware.DrivetrainMotors;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 
-public class RobotCentricDrive extends AbstractDrive
+public class RobotCentricDrive
 {
+    public DrivetrainMotors drivetrainMotors;
+
     public RobotCentricDrive(Hardware hardware)
     {
-        super(hardware);
+        drivetrainMotors = hardware.drivetrainMotors;
     }
 
-    @Override
     public void update(Gamepads gamepads)
     {
-        if (gamepads.justPressed(Button.GP1_RIGHT_BUMPER)) toggleSlowMode();
-        super.update(gamepads);
+        double drive = gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_Y);
+        double strafe = gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_X);
+        double turn = gamepads.getAnalogValue(Analog.GP1_RIGHT_STICK_X);
+        drive(drive, strafe, turn);
     }
 
-    @Override
     public void drive(double y, double x, double rx)
     {
         double frPower = y - x;
@@ -26,15 +29,15 @@ public class RobotCentricDrive extends AbstractDrive
         double brPower = y + x;
         double blPower = y - x;
 
-        frPower -= rx * turnSpeed;
-        brPower -= rx * turnSpeed;
-        flPower += rx * turnSpeed;
-        blPower += rx * turnSpeed;
+        frPower -= rx * DrivetrainMotors.TURN_SPEED;
+        brPower -= rx * DrivetrainMotors.TURN_SPEED;
+        flPower += rx * DrivetrainMotors.TURN_SPEED;
+        blPower += rx * DrivetrainMotors.TURN_SPEED;
 
-        frPower *= speed;
-        flPower *= speed;
-        brPower *= speed;
-        blPower *= speed;
+        frPower *= DrivetrainMotors.SPEED;
+        flPower *= DrivetrainMotors.SPEED;
+        brPower *= DrivetrainMotors.SPEED;
+        blPower *= DrivetrainMotors.SPEED;
 
         drivetrainMotors.setPower(frPower, flPower, brPower, blPower);
     }
