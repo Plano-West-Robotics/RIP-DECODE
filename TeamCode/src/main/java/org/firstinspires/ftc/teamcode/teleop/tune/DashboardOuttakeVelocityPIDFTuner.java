@@ -11,10 +11,10 @@ import org.firstinspires.ftc.teamcode.teleop.BaseTeleOp;
 @TeleOp(group = "Tune")
 public class DashboardOuttakeVelocityPIDFTuner extends BaseTeleOp
 {
-    public static double P = 0;
-    public static double I = 0;
+    public static double F = 32767 / Outtake.MAX_ANGULAR_RATE;
+    public static double P = 0.1 * F;
+    public static double I = 0.1 * P;
     public static double D = 0;
-    public static double F = 0;
     public static double targetAngularRate = 0;
 
     public Outtake outtake;

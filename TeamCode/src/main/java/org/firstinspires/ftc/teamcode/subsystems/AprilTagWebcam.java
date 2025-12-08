@@ -12,8 +12,6 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
-import java.util.List;
-
 import javax.annotation.Nullable;
 
 public class AprilTagWebcam
@@ -51,17 +49,19 @@ public class AprilTagWebcam
     public static final int BLUE_GOAL_ID = 20;
     public static final int RED_GOAL_ID = 24;
 
+    public static final double BEARING_NOISE_TOLERANCE = 1.5; // degrees
+    public static final double RANGE_NOISE_TOLERANCE = 0.15; // meters
+
     public WebcamName camera;
-    public AngleUnit angleUnit;
     public AprilTagProcessor processor;
     public VisionPortal portal;
     public int goalId;
 
-    public AprilTagWebcam(Hardware hardware, AngleUnit angleUnit, int goalId)
+    public double bearing, range;
+
+    public AprilTagWebcam(Hardware hardware, int goalId)
     {
         camera = hardware.webcam;
-
-        this.angleUnit = angleUnit;
 
         processor = new AprilTagProcessor.Builder()
             .setLensIntrinsics(
@@ -70,7 +70,7 @@ public class AprilTagWebcam
                 LensIntrinsics.CX,
                 LensIntrinsics.CY
             )
-            .setOutputUnits(DistanceUnit.METER, angleUnit)
+            .setOutputUnits(DistanceUnit.METER, AngleUnit.DEGREES)
             .setDrawAxes(true)
             .setDrawCubeProjection(true)
             .setDrawTagOutline(true)
@@ -92,9 +92,36 @@ public class AprilTagWebcam
         this.goalId = goalId;
     }
 
-    public List<AprilTagDetection> getDetections()
+    public void update(Gamepads gamepads)
     {
-        return processor.getDetections();
+        if (gamepads.justPressed(Button.GP1_Y)) toggleGoalId();
+    }
+
+    /**
+     * Make sure {@code newBearing} is in degrees, not radians
+     */
+    public void updateBearing(double newBearing)
+    {
+        if (Math.abs(newBearing - bearing) > BEARING_NOISE_TOLERANCE) bearing = newBearing;
+    }
+
+    /**
+     * Make sure {@code newRange} is in meters
+     */
+    public void updateRange(double newRange)
+    {
+        if (Math.abs(newRange - range) > RANGE_NOISE_TOLERANCE) range = newRange;
+    }
+
+    public void toggleGoalId()
+    {
+        goalId = goalId == BLUE_GOAL_ID ? RED_GOAL_ID : BLUE_GOAL_ID;
+    }
+
+    @Nullable
+    public AprilTagDetection getGoalDetection()
+    {
+        return getDetectionById(goalId);
     }
 
     @Nullable
@@ -111,34 +138,18 @@ public class AprilTagWebcam
         return null;
     }
 
-    @Nullable
-    public AprilTagDetection getGoalDetection()
-    {
-        return getDetectionById(goalId);
-    }
-
-    public void stopStreaming()
-    {
-        portal.stopStreaming();
-    }
-
-    public void resumeStreaming()
-    {
-        portal.resumeStreaming();
-    }
-
     public int getGoalId()
     {
         return goalId;
     }
 
-    public void toggleGoalId()
+    public double getBearing()
     {
-        goalId = goalId == BLUE_GOAL_ID ? RED_GOAL_ID : BLUE_GOAL_ID;
+        return bearing;
     }
 
-    public void update(Gamepads gamepads)
+    public double getRange()
     {
-        if (gamepads.justPressed(Button.GP1_Y)) toggleGoalId();
+        return range;
     }
 }

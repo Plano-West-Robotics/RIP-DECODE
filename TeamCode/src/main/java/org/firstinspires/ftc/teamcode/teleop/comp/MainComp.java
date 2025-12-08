@@ -42,7 +42,7 @@ public class MainComp extends BaseTeleOp
         drive = new FieldCentricDrive(hardware);
         intake = new Intake(hardware);
         outtake = new Outtake(hardware);
-        webcam = new AprilTagWebcam(hardware, AngleUnit.DEGREES, AprilTagWebcam.RED_GOAL_ID);
+        webcam = new AprilTagWebcam(hardware, AprilTagWebcam.RED_GOAL_ID);
 
         bearingController = new PIDFController(
             DashboardWebcamBearingPIDFTuner.P,
@@ -124,24 +124,23 @@ public class MainComp extends BaseTeleOp
                         gamepad1.rumble(1000);
                     }
                     drive.update(gamepads);
-                    outtake.motor.setPower(0);
+                    ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE);
                 }
                 else
                 {
-                    double bearing = detection.ftcPose.bearing;
-                    double range = detection.ftcPose.range;
+                    webcam.updateBearing(detection.ftcPose.bearing);
+                    webcam.updateRange(detection.ftcPose.range);
 
-                    double rx = bearingController.calculate(bearing, 0);
-                    double targetAngularRate = Outtake.toAngularRate(Outtake.calculateIdealFlywheelTangentialVelocity(range));
+                    double rx = bearingController.calculate(webcam.getBearing(), 0);
+                    double targetAngularRate = Outtake.toAngularRate(Outtake.calculateIdealFlywheelTangentialVelocity(webcam.getRange()));
 
-                    // TODO: See if we can allow for driving and strafing with webcam heading correction by replacing the line below with "drive.drive(gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_Y), gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_X), rx);"
-                    drive.drive(0, 0, rx);
+                    drive.drive(gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_Y), gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_X), rx);
                     ((DcMotorEx) outtake.motor.motor).setVelocity(targetAngularRate);
 
                     double error = ((DcMotorEx) outtake.motor.motor).getVelocity() - targetAngularRate;
 
-                    telemetry.addData("Range", range);
-                    telemetry.addData("Bearing", bearing);
+                    telemetry.addData("Range", webcam.getRange());
+                    telemetry.addData("Bearing", webcam.getBearing());
                     telemetry.addData("RX", rx);
                     telemetry.addData("Target Angular Rate", targetAngularRate);
                     telemetry.addData("Error", error);

@@ -28,7 +28,7 @@ public class DashboardWebcamBearingPIDFTuner extends BaseTeleOp
     @Override
     public void setup()
     {
-        webcam = new AprilTagWebcam(hardware, AngleUnit.DEGREES, AprilTagWebcam.RED_GOAL_ID);
+        webcam = new AprilTagWebcam(hardware, AprilTagWebcam.RED_GOAL_ID);
         drive = new FieldCentricDrive(hardware);
         controller = new PIDFController(P, I, D, F);
     }
