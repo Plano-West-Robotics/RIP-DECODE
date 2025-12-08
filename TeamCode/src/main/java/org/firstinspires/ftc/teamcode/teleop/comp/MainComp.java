@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.subsystems.FieldCentricDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.teleop.BaseTeleOp;
-import org.firstinspires.ftc.teamcode.teleop.tune.DashboardWebcamAngularPIDFTuner;
+import org.firstinspires.ftc.teamcode.teleop.tune.DashboardWebcamBearingPIDFTuner;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
@@ -33,7 +33,7 @@ public class MainComp extends BaseTeleOp
     public Outtake outtake;
     public AprilTagWebcam webcam;
 
-    public PIDFController controller;
+    public PIDFController bearingController;
     public StateMachine fsm;
 
     @Override
@@ -44,11 +44,11 @@ public class MainComp extends BaseTeleOp
         outtake = new Outtake(hardware);
         webcam = new AprilTagWebcam(hardware, AprilTagWebcam.RED_GOAL_ID);
 
-        controller = new PIDFController(
-            DashboardWebcamAngularPIDFTuner.P,
-            DashboardWebcamAngularPIDFTuner.I,
-            DashboardWebcamAngularPIDFTuner.D,
-            DashboardWebcamAngularPIDFTuner.F
+        bearingController = new PIDFController(
+            DashboardWebcamBearingPIDFTuner.P,
+            DashboardWebcamBearingPIDFTuner.I,
+            DashboardWebcamBearingPIDFTuner.D,
+            DashboardWebcamBearingPIDFTuner.F
         );
         fsm = new StateMachineBuilder()
             .state(State.STANDBY)
@@ -131,7 +131,7 @@ public class MainComp extends BaseTeleOp
                     double bearing = detection.ftcPose.bearing;
                     double range = detection.ftcPose.range;
 
-                    double rx = controller.calculate(bearing, 0);
+                    double rx = bearingController.calculate(bearing, 0);
                     double targetAngularRate = Outtake.toAngularRate(Outtake.calculateIdealFlywheelTangentialVelocity(range));
 
                     // TODO: See if we can allow for driving and strafing with webcam heading correction by replacing the line below with "drive.drive(gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_Y), gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_X), rx);"
