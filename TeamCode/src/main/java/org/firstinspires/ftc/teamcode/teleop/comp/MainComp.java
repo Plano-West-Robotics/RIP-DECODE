@@ -42,7 +42,7 @@ public class MainComp extends BaseTeleOp
         drive = new FieldCentricDrive(hardware);
         intake = new Intake(hardware);
         outtake = new Outtake(hardware);
-        webcam = new AprilTagWebcam(hardware, AprilTagWebcam.RED_GOAL_ID);
+        webcam = new AprilTagWebcam(hardware, AngleUnit.DEGREES, AprilTagWebcam.RED_GOAL_ID);
 
         bearingController = new PIDFController(
             DashboardWebcamBearingPIDFTuner.P,

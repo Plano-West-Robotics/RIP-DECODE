@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.subsystems.AprilTagWebcam;
 import org.firstinspires.ftc.teamcode.subsystems.FieldCentricDrive;
 import org.firstinspires.ftc.teamcode.teleop.BaseTeleOp;
@@ -27,7 +28,7 @@ public class DashboardWebcamBearingPIDFTuner extends BaseTeleOp
     @Override
     public void setup()
     {
-        webcam = new AprilTagWebcam(hardware, AprilTagWebcam.RED_GOAL_ID);
+        webcam = new AprilTagWebcam(hardware, AngleUnit.DEGREES, AprilTagWebcam.RED_GOAL_ID);
         drive = new FieldCentricDrive(hardware);
         controller = new PIDFController(P, I, D, F);
     }

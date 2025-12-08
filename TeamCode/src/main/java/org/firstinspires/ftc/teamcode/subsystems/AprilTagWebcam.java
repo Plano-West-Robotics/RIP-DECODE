@@ -52,13 +52,16 @@ public class AprilTagWebcam
     public static final int RED_GOAL_ID = 24;
 
     public WebcamName camera;
+    public AngleUnit angleUnit;
     public AprilTagProcessor processor;
     public VisionPortal portal;
     public int goalId;
 
-    public AprilTagWebcam(Hardware hardware, int goalId)
+    public AprilTagWebcam(Hardware hardware, AngleUnit angleUnit, int goalId)
     {
         camera = hardware.webcam;
+
+        this.angleUnit = angleUnit;
 
         processor = new AprilTagProcessor.Builder()
             .setLensIntrinsics(
@@ -67,7 +70,7 @@ public class AprilTagWebcam
                 LensIntrinsics.CX,
                 LensIntrinsics.CY
             )
-            .setOutputUnits(DistanceUnit.METER, AngleUnit.DEGREES)
+            .setOutputUnits(DistanceUnit.METER, angleUnit)
             .setDrawAxes(true)
             .setDrawCubeProjection(true)
             .setDrawTagOutline(true)
