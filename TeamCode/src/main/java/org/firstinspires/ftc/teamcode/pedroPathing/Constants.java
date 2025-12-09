@@ -48,8 +48,8 @@ public class Constants {
                             RevHubOrientationOnRobot.UsbFacingDirection.LEFT
                     )
             )
-            .strafePodX(7)
-            .forwardPodY(1.5)
+            .strafePodX(3.3125)
+            .forwardPodY(1.5) // TODO: Measure this
             .forwardEncoderDirection(Encoder.FORWARD)
             .strafeEncoderDirection(Encoder.FORWARD)
             .forwardTicksToInches(0.00195616)
