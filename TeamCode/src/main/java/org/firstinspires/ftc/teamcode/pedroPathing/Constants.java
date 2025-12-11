@@ -16,8 +16,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class Constants {
     public static FollowerConstants followerConstants = new FollowerConstants().
             mass(9.706876718)
-            .forwardZeroPowerAcceleration(-62.7355128)
-            .lateralZeroPowerAcceleration(-65.5597599)
+//            .forwardZeroPowerAcceleration(-62.7355128)
+//            .lateralZeroPowerAcceleration(-65.5597599)
+            .forwardZeroPowerAcceleration(-34.5)
             .translationalPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0.01, 0))
             .headingPIDFCoefficients(new PIDFCoefficients(0.8, 0, 0.01, 0.01))
             .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.001, 0, 0.0001, 0.6, 0))
@@ -35,8 +36,10 @@ public class Constants {
             .leftRearMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
-            .xVelocity(50.674863877)
-            .yVelocity(43.081820267);
+//            .xVelocity(50.674863877)
+//            .yVelocity(43.081820267);
+            .xVelocity(62)
+            .yVelocity(49);
 
     public static TwoWheelConstants localizerConstants = new TwoWheelConstants()
             .forwardEncoder_HardwareMapName("br")
@@ -49,11 +52,13 @@ public class Constants {
                     )
             )
             .strafePodX(3.3125)
-            .forwardPodY(1.5) // TODO: Measure this
-            .forwardEncoderDirection(Encoder.FORWARD)
+            .forwardPodY(4) // TODO: Remeasure this
+            .forwardEncoderDirection(Encoder.REVERSE)
             .strafeEncoderDirection(Encoder.FORWARD)
-            .forwardTicksToInches(0.00195616)
-            .strafeTicksToInches(0.00305353222);
+//            .forwardTicksToInches(0.00195616)
+//            .strafeTicksToInches(0.00305353222)
+            .forwardTicksToInches(0.0029938)
+            .strafeTicksToInches(0.002);
 
     public static Follower createFollower(HardwareMap hardwareMap) {
         return new FollowerBuilder(followerConstants, hardwareMap)
