@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.core.control.Button;
 import org.firstinspires.ftc.teamcode.core.control.Gamepads;
@@ -35,6 +36,8 @@ public class Outtake
     public static final double I = 0.1 * P;
     public static final double D = 0;
 
+    public static final double IDEAL_VOLTAGE = 13.5;
+
     /**
      * Scales the theoretically required velocity to account for inefficient energy transfer. This
      * is tested empirically.
@@ -43,13 +46,22 @@ public class Outtake
 
     public MotorWrapper motor;
     public ControlMode mode;
+    public VoltageSensor vs;
 
     public Outtake(Hardware hardware)
     {
         motor = hardware.outtakeMotor;
         motor.reverse();
         motor.useEncoder();
-        ((DcMotorEx) motor.motor).setVelocityPIDFCoefficients(P, I, D, F);
+
+        vs = hardware.vs;
+        double batteryVoltage = vs.getVoltage();
+
+        ((DcMotorEx) motor.motor).setVelocityPIDFCoefficients(
+                P,
+                I,
+                D,
+                F * (IDEAL_VOLTAGE / batteryVoltage));
         manualMode();
     }
 

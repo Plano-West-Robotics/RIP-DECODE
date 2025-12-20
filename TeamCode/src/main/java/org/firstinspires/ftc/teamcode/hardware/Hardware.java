@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.hardware;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.core.wrappers.MotorWrapper;
@@ -14,6 +15,7 @@ public class Hardware
     public WebcamName webcam;
     public DrivetrainMotors drivetrainMotors;
     public MotorWrapper intakeMotor, outtakeMotor;
+    public VoltageSensor vs;
 
     public Hardware(HardwareMap hardwareMap)
     {
@@ -23,6 +25,8 @@ public class Hardware
             RevHubOrientationOnRobot.UsbFacingDirection.LEFT
         ));
         imu.initialize(imuParameters);
+
+        vs = hardwareMap.voltageSensor.iterator().next();
 
         webcam = hardwareMap.get(WebcamName.class, "Webcam 1");
 //        webcam = null;
