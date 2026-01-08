@@ -201,6 +201,6 @@ public class MainComp extends BaseTeleOp
         telemetry.addData("Goal Color", webcam.getGoalId() == AprilTagWebcam.RED_GOAL_ID ? "RED" : "BLUE");
         telemetry.addData("Outtake Motor Angular Velocity (ticks/sec)", ((DcMotorEx) outtake.motor.motor).getVelocity());
         telemetry.addData("Outtake Motor Angular Velocity (rev/min)", ((DcMotorEx) outtake.motor.motor).getVelocity() * 60 * (1 / Outtake.TICKS_PER_REVOLUTION));
-        telemetry.addData("IMU Yaw (Degrees", drive.getHeading(AngleUnit.DEGREES));
+        telemetry.addData("IMU Yaw (Degrees)", drive.getHeading(AngleUnit.DEGREES));
     }
 }
