@@ -89,6 +89,14 @@ public class Outtake
     public void update(Gamepads gamepads)
     {
         if (gamepads.justPressed(Button.GP1_B)) toggleMode();
+
+        double batteryVoltage = vs.getVoltage();
+
+        ((DcMotorEx) motor.motor).setVelocityPIDFCoefficients(
+            P,
+            I,
+            D,
+            F * (IDEAL_VOLTAGE / batteryVoltage));
     }
 
     /**
