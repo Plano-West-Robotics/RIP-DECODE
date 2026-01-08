@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.teleop.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.subsystems.FieldCentricDrive;
 import org.firstinspires.ftc.teamcode.teleop.BaseTeleOp;
 
@@ -20,5 +21,6 @@ public class FieldCentricDriveTest extends BaseTeleOp
     public void run()
     {
         drive.update(gamepads);
+        telemetry.addData("IMU Yaw (Degrees)", drive.getHeading(AngleUnit.DEGREES));
     }
 }
