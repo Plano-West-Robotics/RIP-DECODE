@@ -35,9 +35,9 @@ public class RedAuto extends OpMode
     public Follower follower;
     public static Pose startPose = new Pose(122.1927409261577, 124.35544430538174, Math.toRadians(37));
     public static Pose scorePose = new Pose(95.77570093457945, 104.74766355140187, Math.toRadians(37));
-    public static Pose lineUp1Pose = new Pose(93.29085681426106, 76, Math.toRadians(180)); // note -> currently 76 = y + 8
-    public static Pose intake1Pose = new Pose(140, 76, Math.toRadians(180)); // note -> currently 76 = y + 8, 140 = x + 5
-    public static Pose leave1Pose = new Pose(140, 80, Math.toRadians(45)); // currently 140 = x + 5
+    public static Pose lineUp1Pose = new Pose(93.29085681426106, 68, Math.toRadians(180)); // note -> currently 76 = y + 8
+    public static Pose intake1Pose = new Pose(130, 68, Math.toRadians(180)); // note -> currently 76 = y + 8, 140 = x + 5
+    public static Pose leave1Pose = new Pose(130, 80, Math.toRadians(45)); // currently 140 = x + 5
 
     public Path preloadPath, lineUp1Path, intake1Path, intermediatePath, score1Path, leave1Path;
 
