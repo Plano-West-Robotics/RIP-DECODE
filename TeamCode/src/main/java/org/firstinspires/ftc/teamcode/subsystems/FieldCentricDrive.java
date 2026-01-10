@@ -22,7 +22,7 @@ public class FieldCentricDrive
 
     public void update(Gamepads gamepads)
     {
-        if (gamepads.isPressed(Button.GP1_DPAD_RIGHT))
+        if (gamepads.justPressed(Button.GP1_DPAD_RIGHT))
         {
             resetHeading();
         }

@@ -29,7 +29,7 @@ public class MainComp extends BaseTeleOp
         WEBCAM_SHOOTING
     }
 
-    public RobotCentricDrive drive;
+    public FieldCentricDrive drive;
     public Intake intake;
     public Outtake outtake;
     public AprilTagWebcam webcam;
@@ -40,7 +40,7 @@ public class MainComp extends BaseTeleOp
     @Override
     public void setup()
     {
-        drive = new RobotCentricDrive(hardware);
+        drive = new FieldCentricDrive(hardware);
         intake = new Intake(hardware);
         outtake = new Outtake(hardware);
         webcam = new AprilTagWebcam(hardware, AprilTagWebcam.RED_GOAL_ID);
@@ -190,7 +190,7 @@ public class MainComp extends BaseTeleOp
     public void start()
     {
         fsm.start();
-        //drive.resetHeading();
+        drive.resetHeading();
     }
 
     @Override
@@ -203,6 +203,6 @@ public class MainComp extends BaseTeleOp
         telemetry.addData("Goal Color", webcam.getGoalId() == AprilTagWebcam.RED_GOAL_ID ? "RED" : "BLUE");
         telemetry.addData("Outtake Motor Angular Velocity (ticks/sec)", ((DcMotorEx) outtake.motor.motor).getVelocity());
         telemetry.addData("Outtake Motor Angular Velocity (rev/min)", ((DcMotorEx) outtake.motor.motor).getVelocity() * 60 * (1 / Outtake.TICKS_PER_REVOLUTION));
-       // telemetry.addData("IMU Yaw (Degrees)", drive.getHeading(AngleUnit.DEGREES));
+        telemetry.addData("IMU Yaw (Degrees)", drive.getHeading(AngleUnit.DEGREES));
     }
 }

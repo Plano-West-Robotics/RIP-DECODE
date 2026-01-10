@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.auton.comp;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
@@ -11,7 +10,6 @@ import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.core.control.Button;
 import org.firstinspires.ftc.teamcode.core.control.Gamepads;
@@ -24,7 +22,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @Autonomous
-public class TestingAuto extends OpMode
+public class RedAuto extends OpMode
 {
     public Hardware hardware;
     public Gamepads gamepads;
@@ -110,7 +108,7 @@ public class TestingAuto extends OpMode
 
         intake1Path = new Path(new BezierLine(lineUp1Pose, intake1Pose));
         intake1Path.setConstantHeadingInterpolation(Math.toRadians(180));
-        intake1Path.setVelocityConstraint(5);
+        intake1Path.setVelocityConstraint(7.5);
 
 
         score1Path = new Path(new BezierLine(intake1Pose, scorePose));
@@ -130,6 +128,7 @@ public class TestingAuto extends OpMode
             case TO_PRELOAD_SCORE:
                 if (!follower.isBusy())
                 {
+                    ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE);
                     pathState = PathState.AT_PRELOAD_SCORE;
                     pathTimer.resetTimer();
                 }
@@ -168,6 +167,7 @@ public class TestingAuto extends OpMode
             case TO_LINEUP1:
                 if (!follower.isBusy())
                 {
+                    outtake.motor.setPower(0);
                     follower.followPath(intake1Path);
                     pathState = PathState.TO_INTAKE1;
                 }
