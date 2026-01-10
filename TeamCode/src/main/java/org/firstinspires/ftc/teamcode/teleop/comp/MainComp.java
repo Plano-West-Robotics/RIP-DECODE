@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.subsystems.AprilTagWebcam;
 import org.firstinspires.ftc.teamcode.subsystems.FieldCentricDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
+import org.firstinspires.ftc.teamcode.subsystems.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.teleop.BaseTeleOp;
 import org.firstinspires.ftc.teamcode.teleop.tune.DashboardWebcamBearingPIDFTuner;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -28,7 +29,7 @@ public class MainComp extends BaseTeleOp
         WEBCAM_SHOOTING
     }
 
-    public FieldCentricDrive drive;
+    public RobotCentricDrive drive;
     public Intake intake;
     public Outtake outtake;
     public AprilTagWebcam webcam;
@@ -39,7 +40,7 @@ public class MainComp extends BaseTeleOp
     @Override
     public void setup()
     {
-        drive = new FieldCentricDrive(hardware);
+        drive = new RobotCentricDrive(hardware);
         intake = new Intake(hardware);
         outtake = new Outtake(hardware);
         webcam = new AprilTagWebcam(hardware, AprilTagWebcam.RED_GOAL_ID);
@@ -189,7 +190,7 @@ public class MainComp extends BaseTeleOp
     public void start()
     {
         fsm.start();
-        drive.resetHeading();
+        //drive.resetHeading();
     }
 
     @Override
@@ -197,10 +198,11 @@ public class MainComp extends BaseTeleOp
     {
         fsm.update();
         telemetry.addData("Current State", fsm.getState());
+        telemetry.addData("Threshold Exceeded", gamepads.exceedsThreshold(Analog.GP1_RIGHT_TRIGGER, Outtake.TRIGGER_THRESHOLD));
         telemetry.addData("Outtake Mode", outtake.getMode());
         telemetry.addData("Goal Color", webcam.getGoalId() == AprilTagWebcam.RED_GOAL_ID ? "RED" : "BLUE");
         telemetry.addData("Outtake Motor Angular Velocity (ticks/sec)", ((DcMotorEx) outtake.motor.motor).getVelocity());
         telemetry.addData("Outtake Motor Angular Velocity (rev/min)", ((DcMotorEx) outtake.motor.motor).getVelocity() * 60 * (1 / Outtake.TICKS_PER_REVOLUTION));
-        telemetry.addData("IMU Yaw (Degrees)", drive.getHeading(AngleUnit.DEGREES));
+       // telemetry.addData("IMU Yaw (Degrees)", drive.getHeading(AngleUnit.DEGREES));
     }
 }
