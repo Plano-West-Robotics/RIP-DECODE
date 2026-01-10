@@ -161,7 +161,11 @@ public class RedAuto extends OpMode
                 }
                 break;
             case TO_SCORE1:
-                if (!follower.isBusy()) pathState = PathState.AT_SCORE1;
+                if (!follower.isBusy())
+                {
+                    pathState = PathState.AT_SCORE1;
+                    pathTimer.resetTimer();
+                }
                 break;
             case AT_SCORE1:
                 shoot();
