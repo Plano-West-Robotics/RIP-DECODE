@@ -20,6 +20,7 @@ public class DrivetrainMotors
         bl = new MotorWrapper(hardwareMap, "bl", true);
 
         fl.reverse();
+        bl.reverse();
 
         motors = new MotorWrapper[] {fr, fl, br, bl};
 

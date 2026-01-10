@@ -11,13 +11,15 @@ public class Intake
     public static final double REGULAR_POWER = 0.5;
 
     public MotorWrapper motor;
-    public double motorPower = REGULAR_POWER;
+    public double motorPower;
     public boolean isSpinning;
+    public double oldPower;
 
     public Intake(Hardware hardware)
     {
         motor = hardware.intakeMotor;
         motor.reverse();
+        motorPower = REGULAR_POWER;
         isSpinning = false;
     }
 
@@ -85,6 +87,19 @@ public class Intake
             {
                 motorPower = Math.signum(motorPower) * LAUNCH_POWER;
             }
+        }
+
+        if (gamepads.justPressed(Button.GP2_Y))
+        {
+            oldPower = motorPower;
+            motorPower = -REGULAR_POWER;
+            isSpinning = true;
+        }
+
+        if (gamepads.justReleased(Button.GP2_Y))
+        {
+            motorPower = oldPower;
+            isSpinning = motorPower != 0;
         }
 
         updateMotor();

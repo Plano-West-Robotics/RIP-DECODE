@@ -17,23 +17,24 @@ public class Constants {
     public static FollowerConstants followerConstants = new FollowerConstants().
             mass(9.706876718)
 //            .forwardZeroPowerAcceleration(-62.7355128)
-//            .lateralZeroPowerAcceleration(-65.5597599)
+            .lateralZeroPowerAcceleration(-57.93669)
             .forwardZeroPowerAcceleration(-34.5)
-            .translationalPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0.01, 0))
-            .headingPIDFCoefficients(new PIDFCoefficients(0.8, 0, 0.01, 0.01))
-            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.001, 0, 0.0001, 0.6, 0))
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.08, 0, 0.0048, 0.01))
+            .headingPIDFCoefficients(new PIDFCoefficients(1, 0, 0.01, 0.02))
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.007, 0, 0.0003, 0.6, 0.01))
+//            .centripetalScaling(0.022);
             .centripetalScaling(0.007);
 
     public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
 
     public static MecanumConstants driveConstants = new MecanumConstants()
-            .maxPower(1)
+            .maxPower(0.6)
             .rightFrontMotorName("fr")
             .rightRearMotorName("br")
             .leftRearMotorName("bl")
             .leftFrontMotorName("fl")
             .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .leftRearMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
 //            .xVelocity(50.674863877)
@@ -52,7 +53,7 @@ public class Constants {
                     )
             )
             .strafePodX(3.3125)
-            .forwardPodY(4) // TODO: Remeasure this
+            .forwardPodY(4)
             .forwardEncoderDirection(Encoder.REVERSE)
             .strafeEncoderDirection(Encoder.FORWARD)
 //            .forwardTicksToInches(0.00195616)
