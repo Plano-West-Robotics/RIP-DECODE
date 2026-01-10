@@ -35,11 +35,11 @@ public class RedAuto extends OpMode
     public Follower follower;
     public static Pose startPose = new Pose(122.1927409261577, 124.35544430538174, Math.toRadians(37));
     public static Pose scorePose = new Pose(95.77570093457945, 104.74766355140187, Math.toRadians(37));
-    public static Pose lineUp1Pose = new Pose(93.29085681426106, 68, Math.toRadians(180));
-    public static Pose intake1Pose = new Pose(135, 68, Math.toRadians(180));
-    public static Pose leave1Pose = new Pose(135, 80, Math.toRadians(45));
+    public static Pose lineUp1Pose = new Pose(93.29085681426106, 76, Math.toRadians(180)); // note -> currently 76 = y + 8
+    public static Pose intake1Pose = new Pose(140, 76, Math.toRadians(180)); // note -> currently 76 = y + 8, 140 = x + 5
+    public static Pose leave1Pose = new Pose(140, 80, Math.toRadians(45)); // currently 140 = x + 5
 
-    public Path preloadPath, lineUp1Path, intake1Path, score1Path, leave1Path;
+    public Path preloadPath, lineUp1Path, intake1Path, intermediatePath, score1Path, leave1Path;
 
     public PathState pathState = PathState.START;
 
@@ -52,6 +52,7 @@ public class RedAuto extends OpMode
         AT_PRELOAD_SCORE,
         TO_LINEUP1,
         TO_INTAKE1,
+        TO_INTERMEDIATE1,
         TO_SCORE1,
         AT_SCORE1,
         LEAVE_LINE,
@@ -108,9 +109,11 @@ public class RedAuto extends OpMode
         intake1Path.setConstantHeadingInterpolation(intake1Pose.getHeading());
         intake1Path.setVelocityConstraint(AutonConstants.INTAKE_1_VEL_CONSTRAINT);
 
+        intermediatePath = new Path(new BezierLine(intake1Pose, lineUp1Pose));
+        intermediatePath.setConstantHeadingInterpolation(intake1Pose.getHeading());
 
-        score1Path = new Path(new BezierLine(intake1Pose, scorePose));
-        score1Path.setLinearHeadingInterpolation(intake1Pose.getHeading(), scorePose.getHeading());
+        score1Path = new Path(new BezierLine(lineUp1Pose, scorePose));
+        score1Path.setLinearHeadingInterpolation(lineUp1Pose.getHeading(), scorePose.getHeading());
 
         leave1Path = new Path(new BezierLine(scorePose, leave1Pose));
         leave1Path.setConstantHeadingInterpolation(scorePose.getHeading());
@@ -156,6 +159,13 @@ public class RedAuto extends OpMode
                 if (!follower.isBusy())
                 {
                     intake.stop();
+                    follower.followPath(intermediatePath);
+                    pathState = PathState.TO_INTERMEDIATE1;
+                }
+                break;
+            case TO_INTERMEDIATE1:
+                if (!follower.isBusy())
+                {
                     follower.followPath(score1Path);
                     pathState = PathState.TO_SCORE1;
                 }

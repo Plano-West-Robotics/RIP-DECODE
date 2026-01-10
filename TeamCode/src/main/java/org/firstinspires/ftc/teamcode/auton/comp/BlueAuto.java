@@ -39,7 +39,7 @@ public class BlueAuto extends OpMode
     public Pose intake1Pose = AutonConstants.mirror(RedAuto.intake1Pose);
     public Pose leave1Pose = AutonConstants.mirror(RedAuto.leave1Pose);
 
-    public Path preloadPath, lineUp1Path, intake1Path, score1Path, leave1Path;
+    public Path preloadPath, lineUp1Path, intake1Path, intermediatePath, score1Path, leave1Path;
 
     public PathState pathState = PathState.START;
 
@@ -52,6 +52,7 @@ public class BlueAuto extends OpMode
         AT_PRELOAD_SCORE,
         TO_LINEUP1,
         TO_INTAKE1,
+        TO_INTERMEDIATE1,
         TO_SCORE1,
         AT_SCORE1,
         LEAVE_LINE,
@@ -108,9 +109,11 @@ public class BlueAuto extends OpMode
         intake1Path.setConstantHeadingInterpolation(intake1Pose.getHeading());
         intake1Path.setVelocityConstraint(AutonConstants.INTAKE_1_VEL_CONSTRAINT);
 
+        intermediatePath = new Path(new BezierLine(intake1Pose, lineUp1Pose));
+        intermediatePath.setConstantHeadingInterpolation(intake1Pose.getHeading());
 
-        score1Path = new Path(new BezierLine(intake1Pose, scorePose));
-        score1Path.setLinearHeadingInterpolation(intake1Pose.getHeading(), scorePose.getHeading());
+        score1Path = new Path(new BezierLine(lineUp1Pose, scorePose));
+        score1Path.setLinearHeadingInterpolation(lineUp1Pose.getHeading(), scorePose.getHeading());
 
         leave1Path = new Path(new BezierLine(scorePose, leave1Pose));
         leave1Path.setConstantHeadingInterpolation(scorePose.getHeading());
@@ -156,6 +159,13 @@ public class BlueAuto extends OpMode
                 if (!follower.isBusy())
                 {
                     intake.stop();
+                    follower.followPath(intermediatePath);
+                    pathState = PathState.TO_INTERMEDIATE1;
+                }
+                break;
+            case TO_INTERMEDIATE1:
+                if (!follower.isBusy())
+                {
                     follower.followPath(score1Path);
                     pathState = PathState.TO_SCORE1;
                 }
