@@ -7,6 +7,7 @@ import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
+import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -31,13 +32,13 @@ public class TestingAuto extends OpMode
     public Outtake outtake;
     public AprilTagWebcam webcam;
 
-    public ElapsedTime pathTimer;
+    public Timer pathTimer;
 
     public Follower follower;
     public Pose startPose = new Pose(122.1927409261577, 124.35544430538174, Math.toRadians(37));
-    public Pose scorePose = new Pose(93.29085681426106, 101.68035043804761, Math.toRadians(45));
-    public Pose lineUp1Pose = new Pose(101, 83.58378378378379, Math.toRadians(180));
-    public Pose intake1Pose = new Pose(126.3, 83.58378378378379, Math.toRadians(180));
+    public Pose scorePose = new Pose(95.77570093457945, 104.74766355140187, Math.toRadians(45));
+    public Pose lineUp1Pose = new Pose(93.29085681426106, 68, Math.toRadians(180));
+    public Pose intake1Pose = new Pose(135, 68, Math.toRadians(180));
 
     public Path preloadPath, lineUp1Path, intake1Path, score1Path;
 
@@ -70,7 +71,7 @@ public class TestingAuto extends OpMode
         outtake = new Outtake(hardware);
         webcam = new AprilTagWebcam(hardware, AprilTagWebcam.RED_GOAL_ID);
 
-        pathTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+        pathTimer = new Timer();
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -109,6 +110,8 @@ public class TestingAuto extends OpMode
 
         intake1Path = new Path(new BezierLine(lineUp1Pose, intake1Pose));
         intake1Path.setConstantHeadingInterpolation(Math.toRadians(180));
+        intake1Path.setVelocityConstraint(10);
+
 
         score1Path = new Path(new BezierLine(intake1Pose, scorePose));
         score1Path.setLinearHeadingInterpolation(intake1Pose.getHeading(), scorePose.getHeading());
@@ -128,12 +131,33 @@ public class TestingAuto extends OpMode
                 if (!follower.isBusy())
                 {
                     pathState = PathState.AT_PRELOAD_SCORE;
-                    pathTimer.reset();
+                    pathTimer.resetTimer();
                 }
                 break;
             case AT_PRELOAD_SCORE:
-                if (shoot(PathState.PRELOAD_LAUNCH)) numShot++;
-                if (numShot >= 3)
+                AprilTagDetection detection = webcam.getGoalDetection();
+                if (detection != null)
+                {
+                    webcam.updateRange(detection.ftcPose.range);
+                    double targetAngularRate = Outtake.toAngularRate(Outtake.calculateIdealFlywheelTangentialVelocity(webcam.getRange()));
+                    ((DcMotorEx) outtake.motor.motor).setVelocity(targetAngularRate);
+                    double error = ((DcMotorEx) outtake.motor.motor).getVelocity() - targetAngularRate;
+
+                    if (Math.abs(error) < Outtake.ANGULAR_RATE_ERROR_TOLERANCE)
+                    {
+                        intake.forwardLaunch();
+                    }
+                    else
+                    {
+                        intake.stop();
+                    }
+
+                    telemetry.addData("Range", webcam.getRange());
+                    telemetry.addData("Target Angular Rate", targetAngularRate);
+                    telemetry.addData("Error", error);
+                    telemetry.addData("Time ", pathTimer.getElapsedTimeSeconds());
+                }
+                if (pathTimer.getElapsedTimeSeconds() > 8)
                 {
                     intake.forwardRegular();
                     outtake.motor.setPower(0);
@@ -160,14 +184,14 @@ public class TestingAuto extends OpMode
                 if (!follower.isBusy()) pathState = PathState.AT_SCORE1;
                 break;
             case AT_SCORE1:
-                shoot(PathState.TO_LINEUP2);
+                shoot();
                 break;
             case TO_LINEUP2:
                 break;
         }
     }
 
-    public boolean shoot(PathState state)
+    public boolean shoot()
     {
         boolean successfullyShot = false;
 
@@ -182,7 +206,10 @@ public class TestingAuto extends OpMode
             if (Math.abs(error) < Outtake.ANGULAR_RATE_ERROR_TOLERANCE)
             {
                 intake.forwardLaunch();
-                successfullyShot = true;
+            }
+            else
+            {
+                intake.stop();
             }
 
             telemetry.addData("Range", webcam.getRange());
