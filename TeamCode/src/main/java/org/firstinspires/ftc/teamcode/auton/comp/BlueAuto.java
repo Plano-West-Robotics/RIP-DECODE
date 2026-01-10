@@ -22,7 +22,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @Autonomous
-public class RedAuto extends OpMode
+public class BlueAuto extends OpMode
 {
     public Hardware hardware;
     public Gamepads gamepads;
@@ -33,11 +33,11 @@ public class RedAuto extends OpMode
     public Timer pathTimer;
 
     public Follower follower;
-    public static Pose startPose = new Pose(122.1927409261577, 124.35544430538174, Math.toRadians(37));
-    public static Pose scorePose = new Pose(95.77570093457945, 104.74766355140187, Math.toRadians(37));
-    public static Pose lineUp1Pose = new Pose(93.29085681426106, 68, Math.toRadians(180));
-    public static Pose intake1Pose = new Pose(135, 68, Math.toRadians(180));
-    public static Pose leave1Pose = new Pose(135, 80, Math.toRadians(45));
+    public Pose startPose = AutonConstants.mirror(RedAuto.startPose);
+    public Pose scorePose = AutonConstants.mirror(RedAuto.scorePose);
+    public Pose lineUp1Pose = AutonConstants.mirror(RedAuto.lineUp1Pose);
+    public Pose intake1Pose = AutonConstants.mirror(RedAuto.intake1Pose);
+    public Pose leave1Pose = AutonConstants.mirror(RedAuto.leave1Pose);
 
     public Path preloadPath, lineUp1Path, intake1Path, score1Path, leave1Path;
 
@@ -65,7 +65,7 @@ public class RedAuto extends OpMode
         gamepads = new Gamepads(gamepad1, gamepad2);
         intake = new Intake(hardware);
         outtake = new Outtake(hardware);
-        webcam = new AprilTagWebcam(hardware, AprilTagWebcam.RED_GOAL_ID);
+        webcam = new AprilTagWebcam(hardware, AprilTagWebcam.BLUE_GOAL_ID);
 
         pathTimer = new Timer();
 
