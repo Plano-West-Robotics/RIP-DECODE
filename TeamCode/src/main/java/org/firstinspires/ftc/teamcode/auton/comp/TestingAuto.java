@@ -110,7 +110,7 @@ public class TestingAuto extends OpMode
 
         intake1Path = new Path(new BezierLine(lineUp1Pose, intake1Pose));
         intake1Path.setConstantHeadingInterpolation(Math.toRadians(180));
-        intake1Path.setVelocityConstraint(10);
+        intake1Path.setVelocityConstraint(5);
 
 
         score1Path = new Path(new BezierLine(intake1Pose, scorePose));
