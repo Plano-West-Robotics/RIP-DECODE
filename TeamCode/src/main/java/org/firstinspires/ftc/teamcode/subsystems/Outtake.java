@@ -42,7 +42,7 @@ public class Outtake
      * Scales the theoretically required velocity to account for inefficient energy transfer. This
      * is tested empirically.
      */
-    public static final double VELOCITY_MULTIPLIER = 2.5;
+    public static final double VELOCITY_MULTIPLIER = 2.47;
 
     public MotorWrapper motor;
     public ControlMode mode;
@@ -96,7 +96,7 @@ public class Outtake
             P,
             I,
             D,
-            F * (IDEAL_VOLTAGE / batteryVoltage));
+            F); //* (IDEAL_VOLTAGE / batteryVoltage));
     }
 
     /**

@@ -9,6 +9,7 @@ public class Intake
 {
     public static final double LAUNCH_POWER = 1;
     public static final double REGULAR_POWER = 0.5;
+    public static final double SLOW_POWER= 0.3;
 
     public MotorWrapper motor;
     public double motorPower;
@@ -23,6 +24,13 @@ public class Intake
         isSpinning = false;
     }
 
+    public void forwardSlow()
+    {
+        motorPower = SLOW_POWER;
+        isSpinning = true;
+        updateMotor();
+    }
+
     public void forwardRegular()
     {
         motorPower = REGULAR_POWER;
@@ -33,6 +41,13 @@ public class Intake
     public void forwardLaunch()
     {
         motorPower = LAUNCH_POWER;
+        isSpinning = true;
+        updateMotor();
+    }
+
+    public void reverseSlow()
+    {
+        motorPower = -SLOW_POWER;
         isSpinning = true;
         updateMotor();
     }

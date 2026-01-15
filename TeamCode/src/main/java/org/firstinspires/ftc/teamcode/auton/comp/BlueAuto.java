@@ -35,8 +35,8 @@ public class BlueAuto extends OpMode
     public Follower follower;
     public Pose startPose = AutonConstants.mirror(RedAuto.startPose);
     public Pose scorePose = AutonConstants.mirror(RedAuto.scorePose);
-    public Pose lineUp1Pose = AutonConstants.mirror(new Pose(RedAuto.lineUp1Pose.getX(), RedAuto.lineUp1Pose.getY() + 8, RedAuto.lineUp1Pose.getHeading()));
-    public Pose intake1Pose = AutonConstants.mirror(new Pose(RedAuto.intake1Pose.getX(), RedAuto.intake1Pose.getY() + 8, RedAuto.intake1Pose.getHeading()));
+    public Pose lineUp1Pose = AutonConstants.mirrorShift(RedAuto.lineUp1Pose, 0, 8);
+    public Pose intake1Pose = AutonConstants.mirrorShift(RedAuto.intake1Pose, 0, 8);
     public Pose leave1Pose = AutonConstants.mirror(RedAuto.leave1Pose);
 
     public Path preloadPath, lineUp1Path, intake1Path, intermediatePath, score1Path, leave1Path;
