@@ -133,9 +133,9 @@ public class BlueAuto extends OpMode
                 pathState = PathState.TO_PRELOAD_SCORE;
                 break;
             case TO_PRELOAD_SCORE:
+                ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE);
                 if (!follower.isBusy())
                 {
-                    ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE);
                     pathState = PathState.AT_PRELOAD_SCORE;
                     pathTimer.resetTimer();
                 }
@@ -144,7 +144,7 @@ public class BlueAuto extends OpMode
                 shoot();
                 if (pathTimer.getElapsedTimeSeconds() > AutonConstants.SHOOT_THREE_BALLS_SECONDS)
                 {
-                    intake.forwardRegular();
+                    intake.forwardSlow();
                     outtake.motor.setPower(0);
                     follower.followPath(lineUp1Path);
                     pathState = PathState.TO_LINEUP1;
@@ -153,7 +153,7 @@ public class BlueAuto extends OpMode
             case TO_LINEUP1:
                 if (!follower.isBusy())
                 {
-                    outtake.motor.setPower(0);
+                    ((DcMotorEx) outtake.motor.motor).setVelocity(0);
                     follower.followPath(intake1Path);
                     pathState = PathState.TO_INTAKE1;
                 }
@@ -161,12 +161,14 @@ public class BlueAuto extends OpMode
             case TO_INTAKE1:
                 if (!follower.isBusy())
                 {
-                    intake.stop();
+                    ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE);
                     follower.followPath(intermediatePath);
                     pathState = PathState.TO_INTERMEDIATE1;
+                    pathTimer.resetTimer();
                 }
                 break;
             case TO_INTERMEDIATE1:
+                if (pathTimer.getElapsedTimeSeconds() >= AutonConstants.DISABLE_INTAKE_SECONDS) intake.stop();
                 if (!follower.isBusy())
                 {
                     follower.followPath(score1Path);
@@ -186,7 +188,7 @@ public class BlueAuto extends OpMode
                 {
                     intake.forwardRegular();
                     outtake.motor.setPower(0);
-                    follower.followPath(leave1Path);
+                    follower.followPath(leave1Path, true);
                     pathState = PathState.LEAVE_LINE;
                 }
                 break;
@@ -199,6 +201,7 @@ public class BlueAuto extends OpMode
                 break;
             case STOP:
                 ((DcMotorEx) outtake.motor.motor).setVelocity(0);
+                intake.stop();
                 break;
         }
     }
