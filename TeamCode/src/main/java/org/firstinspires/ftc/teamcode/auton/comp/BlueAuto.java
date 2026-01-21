@@ -24,6 +24,12 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 @Autonomous
 public class BlueAuto extends OpMode
 {
+    public static Pose startPose = AutonConstants.mirror(RedAuto.startPose);
+    public static Pose scorePose = AutonConstants.mirror(RedAuto.scorePose);
+    public static Pose lineUp1Pose = AutonConstants.mirrorShift(RedAuto.lineUp1Pose, 0, 8);
+    public static Pose intake1Pose = AutonConstants.mirrorShift(RedAuto.intake1Pose, 0, 8);
+    public static Pose leave1Pose = AutonConstants.mirror(RedAuto.leave1Pose);
+
     public Hardware hardware;
     public Gamepads gamepads;
     public Intake intake;
@@ -33,15 +39,10 @@ public class BlueAuto extends OpMode
     public Timer pathTimer;
 
     public Follower follower;
-    public Pose startPose = AutonConstants.mirror(RedAuto.startPose);
-    public Pose scorePose = AutonConstants.mirror(RedAuto.scorePose);
-    public Pose lineUp1Pose = AutonConstants.mirrorShift(RedAuto.lineUp1Pose, 0, 8);
-    public Pose intake1Pose = AutonConstants.mirrorShift(RedAuto.intake1Pose, 0, 8);
-    public Pose leave1Pose = AutonConstants.mirror(RedAuto.leave1Pose);
 
     public Path preloadPath, lineUp1Path, intake1Path, intermediatePath, score1Path, leave1Path;
 
-    public PathState pathState = PathState.START;
+    public PathState pathState;
 
     public int numShot = 0;
 
@@ -75,6 +76,8 @@ public class BlueAuto extends OpMode
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
         follower.setStartingPose(startPose);
+
+        pathState = PathState.START;
     }
 
     @Override
