@@ -114,7 +114,7 @@ public class RedAuto extends OpMode
         intermediatePath = new Path(new BezierLine(intake1Pose, lineUp1Pose));
         intermediatePath.setConstantHeadingInterpolation(intake1Pose.getHeading());
 
-        score1Path = new Path(new BezierLine(lineUp1Pose, scorePose));
+        score1Path = new Path(new BezierLine(intake1Pose, scorePose));
         score1Path.setLinearHeadingInterpolation(lineUp1Pose.getHeading(), scorePose.getHeading());
 
         leave1Path = new Path(new BezierLine(scorePose, leave1Pose));
@@ -161,8 +161,8 @@ public class RedAuto extends OpMode
                 if (!follower.isBusy())
                 {
                     ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE);
-                    follower.followPath(intermediatePath);
-                    pathState = PathState.TO_INTERMEDIATE1;
+                    follower.followPath(score1Path);
+                    pathState = PathState.TO_SCORE1;
                     pathTimer.resetTimer();
                 }
                 break;
@@ -175,6 +175,7 @@ public class RedAuto extends OpMode
                 }
                 break;
             case TO_SCORE1:
+                if (pathTimer.getElapsedTimeSeconds() >= AutonConstants.DISABLE_INTAKE_SECONDS) intake.stop();
                 if (!follower.isBusy())
                 {
                     pathState = PathState.AT_SCORE1;
