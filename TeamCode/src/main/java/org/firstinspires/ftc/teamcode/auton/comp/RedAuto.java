@@ -24,6 +24,12 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 @Autonomous
 public class RedAuto extends OpMode
 {
+    public static Pose startPose = new Pose(122.1927409261577, 124.35544430538174, Math.toRadians(37));
+    public static Pose scorePose = new Pose(94.77570093457945, 104.74766355140187, Math.toRadians(37));
+    public static Pose lineUp1Pose = new Pose(93.29085681426106, AutonConstants.PICKUP_Y_POS_1, Math.toRadians(180));
+    public static Pose intake1Pose = new Pose(129, AutonConstants.PICKUP_Y_POS_1, Math.toRadians(180));
+    public static Pose leave1Pose = new Pose(120, 80, Math.toRadians(45));
+
     public Hardware hardware;
     public Gamepads gamepads;
     public Intake intake;
@@ -32,18 +38,11 @@ public class RedAuto extends OpMode
 
     public Timer pathTimer;
 
-    public static double pickUpYPos1 = 70;
-
     public Follower follower;
-    public static Pose startPose = new Pose(122.1927409261577, 124.35544430538174, Math.toRadians(37));
-    public static Pose scorePose = new Pose(94.77570093457945, 104.74766355140187, Math.toRadians(37));
-    public static Pose lineUp1Pose = new Pose(93.29085681426106, pickUpYPos1, Math.toRadians(180));
-    public static Pose intake1Pose = new Pose(129, pickUpYPos1, Math.toRadians(180));
-    public static Pose leave1Pose = new Pose(120, 80, Math.toRadians(45));
 
     public Path preloadPath, lineUp1Path, intake1Path, intermediatePath, score1Path, leave1Path;
 
-    public PathState pathState = PathState.START;
+    public PathState pathState;
 
     public int numShot = 0;
 
@@ -77,6 +76,8 @@ public class RedAuto extends OpMode
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
         follower.setStartingPose(startPose);
+
+        pathState = PathState.START;
     }
 
     @Override

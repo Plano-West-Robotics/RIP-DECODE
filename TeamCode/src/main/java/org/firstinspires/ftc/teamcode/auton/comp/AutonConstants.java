@@ -7,6 +7,7 @@ public class AutonConstants
     public static final double INTAKE_1_VEL_CONSTRAINT = 4;
     public static final double SHOOT_THREE_BALLS_SECONDS = 5.8;
     public static final double DISABLE_INTAKE_SECONDS = 0.325;
+    public static final double PICKUP_Y_POS_1 = 70;
 
     public static Pose mirror(Pose p)
     {
