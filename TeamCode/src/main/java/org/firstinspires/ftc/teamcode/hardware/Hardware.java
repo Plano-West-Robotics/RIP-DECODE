@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.core.wrappers.MotorWrapper;
+import org.firstinspires.ftc.teamcode.core.wrappers.ServoPairWrapper;
 
 public class Hardware
 {
@@ -16,6 +17,7 @@ public class Hardware
     public DrivetrainMotors drivetrainMotors;
     public MotorWrapper intakeMotor, outtakeMotor;
     public VoltageSensor vs;
+    public ServoPairWrapper stoppers;
 
     public Hardware(HardwareMap hardwareMap)
     {
@@ -36,5 +38,7 @@ public class Hardware
         intakeMotor = new MotorWrapper(hardwareMap, "i", false);
 
         outtakeMotor = new MotorWrapper(hardwareMap, "o", false);
+
+        stoppers = new ServoPairWrapper(hardwareMap, "stopL", "stopR", /*TODO: arbitrary*/ 0.5);
     }
 }
