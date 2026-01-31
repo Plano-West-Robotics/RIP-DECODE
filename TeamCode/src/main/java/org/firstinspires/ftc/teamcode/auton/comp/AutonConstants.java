@@ -4,10 +4,12 @@ import com.pedropathing.geometry.Pose;
 
 public class AutonConstants
 {
-    public static final double INTAKE_1_VEL_CONSTRAINT = 4;
-    public static final double SHOOT_THREE_BALLS_SECONDS = 5.8;
-    public static final double DISABLE_INTAKE_SECONDS = 0.325;
-    public static final double PICKUP_Y_POS_1 = 70;
+    public static final double INTAKE_1_VEL_CONSTRAINT = 3.1;
+    public static final double PRELOAD_SCORE_TIME = 4.8;
+    public static final double FIRST_THREE_SCORE_TIME = 6.3;
+    public static final double DISABLE_INTAKE_SECONDS = 0.35;
+    public static final double PICKUP_Y_POS_1 = 70.5;
+    public static final double REVERSE_INTAKE_SECONDS = 0.2;
 
     public static Pose mirror(Pose p)
     {

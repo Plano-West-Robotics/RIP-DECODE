@@ -32,9 +32,9 @@ public class Outtake
     public static final double EXTRA_DISTANCE = 0.1905; // the distance from the april tag to the center of the goal from a bird's-eye' view
 
 //    Values from tuning guide from 2019
-    public static final double F = 32767 / MAX_ANGULAR_RATE;
-    public static final double P = 2;
-    public static final double I = 0.1 * 0.1 * F;
+    public static final double F = 16;
+    public static final double P = 5;
+    public static final double I = 0;
     public static final double D = 0;
 
     public static final double IDEAL_VOLTAGE = 13.5;
