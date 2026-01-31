@@ -25,11 +25,12 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 @Autonomous(preselectTeleOp = "MainComp", group = "Comp")
 public class FarAuto extends OpMode
 {
-    public Pose startPose = new Pose(80, 9, Math.toRadians(90));
-    public Pose scorePose = new Pose(80, 33, Math.toRadians(63));
-    public Pose lineUp1Pose = AutonConstants.RED_LINEUP_1;
-    public Pose intake1Pose = AutonConstants.RED_INTAKE_1;
-    public Pose leave1Pose = AutonConstants.RED_LEAVE_1;
+    public Pose startPose = AutonConstants.FAR_RED_START;
+    public Pose scorePose = AutonConstants.FAR_RED_SCORE;
+    public Pose lineUp1Pose = AutonConstants.FAR_RED_LINEUP;
+    public Pose intake1Pose = AutonConstants.FAR_RED_INTAKE;
+    public Pose backToScorePose = AutonConstants.FAR_RED_SCORE_1;
+
 
     public Hardware hardware;
     public RightStopper rightStopper;
@@ -42,7 +43,7 @@ public class FarAuto extends OpMode
 
     public Follower follower;
 
-    public Path preloadPath, lineUp1Path, intake1Path, intermediatePath, score1Path, leave1Path;
+    public Path preloadPath, lineUp1Path, intake1Path, score1Path;
 
     public PathState pathState;
 
@@ -50,18 +51,17 @@ public class FarAuto extends OpMode
 
     public boolean isRed = true;
     public boolean score1ReverseLaunchDone = false;
+    public boolean disableAuto = false;
 
     public enum PathState
     {
         START,
         TO_PRELOAD_SCORE,
         AT_PRELOAD_SCORE,
-        TO_LINEUP1,
+        TO_LINEUP,
         TO_INTAKE1,
-        TO_INTERMEDIATE1,
         TO_SCORE1,
         AT_SCORE1,
-        LEAVE_LINE,
         STOP
     }
 
@@ -93,27 +93,33 @@ public class FarAuto extends OpMode
 
             if (isRed)
             {
-                startPose = AutonConstants.mirror(startPose);
-                scorePose = AutonConstants.mirror(scorePose);
-                lineUp1Pose = AutonConstants.BLUE_LINEUP_1;
-                intake1Pose = AutonConstants.BLUE_INTAKE_1;
-                leave1Pose = AutonConstants.BLUE_LEAVE_1;
+                startPose = AutonConstants.FAR_BLUE_START;
+                scorePose = AutonConstants.FAR_BLUE_SCORE;
+                lineUp1Pose = AutonConstants.FAR_BLUE_LINEUP;
+                intake1Pose = AutonConstants.FAR_BLUE_INTAKE;
+                backToScorePose = AutonConstants.FAR_BLUE_SCORE_1;
             }
             else
             {
-                startPose = new Pose(80, 9, Math.toRadians(90));
-                scorePose = new Pose(80, 33, Math.toRadians(63));
-                lineUp1Pose = AutonConstants.RED_LINEUP_1;
-                intake1Pose = AutonConstants.RED_INTAKE_1;
-                leave1Pose = AutonConstants.RED_LEAVE_1;
+                startPose = AutonConstants.FAR_RED_START;
+                scorePose = AutonConstants.FAR_RED_SCORE;
+                lineUp1Pose = AutonConstants.FAR_RED_LINEUP;
+                intake1Pose = AutonConstants.FAR_RED_INTAKE;
+                backToScorePose = AutonConstants.FAR_RED_SCORE_1;
             }
 
             isRed = !isRed;
         }
 
+        if (gamepads.justPressed(Button.GP1_B))
+        {
+            disableAuto = !disableAuto;
+        }
+
         boolean cameraIsReady = webcam.portal.getCameraState() == VisionPortal.CameraState.STREAMING;
         telemetry.addData("Camera Is Ready?", cameraIsReady);
         telemetry.addData("Goal Color", webcam.getGoalId() == AprilTagWebcam.RED_GOAL_ID ? "RED" : "BLUE");
+        telemetry.addData("Auto Disabled", disableAuto);
 
         gamepads.update(gamepad1, gamepad2);
         telemetry.update();
@@ -151,11 +157,9 @@ public class FarAuto extends OpMode
 //        score1Path = new Path(new BezierLine(lineUp1Pose, scorePose));
 //        score1Path.setLinearHeadingInterpolation(lineUp1Pose.getHeading(), scorePose.getHeading());
 
-        score1Path = new Path(new BezierLine(intake1Pose, scorePose));
+        score1Path = new Path(new BezierLine(intake1Pose, backToScorePose));
         score1Path.setLinearHeadingInterpolation(intake1Pose.getHeading(), scorePose.getHeading());
 
-        leave1Path = new Path(new BezierLine(scorePose, leave1Pose));
-        leave1Path.setConstantHeadingInterpolation(scorePose.getHeading());
     }
 
     public void autonomousPaths()
@@ -165,10 +169,18 @@ public class FarAuto extends OpMode
         switch (pathState)
         {
             case START:
-                rightStopper.go();
-                follower.followPath(preloadPath);
-                pathState = PathState.TO_PRELOAD_SCORE;
-                break;
+                if (disableAuto)
+                {
+                    pathState = PathState.STOP;
+                    break;
+                }
+                else
+                {
+                    rightStopper.go();
+                    follower.followPath(preloadPath);
+                    pathState = PathState.TO_PRELOAD_SCORE;
+                    break;
+                }
             case TO_PRELOAD_SCORE:
                 ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE);
                 if (!follower.isBusy())
@@ -179,16 +191,16 @@ public class FarAuto extends OpMode
                 break;
             case AT_PRELOAD_SCORE:
                 shoot(AutonConstants.FAR_TPS);
-                if (pathTimer.getElapsedTimeSeconds() > AutonConstants.PRELOAD_SCORE_TIME)
+                if (pathTimer.getElapsedTimeSeconds() > AutonConstants.FAR_PRELOAD_SCORE_TIME)
                 {
-                    //intake.forwardRegular();
+                    intake.forwardRegular();
 //                    ((DcMotorEx) outtake.motor.motor).setVelocity(0);
-                    //((DcMotorEx) outtake.motor.motor).setVelocity(-800);
-                    //follower.followPath(lineUp1Path);
-                    pathState = PathState.STOP;
+                    ((DcMotorEx) outtake.motor.motor).setVelocity(-800);
+                    follower.followPath(lineUp1Path);
+                    pathState = PathState.TO_LINEUP;
                 }
                 break;
-            /*case TO_LINEUP1:
+            case TO_LINEUP:
                 if (!follower.isBusy())
                 {
 //                    ((DcMotorEx) outtake.motor.motor).setVelocity(0);
@@ -242,23 +254,14 @@ public class FarAuto extends OpMode
                 }
                 rightStopper.go();
                 shoot();
-                if (pathTimer.getElapsedTimeSeconds() > AutonConstants.FIRST_THREE_SCORE_TIME)
+                if (pathTimer.getElapsedTimeSeconds() > AutonConstants.FAR_PRELOAD_SCORE_TIME)
                 {
                     intake.stop();
                     ((DcMotorEx) outtake.motor.motor).setVelocity(0);
-                    follower.followPath(leave1Path, true);
-                    pathState = PathState.LEAVE_LINE;
-                }
-                break;
-            case LEAVE_LINE:
-                if (!follower.isBusy())
-                {
-                    ((DcMotorEx) outtake.motor.motor).setVelocity(0);
+                    follower.followPath(score1Path, true);
                     pathState = PathState.STOP;
                 }
                 break;
-
-             */
             case STOP:
                 intake.stop();
                 ((DcMotorEx) outtake.motor.motor).setVelocity(0);

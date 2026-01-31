@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.core.control.Analog;
 import org.firstinspires.ftc.teamcode.core.control.Button;
 import org.firstinspires.ftc.teamcode.core.control.Gamepads;
 import org.firstinspires.ftc.teamcode.core.wrappers.MotorWrapper;
@@ -11,10 +14,14 @@ public class Intake
     public static final double REGULAR_POWER = 0.8;
     public static final double SLOW_POWER = 0.3;
 
+    public static final double REVERSE_TIME_SEC = 0.5;
+
     public MotorWrapper motor;
     public double motorPower;
     public boolean isSpinning;
+    public boolean timerActive;
     public double oldPower;
+    public ElapsedTime timer;
 
     public Intake(Hardware hardware)
     {
@@ -22,6 +29,7 @@ public class Intake
         motor.reverse();
         motorPower = REGULAR_POWER;
         isSpinning = false;
+        timer = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
     }
 
     public void forwardSlow()
@@ -85,6 +93,21 @@ public class Intake
 
     public void update(Gamepads gamepads)
     {
+       /* if (timerActive)
+        {
+
+        }
+        if (gamepads.justEnteredThreshold(Analog.GP2_RIGHT_TRIGGER, Outtake.TRIGGER_THRESHOLD) && !timerActive)
+        {
+            timerActive = true;
+            reverseSlow();
+        }
+        else if (timerActive)
+        {
+            return;
+        }
+
+*/
         if (gamepads.justPressed(Button.GP2_A)) isSpinning = !isSpinning;
 
         if (gamepads.justPressed(Button.GP2_B))
@@ -119,4 +142,10 @@ public class Intake
 
         updateMotor();
     }
+
+    public double getPower()
+    {
+        return motorPower;
+    }
+
 }

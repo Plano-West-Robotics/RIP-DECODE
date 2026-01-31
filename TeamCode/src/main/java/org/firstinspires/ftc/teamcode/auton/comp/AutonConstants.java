@@ -22,10 +22,26 @@ public class AutonConstants
     public static final double DISABLE_INTAKE_SECONDS = 0.30;
     public static final double PICKUP_Y_POS_1 = 70.5;
     public static final double PICKUP_X_POS = 132.5;
-    public static final double REVERSE_INTAKE_SECONDS = 0.25;
+    public static final double REVERSE_INTAKE_SECONDS = 0.21;
 
-    public static final double FAR_PRELOAD_SCORE_TIME = 12;
-    public static final double FAR_TPS = 1650;
+    public static final double FAR_PRELOAD_SCORE_TIME = 15;
+    public static final double FAR_TPS = 1700;
+    public static final double PICKUP_Y_POS_FAR = 35.5;
+    public static final double SCORE_X_POS_FAR = 80;
+    public static final double SCORE_ANGLE_DEG = 63;
+
+
+    public static final Pose FAR_RED_START = new Pose(SCORE_X_POS_FAR, 9, Math.toRadians(90));
+    public static final Pose FAR_RED_SCORE = new Pose(SCORE_X_POS_FAR, PICKUP_Y_POS_FAR, Math.toRadians(SCORE_ANGLE_DEG));
+    public static final Pose FAR_RED_LINEUP = new Pose(100, PICKUP_Y_POS_FAR, Math.toRadians(180));
+    public static final Pose FAR_RED_INTAKE = new Pose(135, PICKUP_Y_POS_FAR, Math.toRadians(180));
+    public static final Pose FAR_RED_SCORE_1 = new Pose(SCORE_X_POS_FAR, PICKUP_Y_POS_FAR, Math.toRadians(SCORE_ANGLE_DEG));
+
+    public static final Pose FAR_BLUE_START = mirror(FAR_RED_START);
+    public static final Pose FAR_BLUE_SCORE = mirror(FAR_RED_SCORE);
+    public static final Pose FAR_BLUE_LINEUP = mirror(FAR_RED_LINEUP);
+    public static final Pose FAR_BLUE_INTAKE = mirror(FAR_RED_INTAKE);
+    public static final Pose FAR_BLUE_SCORE_1 = mirror(FAR_RED_SCORE_1);
 
     public static Pose mirror(Pose p)
     {
