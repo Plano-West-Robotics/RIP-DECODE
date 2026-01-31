@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.hardware.Hardware;
 public class Intake
 {
     public static final double LAUNCH_POWER = 1;
-    public static final double REGULAR_POWER = 0.65;
+    public static final double REGULAR_POWER = 0.8;
     public static final double SLOW_POWER = 0.3;
 
     public MotorWrapper motor;

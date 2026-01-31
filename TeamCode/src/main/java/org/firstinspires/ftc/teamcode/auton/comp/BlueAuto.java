@@ -145,7 +145,7 @@ public class BlueAuto extends OpMode
                 break;
             case AT_PRELOAD_SCORE:
                 shoot();
-                if (pathTimer.getElapsedTimeSeconds() > AutonConstants.SHOOT_THREE_BALLS_SECONDS)
+                if (pathTimer.getElapsedTimeSeconds() > AutonConstants.PRELOAD_SCORE_TIME)
                 {
                     intake.forwardSlow();
                     outtake.motor.setPower(0);
@@ -188,7 +188,7 @@ public class BlueAuto extends OpMode
                 break;
             case AT_SCORE1:
                 shoot();
-                if (pathTimer.getElapsedTimeSeconds() > AutonConstants.SHOOT_THREE_BALLS_SECONDS)
+                if (pathTimer.getElapsedTimeSeconds() > AutonConstants.FIRST_THREE_SCORE_TIME)
                 {
                     intake.forwardRegular();
                     outtake.motor.setPower(0);

@@ -28,7 +28,7 @@ public class NewAuto extends OpMode
     public Pose startPose = new Pose(122.1927409261577, 124.35544430538174, Math.toRadians(37));
     public Pose scorePose = new Pose(94.77570093457945, 104.74766355140187, Math.toRadians(37));
     public Pose lineUp1Pose = new Pose(93.29085681426106, AutonConstants.PICKUP_Y_POS_1, Math.toRadians(180));
-    public Pose intake1Pose = new Pose(129, AutonConstants.PICKUP_Y_POS_1, Math.toRadians(180));
+    public Pose intake1Pose = new Pose(132.5, AutonConstants.PICKUP_Y_POS_1, Math.toRadians(180));
     public Pose leave1Pose = new Pose(120, 80, Math.toRadians(45));
 
     public Hardware hardware;
@@ -103,7 +103,7 @@ public class NewAuto extends OpMode
                 startPose = new Pose(122.1927409261577, 124.35544430538174, Math.toRadians(37));
                 scorePose = new Pose(94.77570093457945, 104.74766355140187, Math.toRadians(37));
                 lineUp1Pose = new Pose(93.29085681426106, AutonConstants.PICKUP_Y_POS_1, Math.toRadians(180));
-                intake1Pose = new Pose(131.5, AutonConstants.PICKUP_Y_POS_1, Math.toRadians(180));
+                intake1Pose = new Pose(132.5, AutonConstants.PICKUP_Y_POS_1, Math.toRadians(180));
                 leave1Pose = new Pose(120, 80, Math.toRadians(45));
             }
 
@@ -180,7 +180,7 @@ public class NewAuto extends OpMode
                 shoot();
                 if (pathTimer.getElapsedTimeSeconds() > AutonConstants.PRELOAD_SCORE_TIME)
                 {
-                    intake.forwardLaunch();
+                    intake.forwardRegular();
 //                    ((DcMotorEx) outtake.motor.motor).setVelocity(0);
                     ((DcMotorEx) outtake.motor.motor).setVelocity(-800);
                     follower.followPath(lineUp1Path);
@@ -215,9 +215,9 @@ public class NewAuto extends OpMode
             case TO_SCORE1:
                 if (pathTimer.getElapsedTimeSeconds() >= AutonConstants.DISABLE_INTAKE_SECONDS)
                 {
+                    ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE);
                     pathTimer.resetTimer();
                     intake.reverseLaunch();
-                    ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE);
                     rightStopper.go();
                 }
                 if (pathTimer.getElapsedTimeSeconds() >= AutonConstants.REVERSE_INTAKE_SECONDS)
