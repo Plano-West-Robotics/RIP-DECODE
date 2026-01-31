@@ -112,11 +112,14 @@ public class RedAuto extends OpMode
         intake1Path.setConstantHeadingInterpolation(intake1Pose.getHeading());
         intake1Path.setVelocityConstraint(AutonConstants.INTAKE_1_VEL_CONSTRAINT);
 
-        intermediatePath = new Path(new BezierLine(intake1Pose, lineUp1Pose));
-        intermediatePath.setConstantHeadingInterpolation(intake1Pose.getHeading());
+//        intermediatePath = new Path(new BezierLine(intake1Pose, lineUp1Pose));
+//        intermediatePath.setConstantHeadingInterpolation(intake1Pose.getHeading());
+//
+//        score1Path = new Path(new BezierLine(lineUp1Pose, scorePose));
+//        score1Path.setLinearHeadingInterpolation(lineUp1Pose.getHeading(), scorePose.getHeading());
 
-        score1Path = new Path(new BezierLine(intake1Pose, scorePose));
-        score1Path.setLinearHeadingInterpolation(lineUp1Pose.getHeading(), scorePose.getHeading());
+        score1Path = new Path(new BezierLine(intake1Pose, lineUp1Pose));
+        score1Path.setLinearHeadingInterpolation(intake1Pose.getHeading(), scorePose.getHeading());
 
         leave1Path = new Path(new BezierLine(scorePose, leave1Pose));
         leave1Path.setConstantHeadingInterpolation(scorePose.getHeading());
@@ -142,7 +145,7 @@ public class RedAuto extends OpMode
                 break;
             case AT_PRELOAD_SCORE:
                 shoot();
-                if (pathTimer.getElapsedTimeSeconds() > AutonConstants.SHOOT_THREE_BALLS_SECONDS)
+                if (pathTimer.getElapsedTimeSeconds() > AutonConstants.PRELOAD_SCORE_TIME)
                 {
                     intake.forwardSlow();
                     outtake.motor.setPower(0);
@@ -167,14 +170,14 @@ public class RedAuto extends OpMode
                     pathTimer.resetTimer();
                 }
                 break;
-            case TO_INTERMEDIATE1:
-                if (pathTimer.getElapsedTimeSeconds() >= AutonConstants.DISABLE_INTAKE_SECONDS) intake.stop();
-                if (!follower.isBusy())
-                {
-                    follower.followPath(score1Path);
-                    pathState = PathState.TO_SCORE1;
-                }
-                break;
+//            case TO_INTERMEDIATE1:
+//                if (pathTimer.getElapsedTimeSeconds() >= AutonConstants.DISABLE_INTAKE_SECONDS) intake.stop();
+//                if (!follower.isBusy())
+//                {
+//                    follower.followPath(score1Path);
+//                    pathState = PathState.TO_SCORE1;
+//                }
+//                break;
             case TO_SCORE1:
                 if (pathTimer.getElapsedTimeSeconds() >= AutonConstants.DISABLE_INTAKE_SECONDS) intake.stop();
                 if (!follower.isBusy())
@@ -185,7 +188,7 @@ public class RedAuto extends OpMode
                 break;
             case AT_SCORE1:
                 shoot();
-                if (pathTimer.getElapsedTimeSeconds() > AutonConstants.SHOOT_THREE_BALLS_SECONDS)
+                if (pathTimer.getElapsedTimeSeconds() > AutonConstants.FIRST_THREE_SCORE_TIME)
                 {
                     intake.forwardRegular();
                     outtake.motor.setPower(0);

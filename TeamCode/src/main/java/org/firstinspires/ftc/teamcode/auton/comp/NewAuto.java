@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.core.control.Button;
 import org.firstinspires.ftc.teamcode.core.control.Gamepads;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
+import org.firstinspires.ftc.teamcode.hardware.RightStopper;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.AprilTagWebcam;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -21,16 +22,17 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
-@Autonomous
-public class BlueAuto extends OpMode
+@Autonomous(preselectTeleOp = "MainComp", group = "Comp")
+public class NewAuto extends OpMode
 {
-    public static Pose startPose = AutonConstants.mirror(RedAuto.startPose);
-    public static Pose scorePose = AutonConstants.mirror(RedAuto.scorePose);
-    public static Pose lineUp1Pose = AutonConstants.mirrorShift(RedAuto.lineUp1Pose, 0, 8);
-    public static Pose intake1Pose = AutonConstants.mirrorShift(RedAuto.intake1Pose, 0, 8);
-    public static Pose leave1Pose = AutonConstants.mirror(RedAuto.leave1Pose);
+    public Pose startPose = new Pose(122.1927409261577, 124.35544430538174, Math.toRadians(37));
+    public Pose scorePose = new Pose(94.77570093457945, 104.74766355140187, Math.toRadians(37));
+    public Pose lineUp1Pose = new Pose(93.29085681426106, AutonConstants.PICKUP_Y_POS_1, Math.toRadians(180));
+    public Pose intake1Pose = new Pose(129, AutonConstants.PICKUP_Y_POS_1, Math.toRadians(180));
+    public Pose leave1Pose = new Pose(120, 80, Math.toRadians(45));
 
     public Hardware hardware;
+    public RightStopper rightStopper;
     public Gamepads gamepads;
     public Intake intake;
     public Outtake outtake;
@@ -45,6 +47,8 @@ public class BlueAuto extends OpMode
     public PathState pathState;
 
     public int numShot = 0;
+
+    public boolean isRed = true;
 
     public enum PathState
     {
@@ -64,18 +68,17 @@ public class BlueAuto extends OpMode
     public void init()
     {
         hardware = new Hardware(hardwareMap);
+        rightStopper = hardware.rightStopper;
         gamepads = new Gamepads(gamepad1, gamepad2);
         intake = new Intake(hardware);
         outtake = new Outtake(hardware);
-        webcam = new AprilTagWebcam(hardware, AprilTagWebcam.BLUE_GOAL_ID);
+        webcam = new AprilTagWebcam(hardware, AprilTagWebcam.RED_GOAL_ID);
 
         pathTimer = new Timer();
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         follower = Constants.createFollower(hardwareMap);
-        buildPaths();
-        follower.setStartingPose(startPose);
 
         pathState = PathState.START;
     }
@@ -83,7 +86,29 @@ public class BlueAuto extends OpMode
     @Override
     public void init_loop()
     {
-        if (gamepads.justPressed(Button.GP1_A)) webcam.toggleGoalId();
+        if (gamepads.justPressed(Button.GP1_A))
+        {
+            webcam.toggleGoalId();
+
+            if (isRed)
+            {
+                startPose = AutonConstants.mirror(startPose);
+                scorePose = AutonConstants.mirror(scorePose);
+                lineUp1Pose = AutonConstants.mirrorShift(lineUp1Pose, 0, 8);
+                intake1Pose = AutonConstants.mirrorShift(intake1Pose, 0, 8);
+                leave1Pose = AutonConstants.mirror(leave1Pose);
+            }
+            else
+            {
+                startPose = new Pose(122.1927409261577, 124.35544430538174, Math.toRadians(37));
+                scorePose = new Pose(94.77570093457945, 104.74766355140187, Math.toRadians(37));
+                lineUp1Pose = new Pose(93.29085681426106, AutonConstants.PICKUP_Y_POS_1, Math.toRadians(180));
+                intake1Pose = new Pose(131.5, AutonConstants.PICKUP_Y_POS_1, Math.toRadians(180));
+                leave1Pose = new Pose(120, 80, Math.toRadians(45));
+            }
+
+            isRed = !isRed;
+        }
 
         boolean cameraIsReady = webcam.portal.getCameraState() == VisionPortal.CameraState.STREAMING;
         telemetry.addData("Camera Is Ready?", cameraIsReady);
@@ -91,6 +116,13 @@ public class BlueAuto extends OpMode
 
         gamepads.update(gamepad1, gamepad2);
         telemetry.update();
+    }
+
+    @Override
+    public void start()
+    {
+        follower.setStartingPose(startPose);
+        buildPaths();
     }
 
     @Override
@@ -118,7 +150,7 @@ public class BlueAuto extends OpMode
 //        score1Path = new Path(new BezierLine(lineUp1Pose, scorePose));
 //        score1Path.setLinearHeadingInterpolation(lineUp1Pose.getHeading(), scorePose.getHeading());
 
-        score1Path = new Path(new BezierLine(intake1Pose, lineUp1Pose));
+        score1Path = new Path(new BezierLine(intake1Pose, scorePose));
         score1Path.setLinearHeadingInterpolation(intake1Pose.getHeading(), scorePose.getHeading());
 
         leave1Path = new Path(new BezierLine(scorePose, leave1Pose));
@@ -132,6 +164,7 @@ public class BlueAuto extends OpMode
         switch (pathState)
         {
             case START:
+                rightStopper.go();
                 follower.followPath(preloadPath);
                 pathState = PathState.TO_PRELOAD_SCORE;
                 break;
@@ -145,10 +178,11 @@ public class BlueAuto extends OpMode
                 break;
             case AT_PRELOAD_SCORE:
                 shoot();
-                if (pathTimer.getElapsedTimeSeconds() > AutonConstants.SHOOT_THREE_BALLS_SECONDS)
+                if (pathTimer.getElapsedTimeSeconds() > AutonConstants.PRELOAD_SCORE_TIME)
                 {
-                    intake.forwardSlow();
-                    outtake.motor.setPower(0);
+                    intake.forwardLaunch();
+//                    ((DcMotorEx) outtake.motor.motor).setVelocity(0);
+                    ((DcMotorEx) outtake.motor.motor).setVelocity(-800);
                     follower.followPath(lineUp1Path);
                     pathState = PathState.TO_LINEUP1;
                 }
@@ -156,15 +190,15 @@ public class BlueAuto extends OpMode
             case TO_LINEUP1:
                 if (!follower.isBusy())
                 {
-                    ((DcMotorEx) outtake.motor.motor).setVelocity(0);
+//                    ((DcMotorEx) outtake.motor.motor).setVelocity(0);
                     follower.followPath(intake1Path);
+                    rightStopper.stop();
                     pathState = PathState.TO_INTAKE1;
                 }
                 break;
             case TO_INTAKE1:
                 if (!follower.isBusy())
                 {
-                    ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE);
                     follower.followPath(score1Path);
                     pathState = PathState.TO_SCORE1;
                     pathTimer.resetTimer();
@@ -179,7 +213,18 @@ public class BlueAuto extends OpMode
 //                }
 //                break;
             case TO_SCORE1:
-                if (pathTimer.getElapsedTimeSeconds() >= AutonConstants.DISABLE_INTAKE_SECONDS) intake.stop();
+                if (pathTimer.getElapsedTimeSeconds() >= AutonConstants.DISABLE_INTAKE_SECONDS)
+                {
+                    pathTimer.resetTimer();
+                    intake.reverseLaunch();
+                    ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE);
+                    rightStopper.go();
+                }
+                if (pathTimer.getElapsedTimeSeconds() >= AutonConstants.REVERSE_INTAKE_SECONDS)
+                {
+                    pathTimer.resetTimer();
+                    intake.stop();
+                }
                 if (!follower.isBusy())
                 {
                     pathState = PathState.AT_SCORE1;
@@ -187,11 +232,12 @@ public class BlueAuto extends OpMode
                 }
                 break;
             case AT_SCORE1:
+                rightStopper.go();
                 shoot();
-                if (pathTimer.getElapsedTimeSeconds() > AutonConstants.SHOOT_THREE_BALLS_SECONDS)
+                if (pathTimer.getElapsedTimeSeconds() > AutonConstants.FIRST_THREE_SCORE_TIME)
                 {
-                    intake.forwardRegular();
-                    outtake.motor.setPower(0);
+                    intake.stop();
+                    ((DcMotorEx) outtake.motor.motor).setVelocity(0);
                     follower.followPath(leave1Path, true);
                     pathState = PathState.LEAVE_LINE;
                 }
@@ -199,13 +245,12 @@ public class BlueAuto extends OpMode
             case LEAVE_LINE:
                 if (!follower.isBusy())
                 {
-                    outtake.motor.setPower(0);
+                    ((DcMotorEx) outtake.motor.motor).setVelocity(0);
                     pathState = PathState.STOP;
                 }
                 break;
             case STOP:
                 ((DcMotorEx) outtake.motor.motor).setVelocity(0);
-                intake.stop();
                 break;
         }
     }

@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.firstinspires.ftc.teamcode.core.control.Button;
 import org.firstinspires.ftc.teamcode.core.control.Gamepads;
 import org.firstinspires.ftc.teamcode.core.wrappers.MotorWrapper;
+import org.firstinspires.ftc.teamcode.core.wrappers.ServoPairWrapper;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 
 public class Outtake
@@ -31,9 +32,9 @@ public class Outtake
     public static final double EXTRA_DISTANCE = 0.1905; // the distance from the april tag to the center of the goal from a bird's-eye' view
 
 //    Values from tuning guide from 2019
-    public static final double F = 32767 / MAX_ANGULAR_RATE;
-    public static final double P = 2;
-    public static final double I = 0.1 * 0.1 * F;
+    public static final double F = 16;
+    public static final double P = 5;
+    public static final double I = 0;
     public static final double D = 0;
 
     public static final double IDEAL_VOLTAGE = 13.5;
@@ -44,12 +45,19 @@ public class Outtake
      */
     public static final double VELOCITY_MULTIPLIER = 2.47;
 
+    //TODO: arbitrary
+    public static final double UP = 0;
+    public static final double DOWN = 0;
+
     public MotorWrapper motor;
     public ControlMode mode;
     public VoltageSensor vs;
 
+    public ServoPairWrapper servos;
+
     public Outtake(Hardware hardware)
     {
+        servos = hardware.stoppers;
         motor = hardware.outtakeMotor;
         motor.reverse();
         motor.useEncoder();
@@ -65,6 +73,8 @@ public class Outtake
         manualMode();
     }
 
+    public void stoppersUp() { servos.setPosition(UP); }
+    public void stoppersDown() { servos.setPosition(DOWN); }
     public ControlMode getMode()
     {
         return mode;
@@ -86,6 +96,8 @@ public class Outtake
         else manualMode();
     }
 
+
+
     public void update(Gamepads gamepads)
     {
         if (gamepads.justPressed(Button.GP1_B)) toggleMode();
@@ -97,6 +109,8 @@ public class Outtake
             I,
             D,
             F); //* (IDEAL_VOLTAGE / batteryVoltage));
+
+
     }
 
     /**
