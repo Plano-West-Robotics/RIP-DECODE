@@ -9,6 +9,7 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.core.control.Analog;
 import org.firstinspires.ftc.teamcode.core.control.Button;
+import org.firstinspires.ftc.teamcode.core.control.Gamepads;
 import org.firstinspires.ftc.teamcode.subsystems.AprilTagWebcam;
 import org.firstinspires.ftc.teamcode.subsystems.FieldCentricDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -36,6 +37,9 @@ public class MainComp extends BaseTeleOp
 
     public PIDFController bearingController;
     public StateMachine fsm;
+
+    public AprilTagDetection lastValidDetection;
+
 
     @Override
     public void setup()
@@ -118,31 +122,23 @@ public class MainComp extends BaseTeleOp
             .state(State.WEBCAM_SHOOTING)
             .loop(() -> {
                 AprilTagDetection detection = webcam.getGoalDetection();
-                if (detection == null)
-                {
-                    if (!gamepad1.isRumbling())
-                    {
-                        gamepad1.rumble(1000);
-                    }
-                    drive.update(gamepads);
-                    ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE);
-                }
-                else
-                {
-                    webcam.updateBearing(detection.ftcPose.bearing);
-                    webcam.updateRange(detection.ftcPose.range);
 
-                    double rx = bearingController.calculate(webcam.getBearing(), 0);
+                if (gamepads.exceedsThreshold(Analog.GP1_LEFT_TRIGGER, Outtake.TRIGGER_THRESHOLD) && gamepads.exceedsThreshold(Analog.GP1_RIGHT_TRIGGER, Outtake.TRIGGER_THRESHOLD) && lastValidDetection != null)
+                {
+                    webcam.updateBearing(lastValidDetection.ftcPose.bearing);
+                    webcam.updateRange(lastValidDetection.ftcPose.range);
+
+                    //double rx = bearingController.calculate(webcam.getBearing(), 0);
                     double targetAngularRate = Outtake.toAngularRate(Outtake.calculateIdealFlywheelTangentialVelocity(webcam.getRange()));
 
-                    drive.drive(gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_Y), gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_X), rx);
+                    drive.drive(gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_Y), gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_X), 0);
                     ((DcMotorEx) outtake.motor.motor).setVelocity(targetAngularRate);
 
                     double error = ((DcMotorEx) outtake.motor.motor).getVelocity() - targetAngularRate;
 
                     telemetry.addData("Range", webcam.getRange());
                     telemetry.addData("Bearing", webcam.getBearing());
-                    telemetry.addData("RX", rx);
+                    //telemetry.addData("RX", rx);
                     telemetry.addData("Target Angular Rate", targetAngularRate);
                     telemetry.addData("Error", error);
 
@@ -163,6 +159,48 @@ public class MainComp extends BaseTeleOp
                     {
                         intake.stop();
                         gamepad1.stopRumble();
+                    }
+                }
+                else {
+                    if (detection == null) {
+                        if (!gamepad1.isRumbling()) {
+                            gamepad1.rumble(1000);
+                        }
+                        drive.update(gamepads);
+                        ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE);
+                        telemetry.addData("AprilTag Found", false);
+                    } else {
+                        webcam.updateBearing(detection.ftcPose.bearing);
+                        webcam.updateRange(detection.ftcPose.range);
+
+                        double rx = bearingController.calculate(webcam.getBearing(), 0);
+                        double targetAngularRate = Outtake.toAngularRate(Outtake.calculateIdealFlywheelTangentialVelocity(webcam.getRange()));
+
+                        drive.drive(gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_Y), gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_X), rx);
+                        ((DcMotorEx) outtake.motor.motor).setVelocity(targetAngularRate);
+
+                        double error = ((DcMotorEx) outtake.motor.motor).getVelocity() - targetAngularRate;
+
+                        telemetry.addData("Range", webcam.getRange());
+                        telemetry.addData("Bearing", webcam.getBearing());
+                        telemetry.addData("RX", rx);
+                        telemetry.addData("Target Angular Rate", targetAngularRate);
+                        telemetry.addData("Error", error);
+
+                        if (gamepads.isPressed(Button.GP1_A)) {
+                            if (Math.abs(error) < Outtake.ANGULAR_RATE_ERROR_TOLERANCE) {
+                                intake.forwardLaunch();
+                                gamepad1.stopRumble();
+                            } else {
+                                intake.stop();
+                                gamepad1.rumbleBlips(1);
+                            }
+                        } else {
+                            intake.stop();
+                            gamepad1.stopRumble();
+                        }
+
+                        lastValidDetection = detection;
                     }
                 }
             })
