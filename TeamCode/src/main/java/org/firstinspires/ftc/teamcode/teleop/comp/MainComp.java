@@ -123,7 +123,8 @@ public class MainComp extends BaseTeleOp
             .loop(() -> {
                 AprilTagDetection detection = webcam.getGoalDetection();
 
-                if (gamepads.exceedsThreshold(Analog.GP1_LEFT_TRIGGER, Outtake.TRIGGER_THRESHOLD) && gamepads.exceedsThreshold(Analog.GP1_RIGHT_TRIGGER, Outtake.TRIGGER_THRESHOLD) && lastValidDetection != null)
+                if (gamepads.exceedsThreshold(Analog.GP1_LEFT_TRIGGER, Outtake.TRIGGER_THRESHOLD) &&
+                        gamepads.exceedsThreshold(Analog.GP1_RIGHT_TRIGGER, Outtake.TRIGGER_THRESHOLD) && lastValidDetection != null && detection == null)
                 {
                     webcam.updateBearing(lastValidDetection.ftcPose.bearing);
                     webcam.updateRange(lastValidDetection.ftcPose.range);

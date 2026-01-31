@@ -23,10 +23,10 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @Autonomous(preselectTeleOp = "MainComp", group = "Comp")
-public class NewAuto extends OpMode
+public class FarAuto extends OpMode
 {
-    public Pose startPose = AutonConstants.RED_START;
-    public Pose scorePose = AutonConstants.RED_SCORE;
+    public Pose startPose = new Pose(80, 9, Math.toRadians(90));
+    public Pose scorePose = new Pose(80, 33, Math.toRadians(63));
     public Pose lineUp1Pose = AutonConstants.RED_LINEUP_1;
     public Pose intake1Pose = AutonConstants.RED_INTAKE_1;
     public Pose leave1Pose = AutonConstants.RED_LEAVE_1;
@@ -93,16 +93,16 @@ public class NewAuto extends OpMode
 
             if (isRed)
             {
-                startPose = AutonConstants.BLUE_START;
-                scorePose = AutonConstants.BLUE_SCORE;
+                startPose = AutonConstants.mirror(startPose);
+                scorePose = AutonConstants.mirror(scorePose);
                 lineUp1Pose = AutonConstants.BLUE_LINEUP_1;
                 intake1Pose = AutonConstants.BLUE_INTAKE_1;
                 leave1Pose = AutonConstants.BLUE_LEAVE_1;
             }
             else
             {
-                startPose = AutonConstants.RED_START;
-                scorePose = AutonConstants.RED_SCORE;
+                startPose = new Pose(80, 9, Math.toRadians(90));
+                scorePose = new Pose(80, 33, Math.toRadians(63));
                 lineUp1Pose = AutonConstants.RED_LINEUP_1;
                 intake1Pose = AutonConstants.RED_INTAKE_1;
                 leave1Pose = AutonConstants.RED_LEAVE_1;
@@ -136,7 +136,7 @@ public class NewAuto extends OpMode
     public void buildPaths()
     {
         preloadPath = new Path(new BezierLine(startPose, scorePose));
-        preloadPath.setConstantHeadingInterpolation(startPose.getHeading());
+        preloadPath.setLinearHeadingInterpolation(startPose.getHeading(), scorePose.getHeading());
 
         lineUp1Path = new Path(new BezierLine(scorePose, lineUp1Pose));
         lineUp1Path.setLinearHeadingInterpolation(scorePose.getHeading(), lineUp1Pose.getHeading());
@@ -178,17 +178,17 @@ public class NewAuto extends OpMode
                 }
                 break;
             case AT_PRELOAD_SCORE:
-                shoot();
+                shoot(AutonConstants.FAR_TPS);
                 if (pathTimer.getElapsedTimeSeconds() > AutonConstants.PRELOAD_SCORE_TIME)
                 {
-                    intake.forwardRegular();
+                    //intake.forwardRegular();
 //                    ((DcMotorEx) outtake.motor.motor).setVelocity(0);
-                    ((DcMotorEx) outtake.motor.motor).setVelocity(-800);
-                    follower.followPath(lineUp1Path);
-                    pathState = PathState.TO_LINEUP1;
+                    //((DcMotorEx) outtake.motor.motor).setVelocity(-800);
+                    //follower.followPath(lineUp1Path);
+                    pathState = PathState.STOP;
                 }
                 break;
-            case TO_LINEUP1:
+            /*case TO_LINEUP1:
                 if (!follower.isBusy())
                 {
 //                    ((DcMotorEx) outtake.motor.motor).setVelocity(0);
@@ -257,7 +257,10 @@ public class NewAuto extends OpMode
                     pathState = PathState.STOP;
                 }
                 break;
+
+             */
             case STOP:
+                intake.stop();
                 ((DcMotorEx) outtake.motor.motor).setVelocity(0);
                 break;
         }
@@ -286,5 +289,22 @@ public class NewAuto extends OpMode
             telemetry.addData("Target Angular Rate", targetAngularRate);
             telemetry.addData("Error", error);
         }
+    }
+
+    public void shoot(double ticksPerSecond)
+    {
+        ((DcMotorEx) outtake.motor.motor).setVelocity(ticksPerSecond);
+        double error = ((DcMotorEx) outtake.motor.motor).getVelocity() - ticksPerSecond;
+
+        if (Math.abs(error) < Outtake.ANGULAR_RATE_ERROR_TOLERANCE)
+        {
+            intake.forwardLaunch();
+        }
+        else
+        {
+            intake.stop();
+        }
+
+        telemetry.addData("Error", error);
     }
 }
