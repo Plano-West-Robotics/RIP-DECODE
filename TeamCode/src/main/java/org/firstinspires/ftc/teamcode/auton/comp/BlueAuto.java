@@ -112,11 +112,14 @@ public class BlueAuto extends OpMode
         intake1Path.setConstantHeadingInterpolation(intake1Pose.getHeading());
         intake1Path.setVelocityConstraint(AutonConstants.INTAKE_1_VEL_CONSTRAINT);
 
-        intermediatePath = new Path(new BezierLine(intake1Pose, lineUp1Pose));
-        intermediatePath.setConstantHeadingInterpolation(intake1Pose.getHeading());
+//        intermediatePath = new Path(new BezierLine(intake1Pose, lineUp1Pose));
+//        intermediatePath.setConstantHeadingInterpolation(intake1Pose.getHeading());
+//
+//        score1Path = new Path(new BezierLine(lineUp1Pose, scorePose));
+//        score1Path.setLinearHeadingInterpolation(lineUp1Pose.getHeading(), scorePose.getHeading());
 
-        score1Path = new Path(new BezierLine(lineUp1Pose, scorePose));
-        score1Path.setLinearHeadingInterpolation(lineUp1Pose.getHeading(), scorePose.getHeading());
+        score1Path = new Path(new BezierLine(intake1Pose, lineUp1Pose));
+        score1Path.setLinearHeadingInterpolation(intake1Pose.getHeading(), scorePose.getHeading());
 
         leave1Path = new Path(new BezierLine(scorePose, leave1Pose));
         leave1Path.setConstantHeadingInterpolation(scorePose.getHeading());
@@ -162,20 +165,21 @@ public class BlueAuto extends OpMode
                 if (!follower.isBusy())
                 {
                     ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE);
-                    follower.followPath(intermediatePath);
-                    pathState = PathState.TO_INTERMEDIATE1;
+                    follower.followPath(score1Path);
+                    pathState = PathState.TO_SCORE1;
                     pathTimer.resetTimer();
                 }
                 break;
-            case TO_INTERMEDIATE1:
-                if (pathTimer.getElapsedTimeSeconds() >= AutonConstants.DISABLE_INTAKE_SECONDS) intake.stop();
-                if (!follower.isBusy())
-                {
-                    follower.followPath(score1Path);
-                    pathState = PathState.TO_SCORE1;
-                }
-                break;
+//            case TO_INTERMEDIATE1:
+//                if (pathTimer.getElapsedTimeSeconds() >= AutonConstants.DISABLE_INTAKE_SECONDS) intake.stop();
+//                if (!follower.isBusy())
+//                {
+//                    follower.followPath(score1Path);
+//                    pathState = PathState.TO_SCORE1;
+//                }
+//                break;
             case TO_SCORE1:
+                if (pathTimer.getElapsedTimeSeconds() >= AutonConstants.DISABLE_INTAKE_SECONDS) intake.stop();
                 if (!follower.isBusy())
                 {
                     pathState = PathState.AT_SCORE1;
