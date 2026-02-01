@@ -178,7 +178,7 @@ public class NewAuto extends OpMode
                 }
                 break;
             case AT_PRELOAD_SCORE:
-                shoot();
+                shoot(Outtake.NORMAL_ERROR_TOLERANCE_TPS);
                 if (pathTimer.getElapsedTimeSeconds() > AutonConstants.PRELOAD_SCORE_TIME)
                 {
                     intake.forwardRegular();
@@ -241,7 +241,7 @@ public class NewAuto extends OpMode
                     score1ReverseLaunchDone = true;
                 }
                 rightStopper.go();
-                shoot();
+                shoot(Outtake.NORMAL_ERROR_TOLERANCE_TPS);
                 if (pathTimer.getElapsedTimeSeconds() > AutonConstants.FIRST_THREE_SCORE_TIME)
                 {
                     intake.stop();
@@ -263,7 +263,7 @@ public class NewAuto extends OpMode
         }
     }
 
-    public void shoot()
+    public void shoot(double tolerance)
     {
         AprilTagDetection detection = webcam.getGoalDetection();
         if (detection != null)
@@ -273,7 +273,7 @@ public class NewAuto extends OpMode
             ((DcMotorEx) outtake.motor.motor).setVelocity(targetAngularRate);
             double error = ((DcMotorEx) outtake.motor.motor).getVelocity() - targetAngularRate;
 
-            if (Math.abs(error) < Outtake.ANGULAR_RATE_ERROR_TOLERANCE)
+            if (Math.abs(error) < tolerance)
             {
                 intake.forwardLaunch();
             }

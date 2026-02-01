@@ -20,7 +20,6 @@ import org.firstinspires.ftc.teamcode.subsystems.AprilTagWebcam;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @Autonomous(preselectTeleOp = "MainComp", group = "Comp")
 public class FarAuto extends OpMode
@@ -190,7 +189,7 @@ public class FarAuto extends OpMode
                 }
                 break;
             case AT_PRELOAD_SCORE:
-                shoot(AutonConstants.FAR_TPS);
+                shoot(AutonConstants.FAR_TPS, Outtake.FAR_ERROR_TOLERANCE_TPS);
                 if (pathTimer.getElapsedTimeSeconds() > AutonConstants.FAR_PRELOAD_SCORE_TIME)
                 {
                     intake.forwardRegular();
@@ -253,7 +252,7 @@ public class FarAuto extends OpMode
                     score1ReverseLaunchDone = true;
                 }
                 rightStopper.go();
-                shoot();
+                shoot(AutonConstants.FAR_TPS, Outtake.FAR_ERROR_TOLERANCE_TPS);
                 if (pathTimer.getElapsedTimeSeconds() > AutonConstants.FAR_PRELOAD_SCORE_TIME)
                 {
                     intake.stop();
@@ -269,37 +268,12 @@ public class FarAuto extends OpMode
         }
     }
 
-    public void shoot()
-    {
-        AprilTagDetection detection = webcam.getGoalDetection();
-        if (detection != null)
-        {
-            webcam.updateRange(detection.ftcPose.range);
-            double targetAngularRate = Outtake.toAngularRate(Outtake.calculateIdealFlywheelTangentialVelocity(webcam.getRange()));
-            ((DcMotorEx) outtake.motor.motor).setVelocity(targetAngularRate);
-            double error = ((DcMotorEx) outtake.motor.motor).getVelocity() - targetAngularRate;
-
-            if (Math.abs(error) < Outtake.ANGULAR_RATE_ERROR_TOLERANCE)
-            {
-                intake.forwardLaunch();
-            }
-            else
-            {
-                intake.stop();
-            }
-
-            telemetry.addData("Range", webcam.getRange());
-            telemetry.addData("Target Angular Rate", targetAngularRate);
-            telemetry.addData("Error", error);
-        }
-    }
-
-    public void shoot(double ticksPerSecond)
+    public void shoot(double ticksPerSecond, double tolerance)
     {
         ((DcMotorEx) outtake.motor.motor).setVelocity(ticksPerSecond);
         double error = ((DcMotorEx) outtake.motor.motor).getVelocity() - ticksPerSecond;
 
-        if (Math.abs(error) < Outtake.ANGULAR_RATE_ERROR_TOLERANCE)
+        if (Math.abs(error) < tolerance)
         {
             intake.forwardLaunch();
         }

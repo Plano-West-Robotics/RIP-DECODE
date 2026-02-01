@@ -91,7 +91,7 @@ public class StopperTheoreticalTeleop extends BaseTeleOp
 
                     if (gamepads.isPressed(Button.GP1_A))
                     {
-                        if (Math.abs(error) < Outtake.ANGULAR_RATE_ERROR_TOLERANCE)
+                        if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE_TPS)
                         {
                             outtake.stoppersDown();
                             intake.forwardLaunch();
@@ -151,7 +151,7 @@ public class StopperTheoreticalTeleop extends BaseTeleOp
                         double rx = bearingController.calculate(webcam.getBearing(), 0);
                         double targetAngularRate = Outtake.toAngularRate(Outtake.calculateIdealFlywheelTangentialVelocity(webcam.getRange()));
 
-                        if (Math.abs(((DcMotorEx) outtake.motor.motor).getVelocity() - Outtake.MANUAL_ANGULAR_RATE) < Outtake.ANGULAR_RATE_ERROR_TOLERANCE)
+                        if (Math.abs(((DcMotorEx) outtake.motor.motor).getVelocity() - Outtake.MANUAL_ANGULAR_RATE) < Outtake.NORMAL_ERROR_TOLERANCE_TPS)
                             ((DcMotorEx) outtake.motor.motor).setVelocity(targetAngularRate);
 
                         drive.drive(gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_Y), gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_X), rx);
@@ -173,7 +173,7 @@ public class StopperTheoreticalTeleop extends BaseTeleOp
 
                         if (gamepads.isPressed(Button.GP1_A))
                         {
-                            if (Math.abs(error) < Outtake.ANGULAR_RATE_ERROR_TOLERANCE)
+                            if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE_TPS)
                             {
                                 intake.forwardLaunch();
                                 gamepad1.stopRumble();

@@ -220,7 +220,7 @@ public class BlueAuto extends OpMode
             ((DcMotorEx) outtake.motor.motor).setVelocity(targetAngularRate);
             double error = ((DcMotorEx) outtake.motor.motor).getVelocity() - targetAngularRate;
 
-            if (Math.abs(error) < Outtake.ANGULAR_RATE_ERROR_TOLERANCE)
+            if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE_TPS)
             {
                 intake.forwardLaunch();
             }

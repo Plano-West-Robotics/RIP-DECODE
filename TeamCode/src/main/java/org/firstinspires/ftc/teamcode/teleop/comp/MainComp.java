@@ -9,12 +9,10 @@ import com.sfdev.assembly.state.StateMachineBuilder;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.core.control.Analog;
 import org.firstinspires.ftc.teamcode.core.control.Button;
-import org.firstinspires.ftc.teamcode.core.control.Gamepads;
 import org.firstinspires.ftc.teamcode.subsystems.AprilTagWebcam;
 import org.firstinspires.ftc.teamcode.subsystems.FieldCentricDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
-import org.firstinspires.ftc.teamcode.subsystems.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.teleop.BaseTeleOp;
 import org.firstinspires.ftc.teamcode.teleop.tune.DashboardWebcamBearingPIDFTuner;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -89,7 +87,7 @@ public class MainComp extends BaseTeleOp
 
                 if (gamepads.isPressed(Button.GP1_A))
                 {
-                    if (Math.abs(error) < Outtake.ANGULAR_RATE_ERROR_TOLERANCE)
+                    if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE_TPS)
                     {
                         intake.forwardLaunch();
                         gamepad1.stopRumble();
@@ -145,7 +143,7 @@ public class MainComp extends BaseTeleOp
 
                     if (gamepads.isPressed(Button.GP1_A))
                     {
-                        if (Math.abs(error) < Outtake.ANGULAR_RATE_ERROR_TOLERANCE)
+                        if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE_TPS)
                         {
                             intake.forwardLaunch();
                             gamepad1.stopRumble();
@@ -189,7 +187,7 @@ public class MainComp extends BaseTeleOp
                         telemetry.addData("Error", error);
 
                         if (gamepads.isPressed(Button.GP1_A)) {
-                            if (Math.abs(error) < Outtake.ANGULAR_RATE_ERROR_TOLERANCE) {
+                            if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE_TPS) {
                                 intake.forwardLaunch();
                                 gamepad1.stopRumble();
                             } else {
