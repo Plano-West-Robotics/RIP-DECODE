@@ -7,6 +7,7 @@ import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.auton.comp.AutonConstants;
 import org.firstinspires.ftc.teamcode.core.control.Analog;
 import org.firstinspires.ftc.teamcode.core.control.Button;
 import org.firstinspires.ftc.teamcode.subsystems.AprilTagWebcam;
@@ -218,6 +219,12 @@ public class MainComp extends BaseTeleOp
     @Override
     public void init_loop()
     {
+        if (gamepads.justPressed(Button.GP1_A))
+        {
+            webcam.toggleGoalId();
+        }
+        telemetry.addData("Goal Color", webcam.getGoalId() == AprilTagWebcam.RED_GOAL_ID ? "RED" : "BLUE");
+
         boolean cameraIsReady = webcam.portal.getCameraState() == VisionPortal.CameraState.STREAMING;
         telemetry.addData("Camera Is Ready?", cameraIsReady);
         telemetry.update();
@@ -241,5 +248,6 @@ public class MainComp extends BaseTeleOp
         telemetry.addData("Outtake Motor Angular Velocity (ticks/sec)", ((DcMotorEx) outtake.motor.motor).getVelocity());
         telemetry.addData("Outtake Motor Angular Velocity (rev/min)", ((DcMotorEx) outtake.motor.motor).getVelocity() * 60 * (1 / Outtake.TICKS_PER_REVOLUTION));
         telemetry.addData("IMU Yaw (Degrees)", drive.getHeading(AngleUnit.DEGREES));
+        telemetry.addData("Field Centric Drive is Functional", (Math.pow(drive.getHeading(AngleUnit.DEGREES), 2) > 0) ? "YES" : "NO");
     }
 }
