@@ -121,86 +121,77 @@ public class MainComp extends BaseTeleOp
             .loop(() -> {
                 AprilTagDetection detection = webcam.getGoalDetection();
 
-                if (gamepads.exceedsThreshold(Analog.GP1_LEFT_TRIGGER, Outtake.TRIGGER_THRESHOLD) &&
-                        gamepads.exceedsThreshold(Analog.GP1_RIGHT_TRIGGER, Outtake.TRIGGER_THRESHOLD) && lastValidDetection != null && detection == null)
+                AprilTagDetection detectionToUse = (detection != null) ? detection : lastValidDetection;
+
+                if (detectionToUse == null)
                 {
-                    webcam.updateBearing(lastValidDetection.ftcPose.bearing);
-                    webcam.updateRange(lastValidDetection.ftcPose.range);
-
-                    //double rx = bearingController.calculate(webcam.getBearing(), 0);
-                    double targetAngularRate = Outtake.toAngularRate(Outtake.calculateIdealFlywheelTangentialVelocity(webcam.getRange()));
-
-                    drive.drive(gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_Y), gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_X), 0);
-                    ((DcMotorEx) outtake.motor.motor).setVelocity(targetAngularRate);
-
-                    double error = ((DcMotorEx) outtake.motor.motor).getVelocity() - targetAngularRate;
-
-                    telemetry.addData("Range", webcam.getRange());
-                    telemetry.addData("Bearing", webcam.getBearing());
-                    //telemetry.addData("RX", rx);
-                    telemetry.addData("Target Angular Rate", targetAngularRate);
-                    telemetry.addData("Error", error);
-
-                    if (gamepads.isPressed(Button.GP1_A))
+                    if (!gamepad1.isRumbling())
                     {
-                        if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE_TPS)
-                        {
-                            intake.forwardLaunch();
-                            gamepad1.stopRumble();
-                        }
-                        else
-                        {
-                            intake.stop();
-                            gamepad1.rumbleBlips(1);
-                        }
+                        gamepad1.rumble(1000);
+                    }
+                    drive.update(gamepads);
+
+                    ((DcMotorEx) outtake.motor.motor).setVelocity(0);
+
+                    telemetry.addData("AprilTag Found", false);
+                    intake.stop();
+                    return;
+                }
+
+                telemetry.addData("AprilTag Currently Found", detection != null);
+
+                webcam.updateBearing(detectionToUse.ftcPose.bearing);
+                webcam.updateRange(detectionToUse.ftcPose.range);
+
+                double rx = 0;
+                if (detection != null)
+                {
+                    webcam.updateBearing(detection.ftcPose.bearing);
+                    rx = bearingController.calculate(webcam.getBearing(), 0);
+                }
+                else
+                {
+                    // for telemetry
+                    webcam.updateBearing(lastValidDetection.ftcPose.bearing);
+                }
+
+                double targetAngularRate = Outtake.toAngularRate(Outtake.calculateIdealFlywheelTangentialVelocity(webcam.getRange()));
+
+                drive.drive(gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_Y), gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_X), rx);
+
+                DcMotorEx flywheel = (DcMotorEx) outtake.motor.motor;
+                flywheel.setVelocity(targetAngularRate);
+
+                double error = flywheel.getVelocity() - targetAngularRate;
+
+                telemetry.addData("Range", webcam.getRange());
+                telemetry.addData("Bearing", webcam.getBearing());
+                telemetry.addData("RX", rx);
+                telemetry.addData("Target Angular Rate", targetAngularRate);
+                telemetry.addData("Error", error);
+
+                if (gamepads.isPressed(Button.GP1_A))
+                {
+                    if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE_TPS)
+                    {
+                        intake.forwardLaunch();
+                        gamepad1.stopRumble();
                     }
                     else
                     {
                         intake.stop();
-                        gamepad1.stopRumble();
+                        gamepad1.rumbleBlips(1);
                     }
                 }
-                else {
-                    if (detection == null) {
-                        if (!gamepad1.isRumbling()) {
-                            gamepad1.rumble(1000);
-                        }
-                        drive.update(gamepads);
-                        ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE);
-                        telemetry.addData("AprilTag Found", false);
-                    } else {
-                        webcam.updateBearing(detection.ftcPose.bearing);
-                        webcam.updateRange(detection.ftcPose.range);
+                else
+                {
+                    intake.stop();
+                    gamepad1.stopRumble();
+                }
 
-                        double rx = bearingController.calculate(webcam.getBearing(), 0);
-                        double targetAngularRate = Outtake.toAngularRate(Outtake.calculateIdealFlywheelTangentialVelocity(webcam.getRange()));
-
-                        drive.drive(gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_Y), gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_X), rx);
-                        ((DcMotorEx) outtake.motor.motor).setVelocity(targetAngularRate);
-
-                        double error = ((DcMotorEx) outtake.motor.motor).getVelocity() - targetAngularRate;
-
-                        telemetry.addData("Range", webcam.getRange());
-                        telemetry.addData("Bearing", webcam.getBearing());
-                        telemetry.addData("RX", rx);
-                        telemetry.addData("Target Angular Rate", targetAngularRate);
-                        telemetry.addData("Error", error);
-
-                        if (gamepads.isPressed(Button.GP1_A)) {
-                            if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE_TPS) {
-                                intake.forwardLaunch();
-                                gamepad1.stopRumble();
-                            } else {
-                                intake.stop();
-                                gamepad1.rumbleBlips(1);
-                            }
-                        } else {
-                            intake.stop();
-                            gamepad1.stopRumble();
-                        }
-
-                        lastValidDetection = detection;
-                    }
+                if (detection != null)
+                {
+                    lastValidDetection = detection;
                 }
             })
             .transition(() ->
