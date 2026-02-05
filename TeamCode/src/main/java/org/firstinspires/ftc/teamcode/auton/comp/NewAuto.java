@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.core.control.Gamepads;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.hardware.RightStopper;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.pedroPathing.Drawing;
 import org.firstinspires.ftc.teamcode.subsystems.AprilTagWebcam;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
@@ -84,6 +85,8 @@ public class NewAuto extends OpMode
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         follower = Constants.createFollower(hardwareMap);
+        follower.setStartingPose(startPose);
+        Drawing.init();
     }
 
     @Override
@@ -124,7 +127,6 @@ public class NewAuto extends OpMode
     @Override
     public void start()
     {
-        follower.setStartingPose(startPose);
         buildPaths();
         buildMachine();
         fsm.start();
@@ -134,6 +136,7 @@ public class NewAuto extends OpMode
     public void loop()
     {
         follower.update();
+        Drawing.drawDebug(follower);
 
         boolean machineExists = fsm != null;
         if (machineExists) fsm.update();

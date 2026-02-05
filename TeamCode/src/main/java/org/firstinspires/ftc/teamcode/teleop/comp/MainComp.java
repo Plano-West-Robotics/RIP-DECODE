@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.core.control.Analog;
 import org.firstinspires.ftc.teamcode.core.control.Button;
 import org.firstinspires.ftc.teamcode.subsystems.AprilTagWebcam;
@@ -237,6 +238,7 @@ public class MainComp extends BaseTeleOp
         telemetry.addData("Goal Color", webcam.getGoalId() == AprilTagWebcam.RED_GOAL_ID ? "RED" : "BLUE");
         telemetry.addData("Outtake Motor Angular Velocity (ticks/sec)", ((DcMotorEx) outtake.motor.motor).getVelocity());
         telemetry.addData("Outtake Motor Angular Velocity (rev/min)", ((DcMotorEx) outtake.motor.motor).getVelocity() * 60 * (1 / Outtake.TICKS_PER_REVOLUTION));
+        telemetry.addData("Outtake Motor Current Draw (Amperes)", ((DcMotorEx) outtake.motor.motor).getCurrent(CurrentUnit.AMPS));
         telemetry.addData("Pinpoint IMU Yaw (Degrees)", Math.toDegrees(drive.getHeading()));
         telemetry.addData("Field Centric Drive is Functional", (Math.pow(Math.toDegrees(drive.getHeading()), 2) > 0) ? "YES" : "NO");
 
