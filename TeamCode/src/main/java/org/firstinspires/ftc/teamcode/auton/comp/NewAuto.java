@@ -52,8 +52,8 @@ public class NewAuto extends OpMode
     public boolean isRed = true;
     public boolean score1ReverseLaunchDone = false;
 
-    // For the timed mini steps while driving to score
-    public int score1Phase = 0; // 0 = waiting to disable intake, 1 = reversing, -1 = done
+    public enum Score1Phase {WAIT, REVERSE, DONE}
+    Score1Phase score1Phase;
 
     public StateMachine fsm;
 
@@ -164,7 +164,7 @@ public class NewAuto extends OpMode
     public void buildMachine()
     {
         score1ReverseLaunchDone = false;
-        score1Phase = 0;
+        score1Phase = Score1Phase.WAIT;
 
         fsm = new StateMachineBuilder()
 
@@ -206,28 +206,28 @@ public class NewAuto extends OpMode
                 () -> {
                     follower.followPath(score1Path);
                     pathTimer.resetTimer();
-                    score1Phase = 0;
+                    score1Phase = Score1Phase.WAIT;
                 }
             )
 
             .state(PathState.TO_SCORE1)
             .loop(() -> {
-                // phase 0: after DISABLE_INTAKE_SECONDS, reverse intake for a small period of time and spin up the flywheel on the way to the goal
-                if (score1Phase == 0 && pathTimer.getElapsedTimeSeconds() >= AutonConstants.DISABLE_INTAKE_SECONDS)
+                // phase WAIT: after DISABLE_INTAKE_SECONDS, reverse intake for a small period of time and spin up the flywheel on the way to the goal
+                if (score1Phase == Score1Phase.WAIT && pathTimer.getElapsedTimeSeconds() >= AutonConstants.DISABLE_INTAKE_SECONDS)
                 {
                     ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE);
                     intake.reverseLaunch();
                     rightStopper.go();
 
-                    score1Phase = 1;
+                    score1Phase = Score1Phase.REVERSE;
                     pathTimer.resetTimer();
                 }
 
-                // phase 1: after REVERSE_INTAKE_SECONDS, stop intake
-                if (score1Phase == 1 && pathTimer.getElapsedTimeSeconds() >= AutonConstants.REVERSE_INTAKE_SECONDS)
+                // phase REVERSE: after REVERSE_INTAKE_SECONDS, stop intake
+                if (score1Phase == Score1Phase.REVERSE && pathTimer.getElapsedTimeSeconds() >= AutonConstants.REVERSE_INTAKE_SECONDS)
                 {
                     intake.stop();
-                    score1Phase = -1; // not used anymore, change it to 2 if we want to use it again
+                    score1Phase = Score1Phase.DONE;
                 }
             })
             .transition(() -> !follower.isBusy(), PathState.AT_SCORE1,
