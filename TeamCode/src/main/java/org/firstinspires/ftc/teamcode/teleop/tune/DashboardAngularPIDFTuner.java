@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+//import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.subsystems.FieldCentricDrive;
 
@@ -46,7 +46,7 @@ public class DashboardAngularPIDFTuner extends OpMode
 
         controller.setPIDF(P, I, D, F);
 
-        double currentAngle = drive.getHeading(AngleUnit.DEGREES);
+        double currentAngle = Math.toDegrees(drive.getHeading());
         targetAngle = Range.clip(targetAngle, -180, 180);
 
         double rx = -controller.calculate(currentAngle, targetAngle);

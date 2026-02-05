@@ -6,8 +6,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.auton.comp.AutonConstants;
 import org.firstinspires.ftc.teamcode.core.control.Analog;
 import org.firstinspires.ftc.teamcode.core.control.Button;
 import org.firstinspires.ftc.teamcode.subsystems.AprilTagWebcam;
@@ -39,6 +37,7 @@ public class MainComp extends BaseTeleOp
 
     public AprilTagDetection lastValidDetection;
 
+    double oldTime = 0;
 
     @Override
     public void setup()
@@ -247,7 +246,18 @@ public class MainComp extends BaseTeleOp
         telemetry.addData("Goal Color", webcam.getGoalId() == AprilTagWebcam.RED_GOAL_ID ? "RED" : "BLUE");
         telemetry.addData("Outtake Motor Angular Velocity (ticks/sec)", ((DcMotorEx) outtake.motor.motor).getVelocity());
         telemetry.addData("Outtake Motor Angular Velocity (rev/min)", ((DcMotorEx) outtake.motor.motor).getVelocity() * 60 * (1 / Outtake.TICKS_PER_REVOLUTION));
-        telemetry.addData("IMU Yaw (Degrees)", drive.getHeading(AngleUnit.DEGREES));
-        telemetry.addData("Field Centric Drive is Functional", (Math.pow(drive.getHeading(AngleUnit.DEGREES), 2) > 0) ? "YES" : "NO");
+        telemetry.addData("Pinpoint IMU Yaw (Degrees)", Math.toDegrees(drive.getHeading()));
+        telemetry.addData("Field Centric Drive is Functional", (Math.pow(Math.toDegrees(drive.getHeading()), 2) > 0) ? "YES" : "NO");
+
+        // for checking pinpoint loop times & status
+
+        telemetry.addData("Status", hardware.pinpoint.getDeviceStatus());
+        telemetry.addData("Pinpoint Frequency", hardware.pinpoint.getFrequency());
+
+        double newTime = getRuntime();
+        double period = newTime - oldTime;
+        double frequency = 1 / period;
+        oldTime = newTime;
+        telemetry.addData("REV Hub Frequency", frequency);
     }
 }

@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.qualcomm.robotcore.hardware.IMU;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.pinpointFiles.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.core.control.Analog;
 import org.firstinspires.ftc.teamcode.core.control.Button;
 import org.firstinspires.ftc.teamcode.core.control.Gamepads;
@@ -12,16 +10,20 @@ import org.firstinspires.ftc.teamcode.hardware.Hardware;
 public class FieldCentricDrive
 {
     public DrivetrainMotors drivetrainMotors;
-    public IMU imu;
+    //public IMU imu;
+    public GoBildaPinpointDriver pinpoint;
 
     public FieldCentricDrive(Hardware hardware)
     {
         drivetrainMotors = hardware.drivetrainMotors;
-        imu = hardware.imu;
+        //imu = hardware.imu;
+        pinpoint = hardware.pinpoint;
     }
 
     public void update(Gamepads gamepads)
     {
+        pinpoint.update(GoBildaPinpointDriver.ReadData.ONLY_UPDATE_HEADING);
+
         if (gamepads.justPressed(Button.GP1_DPAD_RIGHT))
         {
             resetHeading();
@@ -35,7 +37,7 @@ public class FieldCentricDrive
 
     public void drive(double y, double x, double rx)
     {
-        double heading = getHeading(AngleUnit.RADIANS);
+        double heading = getHeading();
 
         double rotY = (x * Math.sin(-heading) + y * Math.cos(-heading)) * DrivetrainMotors.SPEED;
         double rotX = (x * Math.cos(-heading) - y * Math.sin(-heading)) * DrivetrainMotors.SPEED;
@@ -52,11 +54,13 @@ public class FieldCentricDrive
 
     public void resetHeading()
     {
-        imu.resetYaw();
+        pinpoint.recalibrateIMU();
     }
 
-    public double getHeading(AngleUnit angleUnit)
+    public double getHeading()
     {
-        return imu.getRobotYawPitchRollAngles().getYaw(angleUnit);
+        // TODO: do not change the method yet
+        double yaw = pinpoint.getHeading();
+        return Math.atan2(Math.sin(yaw), Math.cos(yaw));
     }
 }

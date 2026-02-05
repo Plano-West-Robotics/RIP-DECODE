@@ -6,9 +6,9 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.pinpointFiles.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.core.wrappers.MotorWrapper;
 import org.firstinspires.ftc.teamcode.core.wrappers.ServoPairWrapper;
-import org.firstinspires.ftc.teamcode.core.wrappers.ServoWrapper;
 
 public class Hardware
 {
@@ -20,6 +20,7 @@ public class Hardware
     public VoltageSensor vs;
     public ServoPairWrapper stoppers;
     public RightStopper rightStopper;
+    public GoBildaPinpointDriver pinpoint;
 
     public Hardware(HardwareMap hardwareMap)
     {
@@ -29,6 +30,11 @@ public class Hardware
             RevHubOrientationOnRobot.UsbFacingDirection.LEFT
         ));
         imu.initialize(imuParameters);
+
+        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
+        pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        pinpoint.resetPosAndIMU();
 
         vs = hardwareMap.voltageSensor.iterator().next();
 
