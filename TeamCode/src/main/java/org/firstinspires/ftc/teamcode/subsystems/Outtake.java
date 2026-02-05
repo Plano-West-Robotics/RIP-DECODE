@@ -70,7 +70,7 @@ public class Outtake
                 I,
                 D,
                 F * (IDEAL_VOLTAGE / batteryVoltage));
-        manualMode();
+        webcamMode();
     }
 
     public void stoppersUp() { servos.setPosition(UP); }
