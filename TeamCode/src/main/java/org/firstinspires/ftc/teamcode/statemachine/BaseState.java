@@ -1,7 +1,6 @@
-/*
 package org.firstinspires.ftc.teamcode.statemachine;
 
-import org.firstinspires.ftc.teamcode.util.BetterTimer;
+import org.firstinspires.ftc.teamcode.statemachine.BetterTimer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,4 +98,3 @@ public class BaseState implements State {
         return nextState;
     }
 }
-*/
