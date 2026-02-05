@@ -11,6 +11,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+import com.sfdev.assembly.state.StateMachine;
+import com.sfdev.assembly.state.StateMachineBuilder;
+
 import org.firstinspires.ftc.teamcode.core.control.Button;
 import org.firstinspires.ftc.teamcode.core.control.Gamepads;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
@@ -42,23 +45,24 @@ public class NewAuto extends OpMode
 
     public Follower follower;
 
-    public Path preloadPath, lineUp1Path, intake1Path, intermediatePath, score1Path, leave1Path;
-
-    public PathState pathState;
+    public Path preloadPath, lineUp1Path, intake1Path, score1Path, leave1Path;
 
     public int numShot = 0;
 
     public boolean isRed = true;
     public boolean score1ReverseLaunchDone = false;
 
+    // For the timed mini steps while driving to score
+    public int score1Phase = 0; // 0 = waiting to disable intake, 1 = reversing, -1 = done
+
+    public StateMachine fsm;
+
     public enum PathState
     {
         START,
-        TO_PRELOAD_SCORE,
         AT_PRELOAD_SCORE,
         TO_LINEUP1,
         TO_INTAKE1,
-        TO_INTERMEDIATE1,
         TO_SCORE1,
         AT_SCORE1,
         LEAVE_LINE,
@@ -80,8 +84,6 @@ public class NewAuto extends OpMode
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         follower = Constants.createFollower(hardwareMap);
-
-        pathState = PathState.START;
     }
 
     @Override
@@ -124,13 +126,20 @@ public class NewAuto extends OpMode
     {
         follower.setStartingPose(startPose);
         buildPaths();
+        buildMachine();
+        fsm.start();
     }
 
     @Override
     public void loop()
     {
         follower.update();
-        autonomousPaths();
+
+        boolean machineExists = fsm != null;
+        if (machineExists) fsm.update();
+
+        telemetry.addData("Path State", machineExists ? fsm.getStateEnum() : "(no machine)");
+        telemetry.update();
     }
 
     public void buildPaths()
@@ -145,12 +154,6 @@ public class NewAuto extends OpMode
         intake1Path.setConstantHeadingInterpolation(intake1Pose.getHeading());
         intake1Path.setVelocityConstraint(AutonConstants.INTAKE_1_VEL_CONSTRAINT);
 
-//        intermediatePath = new Path(new BezierLine(intake1Pose, lineUp1Pose));
-//        intermediatePath.setConstantHeadingInterpolation(intake1Pose.getHeading());
-//
-//        score1Path = new Path(new BezierLine(lineUp1Pose, scorePose));
-//        score1Path.setLinearHeadingInterpolation(lineUp1Pose.getHeading(), scorePose.getHeading());
-
         score1Path = new Path(new BezierLine(intake1Pose, scorePose));
         score1Path.setLinearHeadingInterpolation(intake1Pose.getHeading(), scorePose.getHeading());
 
@@ -158,109 +161,115 @@ public class NewAuto extends OpMode
         leave1Path.setConstantHeadingInterpolation(scorePose.getHeading());
     }
 
-    public void autonomousPaths()
+    public void buildMachine()
     {
-        telemetry.addData("Path State", pathState);
+        score1ReverseLaunchDone = false;
+        score1Phase = 0;
 
-        switch (pathState)
-        {
-            case START:
+        fsm = new StateMachineBuilder()
+
+            // drive to preload score while spinning up
+            .state(PathState.START)
+            .onEnter(() -> {
                 rightStopper.go();
                 follower.followPath(preloadPath);
-                pathState = PathState.TO_PRELOAD_SCORE;
-                break;
-            case TO_PRELOAD_SCORE:
+            })
+            .loop(() -> {
                 ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE);
-                if (!follower.isBusy())
-                {
-                    pathState = PathState.AT_PRELOAD_SCORE;
-                    pathTimer.resetTimer();
-                }
-                break;
-            case AT_PRELOAD_SCORE:
-                shoot(Outtake.NORMAL_ERROR_TOLERANCE_TPS);
-                if (pathTimer.getElapsedTimeSeconds() > AutonConstants.PRELOAD_SCORE_TIME)
-                {
+            })
+            .transition(() -> !follower.isBusy(), PathState.AT_PRELOAD_SCORE)
+
+            // shoot the balls
+            .state(PathState.AT_PRELOAD_SCORE)
+            .onEnter(() -> pathTimer.resetTimer())
+            .loop(() -> shoot(Outtake.NORMAL_ERROR_TOLERANCE_TPS))
+            .transition(() -> pathTimer.getElapsedTimeSeconds() > AutonConstants.PRELOAD_SCORE_TIME,
+                PathState.TO_LINEUP1,
+                () -> {
+                    // turn on the intake, run the flywheel in reverse to prevent the balls from jumping out
                     intake.forwardRegular();
-//                    ((DcMotorEx) outtake.motor.motor).setVelocity(0);
                     ((DcMotorEx) outtake.motor.motor).setVelocity(-800);
                     follower.followPath(lineUp1Path);
-                    pathState = PathState.TO_LINEUP1;
                 }
-                break;
-            case TO_LINEUP1:
-                if (!follower.isBusy())
-                {
-//                    ((DcMotorEx) outtake.motor.motor).setVelocity(0);
-                    follower.followPath(intake1Path);
+            )
+
+            .state(PathState.TO_LINEUP1)
+            .transition(() -> !follower.isBusy(), PathState.TO_INTAKE1,
+                () -> {
                     rightStopper.stop();
-                    pathState = PathState.TO_INTAKE1;
+                    follower.followPath(intake1Path);
                 }
-                break;
-            case TO_INTAKE1:
-                if (!follower.isBusy())
-                {
+            )
+
+            .state(PathState.TO_INTAKE1)
+            .transition(() -> !follower.isBusy(), PathState.TO_SCORE1,
+                () -> {
                     follower.followPath(score1Path);
-                    pathState = PathState.TO_SCORE1;
                     pathTimer.resetTimer();
+                    score1Phase = 0;
                 }
-                break;
-//            case TO_INTERMEDIATE1:
-//                if (pathTimer.getElapsedTimeSeconds() >= AutonConstants.DISABLE_INTAKE_SECONDS) intake.stop();
-//                if (!follower.isBusy())
-//                {
-//                    follower.followPath(score1Path);
-//                    pathState = PathState.TO_SCORE1;
-//                }
-//                break;
-            case TO_SCORE1:
-                if (pathTimer.getElapsedTimeSeconds() >= AutonConstants.DISABLE_INTAKE_SECONDS)
+            )
+
+            .state(PathState.TO_SCORE1)
+            .loop(() -> {
+                // phase 0: after DISABLE_INTAKE_SECONDS, reverse intake for a small period of time and spin up the flywheel on the way to the goal
+                if (score1Phase == 0 && pathTimer.getElapsedTimeSeconds() >= AutonConstants.DISABLE_INTAKE_SECONDS)
                 {
                     ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE);
-                    pathTimer.resetTimer();
                     intake.reverseLaunch();
                     rightStopper.go();
-                }
-                if (pathTimer.getElapsedTimeSeconds() >= AutonConstants.REVERSE_INTAKE_SECONDS)
-                {
+
+                    score1Phase = 1;
                     pathTimer.resetTimer();
+                }
+
+                // phase 1: after REVERSE_INTAKE_SECONDS, stop intake
+                if (score1Phase == 1 && pathTimer.getElapsedTimeSeconds() >= AutonConstants.REVERSE_INTAKE_SECONDS)
+                {
                     intake.stop();
+                    score1Phase = -1; // not used anymore, change it to 2 if we want to use it again
                 }
-                if (!follower.isBusy())
-                {
+            })
+            .transition(() -> !follower.isBusy(), PathState.AT_SCORE1,
+                () -> {
                     intake.reverseLaunch();
-                    pathState = PathState.AT_SCORE1;
-                    pathTimer.resetTimer();
                 }
-                break;
-            case AT_SCORE1:
+            )
+
+            .state(PathState.AT_SCORE1)
+            .onEnter(() -> {
+                pathTimer.resetTimer();
+                score1ReverseLaunchDone = false;
+            })
+            .loop(() -> {
                 if (!score1ReverseLaunchDone && pathTimer.getElapsedTimeSeconds() >= AutonConstants.REVERSE_INTAKE_SECONDS)
                 {
-                    pathTimer.resetTimer();
                     intake.stop();
                     score1ReverseLaunchDone = true;
+                    pathTimer.resetTimer();
                 }
+
                 rightStopper.go();
                 shoot(Outtake.NORMAL_ERROR_TOLERANCE_TPS);
-                if (pathTimer.getElapsedTimeSeconds() > AutonConstants.FIRST_THREE_SCORE_TIME)
-                {
+            })
+            .transition(() -> pathTimer.getElapsedTimeSeconds() > (AutonConstants.FIRST_THREE_SCORE_TIME - AutonConstants.REVERSE_INTAKE_SECONDS),
+                PathState.LEAVE_LINE,
+                () -> {
                     intake.stop();
                     ((DcMotorEx) outtake.motor.motor).setVelocity(0);
                     follower.followPath(leave1Path, true);
-                    pathState = PathState.LEAVE_LINE;
                 }
-                break;
-            case LEAVE_LINE:
-                if (!follower.isBusy())
-                {
-                    ((DcMotorEx) outtake.motor.motor).setVelocity(0);
-                    pathState = PathState.STOP;
-                }
-                break;
-            case STOP:
-                ((DcMotorEx) outtake.motor.motor).setVelocity(0);
-                break;
-        }
+            )
+
+            .state(PathState.LEAVE_LINE)
+            .transition(() -> !follower.isBusy(), PathState.STOP,
+                () -> ((DcMotorEx) outtake.motor.motor).setVelocity(0)
+            )
+
+            .state(PathState.STOP)
+            .loop(() -> ((DcMotorEx) outtake.motor.motor).setVelocity(0))
+
+            .build();
     }
 
     public void shoot(double tolerance)
