@@ -8,7 +8,7 @@ public class AutonConstants
     public static final Pose RED_SCORE = new Pose(94.77570093457945, 104.74766355140187, Math.toRadians(37));
     public static final Pose RED_LINEUP_1 = new Pose(93.29085681426106, AutonConstants.PICKUP_Y_POS_1, Math.toRadians(180));
     public static final Pose RED_INTAKE_1 = new Pose(AutonConstants.PICKUP_X_POS, AutonConstants.PICKUP_Y_POS_1, Math.toRadians(180));
-    public static final Pose RED_LEAVE_1 = new Pose(120, 80, Math.toRadians(45));
+    public static final Pose RED_LEAVE_1 = new Pose(120, 80, Math.toRadians(0));
 
     public static final Pose BLUE_START = AutonConstants.mirror(RED_START);
     public static final Pose BLUE_SCORE = AutonConstants.mirror(RED_SCORE);
