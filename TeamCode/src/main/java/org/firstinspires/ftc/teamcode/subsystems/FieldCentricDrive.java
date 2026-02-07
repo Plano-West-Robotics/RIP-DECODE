@@ -54,7 +54,7 @@ public class FieldCentricDrive
 
     public void resetHeading()
     {
-        pinpoint.recalibrateIMU();
+        pinpoint.resetPosAndIMU();
     }
 
     public double getHeading()

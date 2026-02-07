@@ -46,7 +46,7 @@ public class Constants {
             .xVelocity(62)
             .yVelocity(49);
 
-    /*
+
     public static TwoWheelConstants localizerConstants = new TwoWheelConstants()
             .forwardEncoder_HardwareMapName("br")
             .strafeEncoder_HardwareMapName("bl")
@@ -65,22 +65,23 @@ public class Constants {
 //            .strafeTicksToInches(0.00305353222)
             .forwardTicksToInches(0.0029938)
             .strafeTicksToInches(0.002);
-    */
 
-    public static PinpointConstants localizerConstants = new PinpointConstants()
-            .forwardPodY(4)
-            .strafePodX(1.4)
-            .distanceUnit(DistanceUnit.INCH)
-            .hardwareMapName("pinpoint")
-            .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
-            .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
-            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);
+
+//    public static PinpointConstants localizerConstants = new PinpointConstants()
+//            .forwardPodY(4)
+//            .strafePodX(1.4)
+//            .distanceUnit(DistanceUnit.INCH)
+//            .hardwareMapName("pinpoint")
+//            .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
+//            .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
+//            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
     public static Follower createFollower(HardwareMap hardwareMap) {
         return new FollowerBuilder(followerConstants, hardwareMap)
                 .pathConstraints(pathConstraints)
                 .mecanumDrivetrain(driveConstants)
-                .pinpointLocalizer(localizerConstants)
+                .twoWheelLocalizer(localizerConstants)
+                //.pinpointLocalizer(localizerConstants)
                 .build();
     }
 }

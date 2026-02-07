@@ -132,7 +132,7 @@ public class MainComp extends BaseTeleOp
                     }
                     drive.update(gamepads);
 
-                    ((DcMotorEx) outtake.motor.motor).setVelocity(0);
+                    ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE);
 
                     telemetry.addData("AprilTag Found", false);
                     intake.stop();
@@ -144,7 +144,7 @@ public class MainComp extends BaseTeleOp
                 webcam.updateBearing(detectionToUse.ftcPose.bearing);
                 webcam.updateRange(detectionToUse.ftcPose.range);
 
-                double rx = 0;
+                double rx = gamepads.getAnalogValue(Analog.GP1_RIGHT_STICK_X);
                 if (detection != null)
                 {
                     webcam.updateBearing(detection.ftcPose.bearing);
@@ -161,9 +161,9 @@ public class MainComp extends BaseTeleOp
                 drive.drive(gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_Y), gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_X), rx);
 
                 DcMotorEx flywheel = (DcMotorEx) outtake.motor.motor;
-                flywheel.setVelocity(targetAngularRate);
+                flywheel.setVelocity(Outtake.MANUAL_ANGULAR_RATE);
 
-                double error = flywheel.getVelocity() - targetAngularRate;
+                double error = flywheel.getVelocity() - Outtake.MANUAL_ANGULAR_RATE;
 
                 telemetry.addData("Range", webcam.getRange());
                 telemetry.addData("Bearing", webcam.getBearing());
@@ -210,10 +210,6 @@ public class MainComp extends BaseTeleOp
     @Override
     public void init_loop()
     {
-        if (gamepads.justPressed(Button.GP1_A))
-        {
-            webcam.toggleGoalId();
-        }
         telemetry.addData("Goal Color", webcam.getGoalId() == AprilTagWebcam.RED_GOAL_ID ? "RED" : "BLUE");
 
         boolean cameraIsReady = webcam.portal.getCameraState() == VisionPortal.CameraState.STREAMING;
@@ -231,6 +227,7 @@ public class MainComp extends BaseTeleOp
     @Override
     public void run()
     {
+        // note - pressing Y on GP1 changes the goal color
         fsm.update();
         telemetry.addData("Current State", fsm.getState());
         telemetry.addData("Threshold Exceeded", gamepads.exceedsThreshold(Analog.GP1_RIGHT_TRIGGER, Outtake.TRIGGER_THRESHOLD));
@@ -252,5 +249,8 @@ public class MainComp extends BaseTeleOp
         double frequency = 1 / period;
         oldTime = newTime;
         telemetry.addData("REV Hub Frequency", frequency);
+
+        telemetry.addLine();
+        telemetry.addData("Intake Current Draw", ((DcMotorEx)(intake.motor.motor)).getCurrent(CurrentUnit.AMPS));
     }
 }
