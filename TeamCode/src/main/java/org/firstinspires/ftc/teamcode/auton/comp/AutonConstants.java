@@ -45,6 +45,8 @@ public class AutonConstants
     public static final Pose FAR_BLUE_INTAKE = mirror(FAR_RED_INTAKE);
     public static final Pose FAR_BLUE_SCORE_1 = mirror(FAR_RED_SCORE_1);
 
+    public static final int PATH_COUNT_UPPER_BOUND = 20;
+
     public static Pose mirror(Pose p)
     {
         double heading = p.getHeading();

@@ -23,8 +23,8 @@ public class Outtake
 
     public static final double MANUAL_ANGULAR_RATE = 0.375 * MAX_ANGULAR_RATE;
     public static final double TRIGGER_THRESHOLD = 0.5;
-    public static final double NORMAL_ERROR_TOLERANCE_TPS = 30; // ticks/sec
-    public static final double FAR_ERROR_TOLERANCE_TPS = 160; // ticks/sec
+    public static final double NORMAL_ERROR_TOLERANCE = 30; // ticks/sec
+    public static final double FAR_ERROR_TOLERANCE = 160; // ticks/sec
 
     public static final double FLYWHEEL_RADIUS = 0.0508; // meters
     public static final double HALF_GRAVITY = 4.903325; // meters per second squared

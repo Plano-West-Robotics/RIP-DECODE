@@ -189,7 +189,7 @@ public class FarAuto extends OpMode
                 }
                 break;
             case AT_PRELOAD_SCORE:
-                shoot(AutonConstants.FAR_TPS, Outtake.FAR_ERROR_TOLERANCE_TPS);
+                shoot(AutonConstants.FAR_TPS, Outtake.FAR_ERROR_TOLERANCE);
                 if (pathTimer.getElapsedTimeSeconds() > AutonConstants.FAR_PRELOAD_SCORE_TIME)
                 {
                     intake.forwardRegular();
@@ -252,7 +252,7 @@ public class FarAuto extends OpMode
                     score1ReverseLaunchDone = true;
                 }
                 rightStopper.go();
-                shoot(AutonConstants.FAR_TPS, Outtake.FAR_ERROR_TOLERANCE_TPS);
+                shoot(AutonConstants.FAR_TPS, Outtake.FAR_ERROR_TOLERANCE);
                 if (pathTimer.getElapsedTimeSeconds() > AutonConstants.FAR_PRELOAD_SCORE_TIME)
                 {
                     intake.stop();

@@ -221,7 +221,7 @@ public class RedAuto extends OpMode
             ((DcMotorEx) outtake.motor.motor).setVelocity(targetAngularRate);
             double error = ((DcMotorEx) outtake.motor.motor).getVelocity() - targetAngularRate;
 
-            if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE_TPS)
+            if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE)
             {
                 intake.forwardLaunch();
             }

@@ -185,7 +185,7 @@ public class NewAuto extends OpMode
             // shoot the balls
             .state(PathState.AT_PRELOAD_SCORE)
             .onEnter(() -> pathTimer.resetTimer())
-            .loop(() -> shoot(Outtake.NORMAL_ERROR_TOLERANCE_TPS))
+            .loop(() -> shoot(Outtake.NORMAL_ERROR_TOLERANCE))
             .transition(() -> pathTimer.getElapsedTimeSeconds() > AutonConstants.PRELOAD_SCORE_TIME,
                 PathState.TO_LINEUP1,
                 () -> {
@@ -253,7 +253,7 @@ public class NewAuto extends OpMode
                 }
 
                 rightStopper.go();
-                shoot(Outtake.NORMAL_ERROR_TOLERANCE_TPS);
+                shoot(Outtake.NORMAL_ERROR_TOLERANCE);
             })
             .transition(() -> pathTimer.getElapsedTimeSeconds() > (AutonConstants.FIRST_THREE_SCORE_TIME - AutonConstants.REVERSE_INTAKE_SECONDS),
                 PathState.LEAVE_LINE,
