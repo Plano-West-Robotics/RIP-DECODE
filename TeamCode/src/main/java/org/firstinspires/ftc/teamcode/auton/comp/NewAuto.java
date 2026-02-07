@@ -86,6 +86,10 @@ public class NewAuto extends OpMode
 
         follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(startPose);
+
+        buildPaths();
+        buildMachine();
+
         Drawing.init();
     }
 
@@ -127,8 +131,6 @@ public class NewAuto extends OpMode
     @Override
     public void start()
     {
-        buildPaths();
-        buildMachine();
         fsm.start();
     }
 
