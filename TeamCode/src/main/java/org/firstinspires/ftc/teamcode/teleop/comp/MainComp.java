@@ -147,7 +147,7 @@ public class MainComp extends BaseTeleOp
                 telemetry.addData("AprilTag Currently Found", detection != null);
 
                 webcam.updateBearing(detectionToUse.ftcPose.bearing);
-                webcam.updateRange(detectionToUse.ftcPose.range);
+//                webcam.updateRange(detectionToUse.ftcPose.range);
 
                 double rx = gamepads.getAnalogValue(Analog.GP1_RIGHT_STICK_X);
                 if (detection != null)
@@ -161,7 +161,7 @@ public class MainComp extends BaseTeleOp
                     webcam.updateBearing(lastValidDetection.ftcPose.bearing);
                 }
 
-                double targetAngularRate = Outtake.toAngularRate(Outtake.calculateIdealFlywheelTangentialVelocity(webcam.getRange()));
+                //double targetAngularRate = Outtake.toAngularRate(Outtake.calculateIdealFlywheelTangentialVelocity(webcam.getRange()));
 
                 drive.drive(gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_Y), gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_X), rx);
 
@@ -173,7 +173,7 @@ public class MainComp extends BaseTeleOp
                 telemetry.addData("Range", webcam.getRange());
                 telemetry.addData("Bearing", webcam.getBearing());
                 telemetry.addData("RX", rx);
-                telemetry.addData("Target Angular Rate", targetAngularRate);
+                telemetry.addData("Target Angular Rate", Outtake.MANUAL_ANGULAR_RATE);
                 telemetry.addData("Error", error);
 
                 if (gamepads.isPressed(Button.GP1_A))
