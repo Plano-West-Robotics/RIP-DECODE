@@ -74,7 +74,10 @@ public class MainComp extends BaseTeleOp
                         && outtake.getMode() == Outtake.ControlMode.WEBCAM_CONTROL,
                 State.WEBCAM_SHOOTING
             )
-            .onExit(() -> intake.stop())
+            .onExit(() -> {
+                intake.stop();
+            })
+
 
             .state(State.MANUAL_SHOOTING)
             .onEnter(() -> ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE))
@@ -116,6 +119,8 @@ public class MainComp extends BaseTeleOp
                 intake.forwardRegular();
                 intake.stop();
                 outtake.motor.setPower(0);
+                if (!gamepad2.isRumbling())
+                    gamepad2.rumble(1000);
             })
 
             .state(State.WEBCAM_SHOOTING)
@@ -181,7 +186,10 @@ public class MainComp extends BaseTeleOp
                     else
                     {
                         intake.stop();
-                        gamepad1.rumbleBlips(1);
+                        if (!gamepad1.isRumbling())
+                        {
+                            gamepad1.rumble(500);
+                        }
                     }
                 }
                 else
@@ -203,6 +211,8 @@ public class MainComp extends BaseTeleOp
                 intake.forwardRegular();
                 intake.stop();
                 outtake.motor.setPower(0);
+                if (!gamepad2.isRumbling())
+                    gamepad2.rumble(1000);
             })
             .build();
     }
