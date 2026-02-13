@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.teleop.BaseTeleOp;
 
 @Config
 @TeleOp(group = "Tune")
-public class DashboardOuttakeVelocityPIDFTuner extends BaseTeleOp
+public class DashboardHoodedShooterTuner extends BaseTeleOp
 {
     public static double F = Outtake.F;
     public static double P = Outtake.P;

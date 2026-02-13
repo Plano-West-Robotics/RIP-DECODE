@@ -56,12 +56,12 @@ public class MainComp extends BaseTeleOp
         );
         fsm = new StateMachineBuilder()
             .state(State.STANDBY)
-            .onEnter(() -> outtake.motor.setPower(0))
+            .onEnter(() -> outtake.stop())
             .loop(() -> {
                 drive.update(gamepads);
                 intake.update(gamepads);
                 outtake.update(gamepads);
-                outtake.motor.setPower(0);
+                outtake.stop();
                 webcam.update(gamepads);
             })
             .transition(() ->
@@ -80,13 +80,13 @@ public class MainComp extends BaseTeleOp
 
 
             .state(State.MANUAL_SHOOTING)
-            .onEnter(() -> ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE))
+            .onEnter(() -> outtake.setVelocity(Outtake.MANUAL_ANGULAR_RATE))
             .loop(() -> {
                 drive.update(gamepads);
-                ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE);
+                outtake.setVelocity(Outtake.MANUAL_ANGULAR_RATE);
                 webcam.update(gamepads);
 
-                double error = ((DcMotorEx) outtake.motor.motor).getVelocity() - Outtake.MANUAL_ANGULAR_RATE;
+                double error = outtake.getAverageVelocity() - Outtake.MANUAL_ANGULAR_RATE;
                 telemetry.addData("Error", error);
 
                 if (gamepads.isPressed(Button.GP1_A))
@@ -118,7 +118,7 @@ public class MainComp extends BaseTeleOp
             .onExit(() -> {
                 intake.forwardRegular();
                 intake.stop();
-                outtake.motor.setPower(0);
+                outtake.stop();
                 if (!gamepad2.isRumbling())
                     gamepad2.rumble(1000);
             })
@@ -137,7 +137,7 @@ public class MainComp extends BaseTeleOp
                     }
                     drive.update(gamepads);
 
-                    ((DcMotorEx) outtake.motor.motor).setVelocity(Outtake.MANUAL_ANGULAR_RATE);
+                    outtake.setVelocity(Outtake.MANUAL_ANGULAR_RATE);
 
                     telemetry.addData("AprilTag Found", false);
                     intake.stop();
@@ -165,10 +165,9 @@ public class MainComp extends BaseTeleOp
 
                 drive.drive(gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_Y), gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_X), rx);
 
-                DcMotorEx flywheel = (DcMotorEx) outtake.motor.motor;
-                flywheel.setVelocity(Outtake.MANUAL_ANGULAR_RATE);
+                outtake.setVelocity(Outtake.MANUAL_ANGULAR_RATE);
 
-                double error = flywheel.getVelocity() - Outtake.MANUAL_ANGULAR_RATE;
+                double error = outtake.getAverageVelocity() - Outtake.MANUAL_ANGULAR_RATE;
 
                 telemetry.addData("Range", webcam.getRange());
                 telemetry.addData("Bearing", webcam.getBearing());
@@ -210,7 +209,7 @@ public class MainComp extends BaseTeleOp
             .onExit(() -> {
                 intake.forwardRegular();
                 intake.stop();
-                outtake.motor.setPower(0);
+                outtake.stop();
                 if (!gamepad2.isRumbling())
                     gamepad2.rumble(1000);
             })
@@ -243,9 +242,9 @@ public class MainComp extends BaseTeleOp
         telemetry.addData("Threshold Exceeded", gamepads.exceedsThreshold(Analog.GP1_RIGHT_TRIGGER, Outtake.TRIGGER_THRESHOLD));
         telemetry.addData("Outtake Mode", outtake.getMode());
         telemetry.addData("Goal Color", webcam.getGoalId() == AprilTagWebcam.RED_GOAL_ID ? "RED" : "BLUE");
-        telemetry.addData("Outtake Motor Angular Velocity (ticks/sec)", ((DcMotorEx) outtake.motor.motor).getVelocity());
-        telemetry.addData("Outtake Motor Angular Velocity (rev/min)", ((DcMotorEx) outtake.motor.motor).getVelocity() * 60 * (1 / Outtake.TICKS_PER_REVOLUTION));
-        telemetry.addData("Outtake Motor Current Draw (Amperes)", ((DcMotorEx) outtake.motor.motor).getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("Outtake Motor Angular Velocity (ticks/sec)", outtake.getAverageVelocity());
+        telemetry.addData("Outtake Motor Angular Velocity (rev/min)", outtake.getAverageVelocity() * 60 * (1 / Outtake.TICKS_PER_REVOLUTION));
+//        telemetry.addData("Outtake Motor Current Draw (Amperes)", ((DcMotorEx) outtake.motor.motor).getCurrent(   CurrentUnit.AMPS));
         telemetry.addData("Pinpoint IMU Yaw (Degrees)", Math.toDegrees(drive.getHeading()));
         telemetry.addData("Field Centric Drive is Functional", (Math.pow(Math.toDegrees(drive.getHeading()), 2) > 0) ? "YES" : "NO");
 

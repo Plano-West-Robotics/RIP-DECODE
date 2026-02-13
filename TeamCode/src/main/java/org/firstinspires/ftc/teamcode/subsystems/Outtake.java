@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.core.control.Button;
 import org.firstinspires.ftc.teamcode.core.control.Gamepads;
+import org.firstinspires.ftc.teamcode.core.wrappers.MotorPairWrapper;
 import org.firstinspires.ftc.teamcode.core.wrappers.MotorWrapper;
 import org.firstinspires.ftc.teamcode.core.wrappers.ServoPairWrapper;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
@@ -49,7 +50,8 @@ public class Outtake
     public static final double UP = 0;
     public static final double DOWN = 0;
 
-    public MotorWrapper motor;
+    public MotorWrapper top, bot;
+    public MotorPairWrapper motors;
     public ControlMode mode;
     public VoltageSensor vs;
 
@@ -58,18 +60,26 @@ public class Outtake
     public Outtake(Hardware hardware)
     {
         servos = hardware.stoppers;
-        motor = hardware.outtakeMotor;
-        motor.reverse();
-        motor.useEncoder();
 
         vs = hardware.vs;
         double batteryVoltage = vs.getVoltage();
 
-        ((DcMotorEx) motor.motor).setVelocityPIDFCoefficients(
+        motors = hardware.outtakeMotors;
+
+        ((DcMotorEx) motors.getLeft().motor).setVelocityPIDFCoefficients(
                 P,
                 I,
                 D,
-                F * (IDEAL_VOLTAGE / batteryVoltage));
+                F * (IDEAL_VOLTAGE / batteryVoltage)
+        );
+
+        ((DcMotorEx) motors.getRight().motor).setVelocityPIDFCoefficients(
+            P,
+            I,
+            D,
+            F * (IDEAL_VOLTAGE / batteryVoltage)
+        );
+
         webcamMode();
     }
 
@@ -96,7 +106,21 @@ public class Outtake
         else manualMode();
     }
 
+    public double getAverageVelocity()
+    {
+        return (((DcMotorEx) motors.getLeft().motor).getVelocity() + ((DcMotorEx) motors.getRight().motor).getVelocity()) / 2.0;
+    }
 
+    public void setVelocity(double angularRate)
+    {
+        ((DcMotorEx) motors.getLeft().motor).setVelocity(angularRate);
+        ((DcMotorEx) motors.getRight().motor).setVelocity(angularRate);
+    }
+
+    public void stop()
+    {
+        setVelocity(0);
+    }
 
     public void update(Gamepads gamepads)
     {
@@ -104,13 +128,20 @@ public class Outtake
 
         double batteryVoltage = vs.getVoltage();
 
-        ((DcMotorEx) motor.motor).setVelocityPIDFCoefficients(
+        ((DcMotorEx) motors.getLeft().motor).setVelocityPIDFCoefficients(
             P,
             I,
             D,
-            F); //* (IDEAL_VOLTAGE / batteryVoltage));
+            F //* (IDEAL_VOLTAGE / batteryVoltage));
+        );
 
 
+        ((DcMotorEx) motors.getRight().motor).setVelocityPIDFCoefficients(
+            P,
+            I,
+            D,
+            F //* (IDEAL_VOLTAGE / batteryVoltage));
+        );
     }
 
     /**

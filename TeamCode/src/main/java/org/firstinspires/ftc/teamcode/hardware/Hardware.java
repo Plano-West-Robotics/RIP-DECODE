@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.core.wrappers.MotorPairWrapper;
 import org.firstinspires.ftc.teamcode.pinpointFiles.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.core.wrappers.MotorWrapper;
 import org.firstinspires.ftc.teamcode.core.wrappers.ServoPairWrapper;
@@ -16,7 +17,8 @@ public class Hardware
     public IMU.Parameters imuParameters;
     public WebcamName webcam;
     public DrivetrainMotors drivetrainMotors;
-    public MotorWrapper intakeMotor, outtakeMotor;
+    public MotorWrapper intakeMotor;
+    public MotorPairWrapper outtakeMotors;
     public VoltageSensor vs;
     public ServoPairWrapper stoppers;
     public RightStopper rightStopper;
@@ -45,7 +47,9 @@ public class Hardware
 
         intakeMotor = new MotorWrapper(hardwareMap, "i", false);
 
-        outtakeMotor = new MotorWrapper(hardwareMap, "o", false);
+        outtakeMotors = new MotorPairWrapper(hardwareMap, "otop", "obot");
+        outtakeMotors.getLeft().noEncoder();
+        outtakeMotors.getRight().noEncoder();
 
 //        stoppers = new ServoPairWrapper(hardwareMap, "stopL", "stopR", /*TODO: arbitrary*/ 0.5);
 
