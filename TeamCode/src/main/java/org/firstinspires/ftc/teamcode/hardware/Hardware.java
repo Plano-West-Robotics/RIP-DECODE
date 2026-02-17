@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.core.wrappers.MotorPairWrapper;
+import org.firstinspires.ftc.teamcode.core.wrappers.ServoWrapper;
 import org.firstinspires.ftc.teamcode.pinpointFiles.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.core.wrappers.MotorWrapper;
 import org.firstinspires.ftc.teamcode.core.wrappers.ServoPairWrapper;
@@ -23,6 +24,8 @@ public class Hardware
     public ServoPairWrapper stoppers;
     public RightStopper rightStopper;
     public GoBildaPinpointDriver pinpoint;
+
+    public ServoWrapper hood;
 
     public Hardware(HardwareMap hardwareMap)
     {
@@ -54,5 +57,7 @@ public class Hardware
 //        stoppers = new ServoPairWrapper(hardwareMap, "stopL", "stopR", /*TODO: arbitrary*/ 0.5);
 
         rightStopper = new RightStopper(hardwareMap);
+
+        hood = new ServoWrapper(hardwareMap, "h");
     }
 }
