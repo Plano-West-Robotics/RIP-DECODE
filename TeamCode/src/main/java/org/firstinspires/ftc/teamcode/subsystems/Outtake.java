@@ -5,11 +5,12 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.core.control.Button;
 import org.firstinspires.ftc.teamcode.core.control.Gamepads;
+import org.firstinspires.ftc.teamcode.core.templates.StageServo;
 import org.firstinspires.ftc.teamcode.core.wrappers.MotorPairWrapper;
 import org.firstinspires.ftc.teamcode.core.wrappers.MotorWrapper;
-import org.firstinspires.ftc.teamcode.core.wrappers.ServoPairWrapper;
 import org.firstinspires.ftc.teamcode.core.wrappers.ServoWrapper;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
+import org.firstinspires.ftc.teamcode.hardware.RightStopper;
 
 public class Outtake
 {
@@ -59,13 +60,13 @@ public class Outtake
     public ControlMode mode;
     public VoltageSensor vs;
 
-    public ServoPairWrapper servos;
+    public StageServo<RightStopper.Stage> servo;
 
     public ServoWrapper hood;
 
     public Outtake(Hardware hardware)
     {
-        servos = hardware.stoppers;
+        servo = hardware.rightStopper;
 
         vs = hardware.vs;
         double batteryVoltage = vs.getVoltage();
@@ -91,8 +92,8 @@ public class Outtake
         webcamMode();
     }
 
-    public void stoppersUp() { servos.setPosition(CLOSED); }
-    public void stoppersDown() { servos.setPosition(OPEN); }
+    public void stoppersUp() { servo.setPosition(CLOSED); }
+    public void stoppersDown() { servo.setPosition(OPEN); }
 
 
     public ControlMode getMode()
