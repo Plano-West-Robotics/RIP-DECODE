@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.subsystems.AprilTagWebcam;
 import org.firstinspires.ftc.teamcode.teleop.BaseTeleOp;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @Config
 @TeleOp(group="tune")
@@ -44,7 +45,17 @@ public class WebcamDistanceVelocityTuner extends BaseTeleOp {
     @Override
     public void run()
     {
-        telemetry.addData("Webcam Distance", webcam.getRange());
+        AprilTagDetection detection = webcam.getGoalDetection();
+
+        if (detection == null)
+        {
+            telemetry.addData("Goal ID not detected", false);
+        }
+        else
+        {
+            telemetry.addData("Range: ", webcam.getRange());
+
+        }
         motor1.setVelocity(targetAngularRate);
         motor2.setVelocity(targetAngularRate);
 
