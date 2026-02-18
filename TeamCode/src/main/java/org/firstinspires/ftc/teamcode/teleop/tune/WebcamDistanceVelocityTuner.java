@@ -53,8 +53,8 @@ public class WebcamDistanceVelocityTuner extends BaseTeleOp {
         }
         else
         {
+            webcam.updateRange(detection.ftcPose.range);
             telemetry.addData("Range: ", webcam.getRange());
-
         }
         motor1.setVelocity(targetAngularRate);
         motor2.setVelocity(targetAngularRate);
