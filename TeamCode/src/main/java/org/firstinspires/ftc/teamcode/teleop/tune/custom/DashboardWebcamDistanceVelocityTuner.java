@@ -16,6 +16,9 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
     public static double targetAngularRate;
     public static boolean launch;
 
+    public static boolean goalIDToggle;
+    public boolean prevGoalID;
+
     public AprilTagWebcam webcam;
     public Intake intake;
     public Outtake outtake;
@@ -54,10 +57,22 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
         telemetry.addData("Right Motor Velocity", outtake.getRightMotorVelocity());
         telemetry.addData("Average Motor Velocity", outtake.getAverageVelocity());
 
+
         if (launch)
             intake.forwardLaunch();
         else
             intake.stop();
-    }
 
+
+        if (goalIDToggle && !prevGoalID)
+        {
+            webcam.toggleGoalId();
+        }
+        else if (!goalIDToggle && prevGoalID)
+        {
+            webcam.toggleGoalId();
+        }
+
+        prevGoalID = goalIDToggle;
+    }
 }
