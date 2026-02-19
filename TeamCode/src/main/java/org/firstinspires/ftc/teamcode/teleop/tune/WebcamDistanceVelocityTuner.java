@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.subsystems.AprilTagWebcam;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.teleop.BaseTeleOp;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
@@ -19,6 +20,8 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 @TeleOp(group="tune")
 public class WebcamDistanceVelocityTuner extends BaseTeleOp {
     public static double targetAngularRate;
+    public static boolean launch;
+    public static boolean regular;
     public DcMotorEx motor1, motor2;
 
     public static final double F = 12;
@@ -27,6 +30,7 @@ public class WebcamDistanceVelocityTuner extends BaseTeleOp {
     public static final double D = 0;
 
     public AprilTagWebcam webcam;
+    public Intake intake;
 
     @Override
     public void setup()
@@ -35,11 +39,13 @@ public class WebcamDistanceVelocityTuner extends BaseTeleOp {
         motor1 = hardwareMap.get(DcMotorEx.class, "o1");
         motor1.setVelocityPIDFCoefficients(P, I, D, F);
         motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motor1.setDirection(DcMotorSimple.Direction.REVERSE);
 
         motor2 = hardwareMap.get(DcMotorEx.class, "o2");
         motor2.setVelocityPIDFCoefficients(P, I, D, F);
-        motor2.setDirection(DcMotorSimple.Direction.REVERSE);
         motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        intake = new Intake(hardware);
     }
 
     @Override
@@ -58,6 +64,13 @@ public class WebcamDistanceVelocityTuner extends BaseTeleOp {
         }
         motor1.setVelocity(targetAngularRate);
         motor2.setVelocity(targetAngularRate);
+
+        if (regular)
+            intake.forwardRegular();
+        else if (launch)
+            intake.forwardLaunch();
+        else
+            intake.stop();
 
     }
 

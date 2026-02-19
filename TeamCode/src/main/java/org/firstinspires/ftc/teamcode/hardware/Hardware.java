@@ -50,7 +50,7 @@ public class Hardware
 
         intakeMotor = new MotorWrapper(hardwareMap, "i", false);
 
-        outtakeMotors = new MotorPairWrapper(hardwareMap, "otop", "obot");
+        outtakeMotors = new MotorPairWrapper(hardwareMap, "o2", "o1");
         outtakeMotors.getLeft().noEncoder();
         outtakeMotors.getRight().noEncoder();
 
