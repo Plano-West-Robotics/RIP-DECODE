@@ -55,10 +55,11 @@ public class WebcamDistanceVelocityTuner extends BaseTeleOp {
 
         if (detection == null)
         {
-            telemetry.addData("Goal ID not detected", false);
+            telemetry.addData("Goal ID Is Detected", detection == null);
         }
         else
         {
+            telemetry.addData("Goal ID Is Detected", detection == null);
             webcam.updateRange(detection.ftcPose.range);
             telemetry.addData("Range: ", webcam.getRange());
         }
