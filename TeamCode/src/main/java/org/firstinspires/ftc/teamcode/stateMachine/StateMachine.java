@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.statemachine;
+package org.firstinspires.ftc.teamcode.stateMachine;
 
 import java.util.ArrayList;
 import java.util.Arrays;

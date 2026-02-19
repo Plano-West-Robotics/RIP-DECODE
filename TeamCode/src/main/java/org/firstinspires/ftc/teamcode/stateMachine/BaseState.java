@@ -1,6 +1,4 @@
-package org.firstinspires.ftc.teamcode.statemachine;
-
-import org.firstinspires.ftc.teamcode.statemachine.BetterTimer;
+package org.firstinspires.ftc.teamcode.stateMachine;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.teleop.tune;
+package org.firstinspires.ftc.teamcode.teleop.tune.custom;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -10,8 +10,9 @@ import org.firstinspires.ftc.teamcode.teleop.BaseTeleOp;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @Config
-@TeleOp(group="tune")
-public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp {
+@TeleOp(group="Custom Tuning")
+public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
+{
     public static double targetAngularRate;
     public static boolean launch;
 

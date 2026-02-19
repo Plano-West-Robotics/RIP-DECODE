@@ -1,20 +1,19 @@
-package org.firstinspires.ftc.teamcode.teleop.tune;
+package org.firstinspires.ftc.teamcode.teleop.tune.custom;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.teleop.BaseTeleOp;
 
 @Config
-@TeleOp(group = "Tune")
+@TeleOp(group = "Custom Tuning")
 public class DashboardHoodedShooterTuner extends BaseTeleOp
 {
-    public static double F = Outtake.F;
     public static double P = Outtake.P;
     public static double I = Outtake.I;
     public static double D = Outtake.D;
+    public static double F = Outtake.F;
     public static double targetAngularRate = 0;
 
     public Outtake outtake;
@@ -28,10 +27,9 @@ public class DashboardHoodedShooterTuner extends BaseTeleOp
     @Override
     public void run()
     {
-//        ((DcMotorEx) outtake.motor.motor).setVelocityPIDFCoefficients(P, I, D, F);
-//        ((DcMotorEx) outtake.motor.motor).setVelocity(targetAngularRate);
-//
-//        telemetry.addData("Outtake Motor Angular Velocity (ticks/sec)", ((DcMotorEx) outtake.motor.motor).getVelocity());
-//        telemetry.addData("Outtake Motor Angular Velocity (rev/min)", ((DcMotorEx) outtake.motor.motor).getVelocity() * 60 * (1 / Outtake.TICKS_PER_REVOLUTION));
+          outtake.updatePIDFCoefficients(P, I, D, F);
+          outtake.setVelocity(targetAngularRate);
+
+          telemetry.addData("Outtake Motor Avg. Angular Velocity (ticks/sec)", outtake.getAverageVelocity());
     }
 }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.teleop.tune;
+package org.firstinspires.ftc.teamcode.teleop.tune.custom;
 
 import android.util.Pair;
 
@@ -11,11 +11,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
+import com.qualcomm.robotcore.hardware.ServoControllerEx;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
+import com.qualcomm.robotcore.hardware.configuration.typecontainers.ServoConfigurationType;
 
 import java.util.ArrayList;
 
-@TeleOp(group = "Tune")
-public class DashboardMotorByPortVelocityTuner extends OpMode {
+@TeleOp(group = "Custom Tuning")
+public class DashboardCombinedMotorServoTuner extends OpMode {
     ArrayList<Pair<String, DcMotorEx>> motors = new ArrayList<>();
 
     @Override
@@ -29,15 +32,14 @@ public class DashboardMotorByPortVelocityTuner extends OpMode {
 
             for (int i = 0; i < 4; i++) {
                 DcMotorEx m = new DcMotorImplEx(mc, i);
-                String name = mcName + " Port " + i;
+                String name = mcName + "Motor Port " + i;
 
                 m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 m.setMotorDisable();
                 this.motors.add(new Pair<>(name, m));
                 db.addConfigVariable(this.getClass().getSimpleName(), name, new ValueProvider<String>() {
                     final DcMotorEx motor = m;
-                    double velocity = 0.0;
+                    double power = 0.0;
                     String verbatimInput = "";
 
                     @Override
@@ -51,13 +53,52 @@ public class DashboardMotorByPortVelocityTuner extends OpMode {
                             this.motor.setMotorDisable();
                         } else {
                             try {
-                                this.velocity = Double.parseDouble(value);
+                                this.power = Double.parseDouble(value);
                             } catch (NumberFormatException e) {
                                 return;
                             }
 
                             this.motor.setMotorEnable();
-                            this.motor.setVelocity(this.velocity);
+                            this.motor.setPower(this.power);
+                        }
+
+                        this.verbatimInput = value;
+                    }
+                }, true);
+            }
+        }
+
+        for (ServoControllerEx sc : hardwareMap.getAll(ServoControllerEx.class)) {
+            String scName = hardwareMap.getNamesOf(sc).iterator().next();
+            if (scName == null) continue;
+
+            for (int i = 0; i < 6; i++) {
+                ServoImplEx s = new ServoImplEx(sc, i, ServoConfigurationType.getStandardServoType());
+                String name = scName + "Servo Port " + i;
+
+                db.addConfigVariable(this.getClass().getSimpleName(), name, new ValueProvider<String>() {
+                    final ServoImplEx servo = s;
+                    double pos = 0.5;
+                    String verbatimInput = "";
+
+                    @Override
+                    public String get() {
+                        return verbatimInput;
+                    }
+
+                    @Override
+                    public void set(String value) {
+                        if (value.equals("")) {
+                            this.servo.setPwmDisable();
+                        } else {
+                            try {
+                                this.pos = Double.parseDouble(value);
+                            } catch (NumberFormatException e) {
+                                return;
+                            }
+
+                            this.servo.setPwmEnable();
+                            this.servo.setPosition(this.pos);
                         }
 
                         this.verbatimInput = value;

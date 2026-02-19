@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.teleop.tune;
+package org.firstinspires.ftc.teamcode.teleop.tune.standard;
 
 import android.util.Pair;
 
@@ -11,14 +11,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
-import com.qualcomm.robotcore.hardware.ServoControllerEx;
-import com.qualcomm.robotcore.hardware.ServoImplEx;
-import com.qualcomm.robotcore.hardware.configuration.typecontainers.ServoConfigurationType;
 
 import java.util.ArrayList;
 
-@TeleOp(group = "Tune")
-public class DashboardCombinedMotorServoTuner extends OpMode {
+@TeleOp(group = "Standard Tuning")
+public class DashboardMotorByPortTuner extends OpMode {
     ArrayList<Pair<String, DcMotorEx>> motors = new ArrayList<>();
 
     @Override
@@ -32,7 +29,7 @@ public class DashboardCombinedMotorServoTuner extends OpMode {
 
             for (int i = 0; i < 4; i++) {
                 DcMotorEx m = new DcMotorImplEx(mc, i);
-                String name = mcName + "Motor Port " + i;
+                String name = mcName + " Port " + i;
 
                 m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 m.setMotorDisable();
@@ -60,45 +57,6 @@ public class DashboardCombinedMotorServoTuner extends OpMode {
 
                             this.motor.setMotorEnable();
                             this.motor.setPower(this.power);
-                        }
-
-                        this.verbatimInput = value;
-                    }
-                }, true);
-            }
-        }
-
-        for (ServoControllerEx sc : hardwareMap.getAll(ServoControllerEx.class)) {
-            String scName = hardwareMap.getNamesOf(sc).iterator().next();
-            if (scName == null) continue;
-
-            for (int i = 0; i < 6; i++) {
-                ServoImplEx s = new ServoImplEx(sc, i, ServoConfigurationType.getStandardServoType());
-                String name = scName + "Servo Port " + i;
-
-                db.addConfigVariable(this.getClass().getSimpleName(), name, new ValueProvider<String>() {
-                    final ServoImplEx servo = s;
-                    double pos = 0.5;
-                    String verbatimInput = "";
-
-                    @Override
-                    public String get() {
-                        return verbatimInput;
-                    }
-
-                    @Override
-                    public void set(String value) {
-                        if (value.equals("")) {
-                            this.servo.setPwmDisable();
-                        } else {
-                            try {
-                                this.pos = Double.parseDouble(value);
-                            } catch (NumberFormatException e) {
-                                return;
-                            }
-
-                            this.servo.setPwmEnable();
-                            this.servo.setPosition(this.pos);
                         }
 
                         this.verbatimInput = value;

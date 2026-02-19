@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.teleop.tune;
+package org.firstinspires.ftc.teamcode.teleop.tune.standard;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.ValueProvider;
@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.ServoControllerEx;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.ServoConfigurationType;
 
-@TeleOp(group = "Tune")
+@TeleOp(group = "Standard Tuning")
 public class DashboardServoByPortTuner extends OpMode {
     @Override
     public void init() {

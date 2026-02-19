@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.teleop.tune;
+package org.firstinspires.ftc.teamcode.teleop.tune.custom;
 
 import android.util.Pair;
 
@@ -14,8 +14,8 @@ import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 
 import java.util.ArrayList;
 
-@TeleOp(group = "Tune")
-public class DashboardMotorByPortTuner extends OpMode {
+@TeleOp(group = "Custom Tuning")
+public class DashboardMotorByPortVelocityTuner extends OpMode {
     ArrayList<Pair<String, DcMotorEx>> motors = new ArrayList<>();
 
     @Override
@@ -32,11 +32,12 @@ public class DashboardMotorByPortTuner extends OpMode {
                 String name = mcName + " Port " + i;
 
                 m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 m.setMotorDisable();
                 this.motors.add(new Pair<>(name, m));
                 db.addConfigVariable(this.getClass().getSimpleName(), name, new ValueProvider<String>() {
                     final DcMotorEx motor = m;
-                    double power = 0.0;
+                    double velocity = 0.0;
                     String verbatimInput = "";
 
                     @Override
@@ -50,13 +51,13 @@ public class DashboardMotorByPortTuner extends OpMode {
                             this.motor.setMotorDisable();
                         } else {
                             try {
-                                this.power = Double.parseDouble(value);
+                                this.velocity = Double.parseDouble(value);
                             } catch (NumberFormatException e) {
                                 return;
                             }
 
                             this.motor.setMotorEnable();
-                            this.motor.setPower(this.power);
+                            this.motor.setVelocity(this.velocity);
                         }
 
                         this.verbatimInput = value;

@@ -1,13 +1,14 @@
-package org.firstinspires.ftc.teamcode.teleop.tune;
+package org.firstinspires.ftc.teamcode.teleop.tune.custom;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 
-
-@TeleOp(group = "Tune")
+@Disabled
+@TeleOp(group = "Custom Tuning")
 public class OuttakeMotorPIDTunerWithoutHardware extends OpMode
 {
     public static double P = 0.1;

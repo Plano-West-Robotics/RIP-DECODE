@@ -138,6 +138,23 @@ public class Outtake
         ((DcMotorEx) motors.getRight().motor).setVelocity(angularRate);
     }
 
+    public void updatePIDFCoefficients(double Kp, double Ki, double Kd, double Kf)
+    {
+        ((DcMotorEx) motors.getLeft().motor).setVelocityPIDFCoefficients(
+                Kp,
+                Ki,
+                Kd,
+                Kf * (IDEAL_VOLTAGE / vs.getVoltage())
+        );
+
+        ((DcMotorEx) motors.getRight().motor).setVelocityPIDFCoefficients(
+                Kp,
+                Ki,
+                Kd,
+                Kf * (IDEAL_VOLTAGE / vs.getVoltage())
+        );
+    }
+
     public void stop()
     {
         setVelocity(0);

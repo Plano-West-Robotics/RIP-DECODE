@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.teleop.tune;
+package org.firstinspires.ftc.teamcode.teleop.tune.custom;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.subsystems.FieldCentricDrive;
 
 @Config
-@TeleOp(group = "Tune")
+@TeleOp(group = "Custom Tuning")
 public class DashboardAngularPIDFTuner extends OpMode
 {
     public static double P = 0.0675;

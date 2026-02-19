@@ -1,12 +1,9 @@
-package org.firstinspires.ftc.teamcode.statemachine;
+package org.firstinspires.ftc.teamcode.stateMachine;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.statemachine.State;
 //import org.firstinspires.ftc.teamcode.util.Pose2d;
-import org.firstinspires.ftc.teamcode.statemachine.StateMachine;
 
-import java.util.ArrayList;
 
 public class Shooter {
     private StateMachine state;
