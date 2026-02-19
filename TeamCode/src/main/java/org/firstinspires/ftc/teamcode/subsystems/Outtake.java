@@ -117,6 +117,16 @@ public class Outtake
         else manualMode();
     }
 
+    public double getLeftMotorVelocity()
+    {
+        return ((DcMotorEx) motors.getLeft().motor).getVelocity();
+    }
+
+    public double getRightMotorVelocity()
+    {
+        return ((DcMotorEx) motors.getRight().motor).getVelocity();
+    }
+
     public double getAverageVelocity()
     {
         return (((DcMotorEx) motors.getLeft().motor).getVelocity() + ((DcMotorEx) motors.getRight().motor).getVelocity()) / 2.0;

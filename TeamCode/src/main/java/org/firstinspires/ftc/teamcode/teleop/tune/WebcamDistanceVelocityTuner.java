@@ -1,18 +1,11 @@
 package org.firstinspires.ftc.teamcode.teleop.tune;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.arcrobotics.ftclib.controller.PIDFController;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.subsystems.AprilTagWebcam;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.teleop.BaseTeleOp;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
@@ -21,30 +14,16 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 public class WebcamDistanceVelocityTuner extends BaseTeleOp {
     public static double targetAngularRate;
     public static boolean launch;
-    public static boolean regular;
-    public DcMotorEx motor1, motor2;
-
-    public static final double F = 12;
-    public static final double P = 44;
-    public static final double I = 0.1;
-    public static final double D = 0;
 
     public AprilTagWebcam webcam;
     public Intake intake;
+    public Outtake outtake;
 
     @Override
     public void setup()
     {
         webcam = new AprilTagWebcam(hardware, AprilTagWebcam.RED_GOAL_ID);
-        motor1 = hardwareMap.get(DcMotorEx.class, "o1");
-        motor1.setVelocityPIDFCoefficients(P, I, D, F);
-        motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motor1.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        motor2 = hardwareMap.get(DcMotorEx.class, "o2");
-        motor2.setVelocityPIDFCoefficients(P, I, D, F);
-        motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
+        outtake = new Outtake(hardware);
         intake = new Intake(hardware);
     }
 
@@ -55,27 +34,29 @@ public class WebcamDistanceVelocityTuner extends BaseTeleOp {
 
         if (detection == null)
         {
-            telemetry.addData("Goal ID Is Detected", detection == null);
+            telemetry.addData("Goal ID Is Detected", false);
+            telemetry.addLine();
         }
         else
         {
-            telemetry.addData("Goal ID Is Detected", detection == null);
+            telemetry.addData("Goal ID Is Detected", true);
+            telemetry.addLine();
+
             webcam.updateRange(detection.ftcPose.range);
             telemetry.addData("Range: ", webcam.getRange());
+            telemetry.addLine();
         }
-        motor1.setVelocity(targetAngularRate);
-        motor2.setVelocity(targetAngularRate);
-        telemetry.addLine();
-        telemetry.addData("Motor 1 Velocity", motor1.getVelocity());
-        telemetry.addData("Motor 2 Velocity", motor2.getVelocity());
 
-        if (regular)
-            intake.forwardRegular();
-        else if (launch)
+        outtake.setVelocity(targetAngularRate);
+
+        telemetry.addData("Motor 1 Velocity", outtake.getLeftMotorVelocity());
+        telemetry.addData("Motor 2 Velocity", outtake.getRightMotorVelocity());
+        telemetry.addData("Average Motor Velocity", outtake.getAverageVelocity());
+
+        if (launch)
             intake.forwardLaunch();
         else
             intake.stop();
-
     }
 
 }
