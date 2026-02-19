@@ -11,7 +11,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @Config
 @TeleOp(group="tune")
-public class WebcamDistanceVelocityTuner extends BaseTeleOp {
+public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp {
     public static double targetAngularRate;
     public static boolean launch;
 
@@ -49,8 +49,8 @@ public class WebcamDistanceVelocityTuner extends BaseTeleOp {
 
         outtake.setVelocity(targetAngularRate);
 
-        telemetry.addData("Motor 1 Velocity", outtake.getLeftMotorVelocity());
-        telemetry.addData("Motor 2 Velocity", outtake.getRightMotorVelocity());
+        telemetry.addData("Left Motor Velocity", outtake.getLeftMotorVelocity());
+        telemetry.addData("Right Motor Velocity", outtake.getRightMotorVelocity());
         telemetry.addData("Average Motor Velocity", outtake.getAverageVelocity());
 
         if (launch)
