@@ -64,6 +64,9 @@ public class WebcamDistanceVelocityTuner extends BaseTeleOp {
         }
         motor1.setVelocity(targetAngularRate);
         motor2.setVelocity(targetAngularRate);
+        telemetry.addLine();
+        telemetry.addData("Motor 1 Velocity", motor1.getVelocity());
+        telemetry.addData("Motor 2 Velocity", motor2.getVelocity());
 
         if (regular)
             intake.forwardRegular();
