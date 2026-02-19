@@ -168,6 +168,24 @@ public class Outtake
     }
 
     /**
+     * Regression graph: <a href="https://www.desmos.com/calculator/8vmhai9gcg">...</a>
+     * @param dx robot's distance from the AprilTag (meters)
+     * @return angular velocity of the outtake flywheel (ticks per second)
+     */
+    public static double piecewiseCalculateFlywheelTangentialVelocityExperimental(double dx)
+    {
+        if (dx < 1 || dx > 1.65)
+            return 0;
+
+        double cubicTerm = -1074.44764 * Math.pow(dx, 3);
+        double quadraticTerm = 3968.74657 * Math.pow(dx, 2);
+        double linearTerm = -4494.23027 * dx;
+        double yIntercept = 2776.6328;
+
+        return cubicTerm + quadraticTerm + linearTerm + yIntercept;
+    }
+
+    /**
      * Converts a given flywheel tangential velocity to an angular rate.
      * @param velocity tangential velocity (meters per second)
      * @return angular rate (ticks per second); should be passed into {@code DcMotorEx}'s {@code setVelocity()}
