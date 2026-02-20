@@ -204,12 +204,14 @@ public class Outtake
         if (dx < 1 || dx > 1.65)
             return 0;
 
-        double cubicTerm = -1074.44764 * Math.pow(dx, 3);
-        double quadraticTerm = 3968.74657 * Math.pow(dx, 2);
-        double linearTerm = -4494.23027 * dx;
-        double yIntercept = 2776.6328;
+        double quinticTerm = 14651.7808 * dx * dx * dx * dx * dx;
+        double quarticTerm = -101130.815 * dx * dx * dx * dx;
+        double cubicTerm = 275685.328 * dx * dx * dx;
+        double quadraticTerm = -371227.954 * dx * dx;
+        double linearTerm = 247369.425 * dx;
+        double yIntercept = -64172.7658;
 
-        return cubicTerm + quadraticTerm + linearTerm + yIntercept;
+        return quinticTerm + quarticTerm + cubicTerm + quadraticTerm + linearTerm + yIntercept;
     }
 
     /**
