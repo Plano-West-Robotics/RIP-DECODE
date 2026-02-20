@@ -18,6 +18,7 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
     public double pastVel;
     public static boolean launch;
     public boolean pastLaunch;
+    public static boolean hoodAdjustment;
 
     public static boolean useCalculated;
 
@@ -25,6 +26,8 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
     public static double marginOfErrorExitTPS;
     public static double setpointChangeResetTPS;
     public static double readyTimeMs;
+    public double farRangeExitMOE;
+    public static boolean farRange; //TODO: at vineet's figure out what far range actually is
     public static boolean requireDetectionToLaunch;
 
     public boolean withinMOE = false;
@@ -41,7 +44,7 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
         outtake = new Outtake(hardware);
         intake = new Intake(hardware);
         t = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
-        marginOfErrorTPS = 30;
+        marginOfErrorTPS = 50;
         marginOfErrorExitTPS = 75;
         setpointChangeResetTPS = 10;
         readyTimeMs = 750;
@@ -51,6 +54,7 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
     @Override
     public void run()
     {
+
         AprilTagDetection detection = webcam.getEitherGoalDetection();
 
         if (detection == null)
@@ -81,14 +85,15 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
         double worstCase = Math.min(outtake.getLeftMotorVelocity(), outtake.getRightMotorVelocity());
         double error = Math.abs(worstCase - setpoint);
 
-        if (withinMOE)
+        withinMOE = error < marginOfErrorExitTPS;
+        /*if (withinMOE)
         {
             withinMOE = error < marginOfErrorExitTPS;
         }
         else
         {
             withinMOE = error < marginOfErrorTPS;
-        }
+        }*/
 
         telemetry.addData("Error", error);
         telemetry.addData("Within MOE", withinMOE);
@@ -101,6 +106,30 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
 
         if (launch)
         {
+            if (hoodAdjustment)
+            {
+                if (farRange)
+                {
+                    farRangeExitMOE = 0.15 * targetAngularRate;
+                    if (error < farRangeExitMOE)
+                    {
+                        outtake.hoodUp();
+                    }
+                    else
+                    {
+                        outtake.hoodDown();
+                    }
+                }
+                else if (error < marginOfErrorTPS)
+                    outtake.hoodUp();
+                else
+                    outtake.hoodDown();
+            }
+            else
+            {
+                outtake.hoodUp();
+            }
+
             if (requireDetectionToLaunch && useCalculated && detection == null)
             {
                 t.reset();
@@ -111,6 +140,7 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
                 t.reset();
                 intake.stop();
             }
+
             else
             {
                 if (t.time() >= readyTimeMs)

@@ -52,6 +52,9 @@ public class Outtake
     public static final double OPEN = 0.33;
     public static final double CLOSED = 0.1;
 
+    public static final double HOOD_UP = 0;
+    public static final double HOOD_DOWN = 1;
+
     public static final double UP = 0.0;
     public static final double DOWN = 1.0;
 
@@ -94,6 +97,9 @@ public class Outtake
 
     public void stoppersUp() { servo.setPosition(CLOSED); }
     public void stoppersDown() { servo.setPosition(OPEN); }
+
+    public void hoodUp() { hood.setPosition(HOOD_UP); }
+    public void hoodDown() { hood.setPosition(HOOD_DOWN); }
 
 
     public ControlMode getMode()
@@ -204,15 +210,23 @@ public class Outtake
         if (dx < 1 || dx > 1.65)
             return 0;
 
-        double quinticTerm = 14651.7808 * dx * dx * dx * dx * dx;
-        double quarticTerm = -101130.815 * dx * dx * dx * dx;
-        double cubicTerm = 275685.328 * dx * dx * dx;
-        double quadraticTerm = -371227.954 * dx * dx;
+        double quinticTerm = 14651.7808 * Math.pow(dx, 5);
+        double quarticTerm = -101130.815 * Math.pow(dx, 4);
+        double cubicTerm = 275685.328 * Math.pow(dx, 3);
+        double quadraticTerm = -371227.954 * Math.pow(dx, 2);
         double linearTerm = 247369.425 * dx;
         double yIntercept = -64172.7658;
 
         return quinticTerm + quarticTerm + cubicTerm + quadraticTerm + linearTerm + yIntercept;
     }
+    public static double calculateCloseRangeLinearFlywheelTangentialVelocity(double dx)
+    {
+        double slope = 235.93961;
+        double yInt = 948.94082;
+
+        return slope * dx + yInt;
+    }
+
 
     /**
      * Converts a given flywheel tangential velocity to an angular rate.
