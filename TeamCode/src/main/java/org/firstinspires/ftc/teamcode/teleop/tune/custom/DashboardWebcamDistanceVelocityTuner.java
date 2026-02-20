@@ -53,7 +53,7 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
     @Override
     public void run()
     {
-        AprilTagDetection detection = webcam.getGoalDetection();
+        AprilTagDetection detection = webcam.getEitherGoalDetection();
 
         if (detection == null)
         {

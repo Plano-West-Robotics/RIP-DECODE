@@ -125,6 +125,17 @@ public class AprilTagWebcam
     }
 
     @Nullable
+    public AprilTagDetection getEitherGoalDetection()
+    {
+        for (AprilTagDetection detection : processor.getDetections())
+        {
+            return detection;
+        }
+
+        return null;
+    }
+
+    @Nullable
     public AprilTagDetection getDetectionById(int id)
     {
         for (AprilTagDetection detection : processor.getDetections())
