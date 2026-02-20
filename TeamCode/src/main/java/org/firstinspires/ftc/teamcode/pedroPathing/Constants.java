@@ -19,7 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Constants {
     public static FollowerConstants followerConstants = new FollowerConstants().
-            mass(9.706876718)
+            mass(9.9000)
 //            .forwardZeroPowerAcceleration(-62.7355128)
             .lateralZeroPowerAcceleration(-57.93669)
             .forwardZeroPowerAcceleration(-34.5)
@@ -53,8 +53,8 @@ public class Constants {
             .IMU_HardwareMapName("imu")
             .IMU_Orientation(
                     new RevHubOrientationOnRobot(
-                            RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                            RevHubOrientationOnRobot.UsbFacingDirection.LEFT
+                            RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                            RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
                     )
             )
             .strafePodX(1.4)
@@ -63,8 +63,9 @@ public class Constants {
             .strafeEncoderDirection(Encoder.FORWARD)
 //            .forwardTicksToInches(0.00195616)
 //            .strafeTicksToInches(0.00305353222)
-            .forwardTicksToInches(0.0029938)
-            .strafeTicksToInches(0.002);
+//OLD            .forwardTicksToInches(0.0029938)
+            .forwardTicksToInches(0.056869)
+            .strafeTicksToInches(0.002); //TODO: update
 
 
 //    public static PinpointConstants localizerConstants = new PinpointConstants()
