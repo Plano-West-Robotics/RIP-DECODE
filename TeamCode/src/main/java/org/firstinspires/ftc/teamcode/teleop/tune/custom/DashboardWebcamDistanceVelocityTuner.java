@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.teleop.tune.custom;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.subsystems.AprilTagWebcam;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -14,14 +15,26 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
 {
     public static double targetAngularRate;
+    public double pastVel;
     public static boolean launch;
+    public boolean pastLaunch;
 
     public static boolean goalIDToggle;
     public boolean prevGoalID;
+    public static boolean useCalculated;
+
+    public static double marginOfErrorTPS;
+    public static double marginOfErrorExitTPS;
+    public static double setpointChangeResetTPS;
+    public static double readyTimeMs;
+    public static boolean requireDetectionToLaunch;
+
+    public boolean withinMOE = false;
 
     public AprilTagWebcam webcam;
     public Intake intake;
     public Outtake outtake;
+    public ElapsedTime t;
 
     @Override
     public void setup()
@@ -29,6 +42,12 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
         webcam = new AprilTagWebcam(hardware, AprilTagWebcam.RED_GOAL_ID);
         outtake = new Outtake(hardware);
         intake = new Intake(hardware);
+        t = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+        marginOfErrorTPS = 30;
+        marginOfErrorExitTPS = 75;
+        setpointChangeResetTPS = 10;
+        readyTimeMs = 750;
+        requireDetectionToLaunch = false;
     }
 
     @Override
@@ -51,28 +70,88 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
             telemetry.addLine();
         }
 
-        outtake.setVelocity(targetAngularRate);
+        double calculatedVel = Outtake.piecewiseCalculateFlywheelTangentialVelocityExperimental(webcam.getRange());
+        double setpoint = useCalculated ? calculatedVel : targetAngularRate;
+        outtake.setVelocity(setpoint);
 
         telemetry.addData("Left Motor Velocity", outtake.getLeftMotorVelocity());
         telemetry.addData("Right Motor Velocity", outtake.getRightMotorVelocity());
         telemetry.addData("Average Motor Velocity", outtake.getAverageVelocity());
+        telemetry.addData("Setpoint", setpoint);
+        telemetry.addData("Worst Case Velocity", Math.min(outtake.getLeftMotorVelocity(), outtake.getRightMotorVelocity()));
 
+        double worstCase = Math.min(outtake.getLeftMotorVelocity(), outtake.getRightMotorVelocity());
+        double error = Math.abs(worstCase - setpoint);
+
+        if (withinMOE)
+        {
+            withinMOE = error < marginOfErrorExitTPS;
+        }
+        else
+        {
+            withinMOE = error < marginOfErrorTPS;
+        }
+
+        telemetry.addData("Error", error);
+        telemetry.addData("Within MOE", withinMOE);
+        telemetry.addData("Timer (ms)", t.time());
+
+        if (onEnter(pastLaunch, launch) || Math.abs(setpoint - pastVel) > setpointChangeResetTPS)
+        {
+            t.reset();
+        }
 
         if (launch)
-            intake.forwardLaunch();
+        {
+            if (requireDetectionToLaunch && useCalculated && detection == null)
+            {
+                t.reset();
+                intake.stop();
+            }
+            else if (!withinMOE)
+            {
+                t.reset();
+                intake.stop();
+            }
+            else
+            {
+                if (t.time() >= readyTimeMs)
+                {
+                    intake.forwardLaunch();
+                }
+                else
+                {
+                    intake.stop();
+                }
+            }
+        }
         else
+        {
             intake.stop();
+        }
 
 
-        if (goalIDToggle && !prevGoalID)
+        if (onEnter(prevGoalID, goalIDToggle))
         {
             webcam.toggleGoalId();
         }
-        else if (!goalIDToggle && prevGoalID)
+        else if (onExit(prevGoalID, goalIDToggle))
         {
             webcam.toggleGoalId();
         }
 
         prevGoalID = goalIDToggle;
+        pastLaunch = launch;
+        pastVel = setpoint;
+    }
+
+    public boolean onEnter(boolean pastCondition, boolean presentCondition)
+    {
+        return !pastCondition && presentCondition;
+    }
+
+    public boolean onExit(boolean pastCondition, boolean presentCondition)
+    {
+        return pastCondition && !presentCondition;
     }
 }
