@@ -19,8 +19,6 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
     public static boolean launch;
     public boolean pastLaunch;
 
-    public static boolean goalIDToggle;
-    public boolean prevGoalID;
     public static boolean useCalculated;
 
     public static double marginOfErrorTPS;
@@ -130,17 +128,6 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
             intake.stop();
         }
 
-
-        if (onEnter(prevGoalID, goalIDToggle))
-        {
-            webcam.toggleGoalId();
-        }
-        else if (onExit(prevGoalID, goalIDToggle))
-        {
-            webcam.toggleGoalId();
-        }
-
-        prevGoalID = goalIDToggle;
         pastLaunch = launch;
         pastVel = setpoint;
     }
