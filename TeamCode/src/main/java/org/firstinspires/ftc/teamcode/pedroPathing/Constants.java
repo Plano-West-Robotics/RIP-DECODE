@@ -65,7 +65,7 @@ public class Constants {
 //            .strafeTicksToInches(0.00305353222)
 //OLD            .forwardTicksToInches(0.0029938)
             .forwardTicksToInches(0.056869)
-            .strafeTicksToInches(0.002); //TODO: update
+            .strafeTicksToInches(0.002); //TODO: update necessary
 
 
 //    public static PinpointConstants localizerConstants = new PinpointConstants()
