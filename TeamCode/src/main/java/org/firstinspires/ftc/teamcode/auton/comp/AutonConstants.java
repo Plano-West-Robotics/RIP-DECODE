@@ -10,11 +10,11 @@ public class AutonConstants
     public static final Pose RED_INTAKE_1 = new Pose(AutonConstants.PICKUP_X_POS, AutonConstants.PICKUP_Y_POS_1, Math.toRadians(0));
     public static final Pose RED_LEAVE_1 = new Pose(120, 80, Math.toRadians(0));
 
-    public static final Pose BLUE_START = AutonConstants.mirror(RED_START);
-    public static final Pose BLUE_SCORE = AutonConstants.mirror(RED_SCORE);
-    public static final Pose BLUE_LINEUP_1 = AutonConstants.mirrorShift(RED_LINEUP_1, 0, 8);
-    public static final Pose BLUE_INTAKE_1 = AutonConstants.mirrorShift(RED_INTAKE_1, 0, 8);
-    public static final Pose BLUE_LEAVE_1 = AutonConstants.mirror(RED_LEAVE_1);
+    public static final Pose BLUE_START = new Pose(21.807259073842303, 124.35544430538174, Math.toRadians(143));
+    public static final Pose BLUE_SCORE = new Pose(49.22429906542055, 104.74766355140187, Math.toRadians(143));
+    public static final Pose BLUE_LINEUP_1 = new Pose(50.70914318573894, AutonConstants.BLUE_PICKUP_Y_POS_1, Math.toRadians(180));
+    public static final Pose BLUE_INTAKE_1 = new Pose(AutonConstants.BLUE_PICKUP_X_POS, AutonConstants.BLUE_PICKUP_Y_POS_1, Math.toRadians(180));
+    public static final Pose BLUE_LEAVE_1 = new Pose(24, 80, Math.toRadians(180));
 
     public static final double INTAKE_1_VEL_CONSTRAINT = 2.0;
     public static final double PRELOAD_SCORE_TIME = 4;
@@ -23,6 +23,9 @@ public class AutonConstants
     public static final double PICKUP_Y_POS_1 = 84.5;
     public static final double PICKUP_X_POS = 131;
     public static final double REVERSE_INTAKE_SECONDS = 0.21;
+
+    public static final double BLUE_PICKUP_Y_POS_1 = 84.5;
+    public static final double BLUE_PICKUP_X_POS = 13;
 
     public static final double FAR_PRELOAD_SCORE_TIME = 15;
     public static final double FAR_TPS = 1600;
