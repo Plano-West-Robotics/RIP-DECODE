@@ -24,7 +24,7 @@ public class Outtake
     public static final double TICKS_PER_RADIAN = TICKS_PER_REVOLUTION / (2 * Math.PI);
     public static final double MAX_ANGULAR_RATE = 2800; // ticks/sec; This is determined from OuttakeMaxVelocityTest
 
-    public static final double MANUAL_ANGULAR_RATE = 0.375 * MAX_ANGULAR_RATE;
+    public static final double MANUAL_ANGULAR_RATE = 1130;
     public static final double TRIGGER_THRESHOLD = 0.5;
     public static final double NORMAL_ERROR_TOLERANCE = 30; // ticks/sec
     public static final double FAR_ERROR_TOLERANCE = 160; // ticks/sec
@@ -36,9 +36,15 @@ public class Outtake
     public static final double EXTRA_DISTANCE = 0.1905; // the distance from the april tag to the center of the goal from a bird's-eye' view
 
     public static final double F = 12;
-    public static final double P = 44;
+    public static final double P = 46;
     public static final double I = 0.1;
     public static final double D = 0;
+
+    public static final double LOWEST_WEBCAM_RANGE = 0.9; // meters
+    public static final double MEDIUM_WEBCAM_RANGE = 1.8;
+    public static final double HIGH_LOW_WEBCAM_RANGE = 2.35;
+    public static final double HIGH_HIGH_WEBCAM_RANGE = 2.7;
+    public static final double MAX_WEBCAM_RANGE = 3.2;
 
     public static final double IDEAL_VOLTAGE = 13.5;
 
@@ -49,8 +55,8 @@ public class Outtake
     public static final double VELOCITY_MULTIPLIER = 2.47;
 
 
-    public static final double OPEN = 0.33;
-    public static final double CLOSED = 0.1;
+    public static final double OPEN = 0.28;
+    public static final double CLOSED = 0;
 
     public static final double HOOD_UP = 0;
     public static final double HOOD_DOWN = 1;
@@ -95,8 +101,8 @@ public class Outtake
         webcamMode();
     }
 
-    public void stoppersUp() { servo.setPosition(CLOSED); }
-    public void stoppersDown() { servo.setPosition(OPEN); }
+    public void stopperClose() { servo.setPosition(CLOSED); }
+    public void stopperOpen() { servo.setPosition(OPEN); }
 
     public void hoodUp() { hood.setPosition(HOOD_UP); }
     public void hoodDown() { hood.setPosition(HOOD_DOWN); }
@@ -205,20 +211,97 @@ public class Outtake
      * @param dx robot's distance from the AprilTag (meters)
      * @return angular velocity of the outtake flywheel (ticks per second)
      */
-    public static double piecewiseCalculateFlywheelTangentialVelocityExperimental(double dx)
+    public static double piecewise1CalculateFlywheelTangentialVelocityExperimental(double dx)
     {
-        if (dx < 1 || dx > 1.65)
+        /*
+        if (dx >= HIGH_WEBCAM_RANGE)
+            return;
+        if (dx >= MEDIUM_WEBCAM_RANGE)
+            return;
+        if (dx >= LOWEST_WEBCAM_RANGE)
+            return;
+        return 0;
+        */
+
+        if (dx < LOWEST_WEBCAM_RANGE)
+            return 0;
+        if (dx > MEDIUM_WEBCAM_RANGE)
+            return piecewise2CalculateFlywheelTangentialVelocityExperimental(dx);
+
+        double quadraticTerm = 128.2753 * dx * dx;
+        double linearTerm = -163.94281 * dx;
+        double yIntercept = 1256.42264;
+
+        return quadraticTerm + linearTerm + yIntercept;
+    }
+
+    public static double piecewise2CalculateFlywheelTangentialVelocityExperimental(double dx)
+    {
+        if (dx <= MEDIUM_WEBCAM_RANGE)
+        {
+            return piecewise1CalculateFlywheelTangentialVelocityExperimental(dx);
+        }
+        if (dx > HIGH_LOW_WEBCAM_RANGE)
+            return piecewise3CalculateFlywheelTangentialVelocityExperimental(dx);
+
+        double quarticTerm = -13057.3498 * dx * dx * dx * dx;
+        double cubicTerm = 107624.992 * dx * dx * dx;
+        double quadraticTerm = -331394.085 * dx * dx;
+        double linearTerm = 452007.531 * dx;
+        double yIntercept = -229134.707;
+
+        return quarticTerm + cubicTerm + quadraticTerm + linearTerm + yIntercept;
+    }
+
+
+    public static double piecewise3CalculateFlywheelTangentialVelocityExperimental(double dx)
+    {
+        if (dx <= HIGH_LOW_WEBCAM_RANGE)
+        {
+            return piecewise2CalculateFlywheelTangentialVelocityExperimental(dx);
+        }
+        if (dx > HIGH_HIGH_WEBCAM_RANGE)
+            return piecewise4CalculateFlywheelTangentialVelocityExperimental(dx);
+
+        /*
+        double quarticTerm = -13057.3498 * dx * dx * dx * dx;
+        double cubicTerm = 107624.992 * dx * dx * dx;
+        double quadraticTerm = -331394.085 * dx * dx;
+        double linearTerm = 452007.531 * dx;
+        double yIntercept = -229134.707;
+        */
+        return 1500;
+    }
+
+    public static double piecewise4CalculateFlywheelTangentialVelocityExperimental(double dx)
+    {
+        if (dx <= HIGH_HIGH_WEBCAM_RANGE)
+        {
+            return piecewise3CalculateFlywheelTangentialVelocityExperimental(dx);
+        }
+        if (dx > MAX_WEBCAM_RANGE)
             return 0;
 
-        double quinticTerm = 14651.7808 * Math.pow(dx, 5);
-        double quarticTerm = -101130.815 * Math.pow(dx, 4);
-        double cubicTerm = 275685.328 * Math.pow(dx, 3);
-        double quadraticTerm = -371227.954 * Math.pow(dx, 2);
-        double linearTerm = 247369.425 * dx;
-        double yIntercept = -64172.7658;
+        double quadraticTerm = -16.38633 * dx * dx;
+        double linearTerm = 227.99804 * dx;
+        double yIntercept = 1004.53359;
 
-        return quinticTerm + quarticTerm + cubicTerm + quadraticTerm + linearTerm + yIntercept;
+        return quadraticTerm + linearTerm + yIntercept;
     }
+
+
+
+    public static boolean inHoodRange(double dx)
+    {
+        return dx >= MEDIUM_WEBCAM_RANGE;
+    }
+/*
+    public static String whichFunction(double dx)
+    {
+        if (dx < LOWEST_WEBCAM_RANGE)
+            return "None";
+    }
+*/
     public static double calculateCloseRangeLinearFlywheelTangentialVelocity(double dx)
     {
         double slope = 235.93961;

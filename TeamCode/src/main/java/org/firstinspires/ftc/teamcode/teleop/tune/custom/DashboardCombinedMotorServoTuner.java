@@ -32,7 +32,7 @@ public class DashboardCombinedMotorServoTuner extends OpMode {
 
             for (int i = 0; i < 4; i++) {
                 DcMotorEx m = new DcMotorImplEx(mc, i);
-                String name = mcName + "Motor Port " + i;
+                String name = mcName + " Motor Port " + i;
 
                 m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 m.setMotorDisable();
@@ -74,7 +74,7 @@ public class DashboardCombinedMotorServoTuner extends OpMode {
 
             for (int i = 0; i < 6; i++) {
                 ServoImplEx s = new ServoImplEx(sc, i, ServoConfigurationType.getStandardServoType());
-                String name = scName + "Servo Port " + i;
+                String name = scName + " Servo Port " + i;
 
                 db.addConfigVariable(this.getClass().getSimpleName(), name, new ValueProvider<String>() {
                     final ServoImplEx servo = s;

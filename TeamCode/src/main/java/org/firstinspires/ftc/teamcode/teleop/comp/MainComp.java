@@ -61,8 +61,9 @@ public class MainComp extends BaseTeleOp
                 drive.update(gamepads);
                 intake.update(gamepads);
                 outtake.update(gamepads);
-                outtake.stop();
+                outtake.setVelocity(-400);
                 webcam.update(gamepads);
+                outtake.hoodDown();
             })
             .transition(() ->
                 gamepads.exceedsThreshold(Analog.GP1_RIGHT_TRIGGER, Outtake.TRIGGER_THRESHOLD)
@@ -161,7 +162,7 @@ public class MainComp extends BaseTeleOp
                     webcam.updateBearing(lastValidDetection.ftcPose.bearing);
                 }
 
-                double targetAngularRate = Outtake.piecewiseCalculateFlywheelTangentialVelocityExperimental(webcam.getRange());
+                double targetAngularRate = Outtake.MANUAL_ANGULAR_RATE;
 
                 drive.drive(gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_Y), gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_X), rx);
 

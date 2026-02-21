@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.teleop.tune.custom;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.subsystems.AprilTagWebcam;
+import org.firstinspires.ftc.teamcode.subsystems.FieldCentricDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.teleop.BaseTeleOp;
@@ -22,33 +24,45 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
 
     public static boolean useCalculated;
 
-    public static double marginOfErrorTPS;
-    public static double marginOfErrorExitTPS;
-    public static double setpointChangeResetTPS;
+    public static boolean correctHeading;
+    public boolean lastCorrectHeading;
+
+    public static boolean hoodDown;
+
+    public static double marginOfErrorTPS = 70;
+    public static double marginOfErrorExitTPS = 120;
+    public static double setpointChangeResetTPS = 10;
     public static double readyTimeMs;
     public double farRangeExitMOE;
     public static boolean farRange; //TODO: at vineet's figure out what far range actually is
-    public static boolean requireDetectionToLaunch;
 
     public boolean withinMOE = false;
+
+    public double rx = 0;
 
     public AprilTagWebcam webcam;
     public Intake intake;
     public Outtake outtake;
     public ElapsedTime t;
+    public PIDFController bearingController;
+    public FieldCentricDrive drive;
 
     @Override
     public void setup()
     {
+        drive = new FieldCentricDrive(hardware);
         webcam = new AprilTagWebcam(hardware, AprilTagWebcam.RED_GOAL_ID);
         outtake = new Outtake(hardware);
         intake = new Intake(hardware);
         t = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
-        marginOfErrorTPS = 50;
-        marginOfErrorExitTPS = 75;
-        setpointChangeResetTPS = 10;
+        bearingController = new PIDFController(
+                DashboardWebcamBearingPIDFTuner.P,
+                DashboardWebcamBearingPIDFTuner.I,
+                DashboardWebcamBearingPIDFTuner.D,
+                DashboardWebcamBearingPIDFTuner.F
+        );
         readyTimeMs = 750;
-        requireDetectionToLaunch = false;
+        outtake.hoodUp();
     }
 
     @Override
@@ -61,6 +75,7 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
         {
             telemetry.addData("Goal ID Is Detected", false);
             telemetry.addLine();
+            rx = 0;
         }
         else
         {
@@ -68,11 +83,16 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
             telemetry.addLine();
 
             webcam.updateRange(detection.ftcPose.range);
+            webcam.updateBearing(detection.ftcPose.bearing);
+            rx = bearingController.calculate(webcam.getBearing(), 0);
+
             telemetry.addData("Range: ", webcam.getRange());
             telemetry.addLine();
         }
 
-        double calculatedVel = Outtake.piecewiseCalculateFlywheelTangentialVelocityExperimental(webcam.getRange());
+        drive.drive(0, 0, rx);
+
+        double calculatedVel = Outtake.piecewise1CalculateFlywheelTangentialVelocityExperimental(webcam.getRange());
         double setpoint = useCalculated ? calculatedVel : targetAngularRate;
         outtake.setVelocity(setpoint);
 
@@ -85,15 +105,20 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
         double worstCase = Math.min(outtake.getLeftMotorVelocity(), outtake.getRightMotorVelocity());
         double error = Math.abs(worstCase - setpoint);
 
-        withinMOE = error < marginOfErrorExitTPS;
-        /*if (withinMOE)
+        if (farRange)
+        {
+            marginOfErrorExitTPS = 0.15 * setpoint;
+            marginOfErrorTPS = 0.075 * setpoint;
+        }
+
+        if (withinMOE)
         {
             withinMOE = error < marginOfErrorExitTPS;
         }
         else
         {
             withinMOE = error < marginOfErrorTPS;
-        }*/
+        }
 
         telemetry.addData("Error", error);
         telemetry.addData("Within MOE", withinMOE);
@@ -108,39 +133,23 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
         {
             if (hoodAdjustment)
             {
-                if (farRange)
-                {
-                    farRangeExitMOE = 0.15 * targetAngularRate;
-                    if (error < farRangeExitMOE)
-                    {
-                        outtake.hoodUp();
-                    }
-                    else
-                    {
-                        outtake.hoodDown();
-                    }
-                }
-                else if (error < marginOfErrorTPS)
+                if (error < marginOfErrorTPS)
                     outtake.hoodUp();
                 else
                     outtake.hoodDown();
             }
+            else if (hoodDown)
+            {
+                outtake.hoodDown();
+            }
             else
-            {
                 outtake.hoodUp();
-            }
 
-            if (requireDetectionToLaunch && useCalculated && detection == null)
+            if (!withinMOE)
             {
                 t.reset();
                 intake.stop();
             }
-            else if (!withinMOE)
-            {
-                t.reset();
-                intake.stop();
-            }
-
             else
             {
                 if (t.time() >= readyTimeMs)
@@ -160,6 +169,7 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
 
         pastLaunch = launch;
         pastVel = setpoint;
+        lastCorrectHeading = correctHeading;
     }
 
     public boolean onEnter(boolean pastCondition, boolean presentCondition)

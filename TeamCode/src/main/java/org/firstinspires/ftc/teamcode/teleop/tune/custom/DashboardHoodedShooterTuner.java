@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.teleop.tune.custom;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.teleop.BaseTeleOp;
 
@@ -17,11 +18,13 @@ public class DashboardHoodedShooterTuner extends BaseTeleOp
     public static double targetAngularRate = 0;
 
     public Outtake outtake;
+    public Intake intake;
 
     @Override
     public void setup()
     {
         outtake = new Outtake(hardware);
+        intake = new Intake(hardware);
     }
 
     @Override
@@ -30,6 +33,9 @@ public class DashboardHoodedShooterTuner extends BaseTeleOp
           outtake.updatePIDFCoefficients(P, I, D, F);
           outtake.setVelocity(targetAngularRate);
 
+          intake.forwardLaunch();
+
+          telemetry.addData("Target Rate", targetAngularRate);
           telemetry.addData("Outtake Motor Avg. Angular Velocity (ticks/sec)", outtake.getAverageVelocity());
     }
 }
