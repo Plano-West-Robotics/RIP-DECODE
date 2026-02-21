@@ -29,24 +29,28 @@ public class AutonConstants
 
     public static final double FAR_PRELOAD_SCORE_TIME = 15;
     public static final double FAR_TPS = 1600;
-    public static final double PICKUP_Y_POS_FAR = 30 ;
-    public static final double START_X_POS_FAR = 80;
-    public static final double SCORE_X_POS_FAR = 84;
-    public static final double SCORE_Y_POS_FAR = 28;
-    public static final double SCORE_ANGLE_DEG = 72;
+    public static final double PICKUP_Y_POS_FAR = 34;
+    public static final double START_X_POS_FAR = 88;
+    public static final double SCORE_X_POS_FAR = 88;
+    public static final double SCORE_Y_POS_FAR = 20;
+    public static final double SCORE_ANGLE_DEG = 69.94;
 
 
     public static final Pose FAR_RED_START = new Pose(START_X_POS_FAR, 9, Math.toRadians(90));
-    public static final Pose FAR_RED_SCORE = new Pose(SCORE_X_POS_FAR, SCORE_Y_POS_FAR, Math.toRadians(SCORE_ANGLE_DEG));
-    public static final Pose FAR_RED_LINEUP = new Pose(100, PICKUP_Y_POS_FAR, Math.toRadians(180));
-    public static final Pose FAR_RED_INTAKE = new Pose(135, PICKUP_Y_POS_FAR, Math.toRadians(180));
-    public static final Pose FAR_RED_SCORE_1 = new Pose(SCORE_X_POS_FAR, PICKUP_Y_POS_FAR, Math.toRadians(SCORE_ANGLE_DEG));
+    public static final Pose FAR_RED_SCORE = new Pose(START_X_POS_FAR, SCORE_Y_POS_FAR, Math.toRadians(SCORE_ANGLE_DEG));
+    public static final Pose FAR_RED_LINEUP = new Pose(START_X_POS_FAR, PICKUP_Y_POS_FAR, Math.toRadians(0));
+    public static final Pose FAR_RED_INTAKE = new Pose(136, PICKUP_Y_POS_FAR, Math.toRadians(0));
+    public static final Pose FAR_RED_LEAVE = new Pose(106, 34, Math.toRadians(0));
 
-    public static final Pose FAR_BLUE_START = mirror(FAR_RED_START);
-    public static final Pose FAR_BLUE_SCORE = mirror(FAR_RED_SCORE);
-    public static final Pose FAR_BLUE_LINEUP = mirror(FAR_RED_LINEUP);
-    public static final Pose FAR_BLUE_INTAKE = mirror(FAR_RED_INTAKE);
-    public static final Pose FAR_BLUE_SCORE_1 = mirror(FAR_RED_SCORE_1);
+    //public static final Pose FAR_RED_SCORE_1 = new Pose(SCORE_X_POS_FAR, PICKUP_Y_POS_FAR, Math.toRadians(SCORE_ANGLE_DEG));
+
+
+
+    public static final Pose FAR_BLUE_START = new Pose(56, 9, Math.toRadians(90));
+    public static final Pose FAR_BLUE_SCORE = new Pose(56, SCORE_Y_POS_FAR, Math.toRadians(110.06));
+    public static final Pose FAR_BLUE_LINEUP = new Pose(56, PICKUP_Y_POS_FAR, Math.toRadians(180));
+    public static final Pose FAR_BLUE_INTAKE = new Pose(8, PICKUP_Y_POS_FAR, Math.toRadians(180));
+    public static final Pose FAR_BLUE_LEAVE = new Pose(38, 34, Math.toRadians(180));
 
     public static final int PATH_COUNT_UPPER_BOUND = 20;
 
