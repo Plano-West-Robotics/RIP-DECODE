@@ -1,8 +1,9 @@
-package org.firstinspires.ftc.teamcode.teleop.comp;
+package org.firstinspires.ftc.teamcode.teleop.test;
 
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.sfdev.assembly.state.StateMachine;
 import com.sfdev.assembly.state.StateMachineBuilder;
 
@@ -19,7 +20,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @TeleOp(group = "Comp")
-public class MainComp extends BaseTeleOp
+public class TestTele extends BaseTeleOp
 {
     public enum State
     {
@@ -28,25 +29,34 @@ public class MainComp extends BaseTeleOp
         WEBCAM_SHOOTING
     }
 
+    public static final int READY_TIME_MS = 750;
+
     public FieldCentricDrive drive;
     public Intake intake;
     public Outtake outtake;
     public AprilTagWebcam webcam;
+    public ElapsedTime t;
 
     public PIDFController bearingController;
     public StateMachine fsm;
 
     public AprilTagDetection lastValidDetection;
 
-    double oldTime = 0;
+    public double oldTime = 0;
+    public boolean withinMOE;
+    public double targetAngularRate;
+    public double pastTargetAngularRate;
 
     @Override
     public void setup()
     {
+        targetAngularRate = pastTargetAngularRate = 0;
         drive = new FieldCentricDrive(hardware);
         intake = new Intake(hardware);
         outtake = new Outtake(hardware);
         webcam = new AprilTagWebcam(hardware, AprilTagWebcam.RED_GOAL_ID);
+        t = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+        withinMOE = false;
 
         bearingController = new PIDFController(
             DashboardWebcamBearingPIDFTuner.P,
@@ -63,7 +73,7 @@ public class MainComp extends BaseTeleOp
                 outtake.update(gamepads);
                 outtake.setVelocity(-400);
                 webcam.update(gamepads);
-                outtake.hoodDown();
+                outtake.hoodUp();
             })
             .transition(() ->
                 gamepads.exceedsThreshold(Analog.GP1_RIGHT_TRIGGER, Outtake.TRIGGER_THRESHOLD)
@@ -83,6 +93,7 @@ public class MainComp extends BaseTeleOp
             .state(State.MANUAL_SHOOTING)
             .onEnter(() -> outtake.setVelocity(Outtake.MANUAL_ANGULAR_RATE))
             .loop(() -> {
+                outtake.hoodUp();
                 drive.update(gamepads);
                 outtake.setVelocity(Outtake.MANUAL_ANGULAR_RATE);
                 webcam.update(gamepads);
@@ -162,13 +173,14 @@ public class MainComp extends BaseTeleOp
                     webcam.updateBearing(lastValidDetection.ftcPose.bearing);
                 }
 
-                double targetAngularRate = Outtake.MANUAL_ANGULAR_RATE;
+                targetAngularRate = Outtake.piecewise1CalculateFlywheelTangentialVelocityExperimental(webcam.getRange());
 
                 drive.drive(gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_Y), gamepads.getAnalogValue(Analog.GP1_LEFT_STICK_X), rx);
 
                 outtake.setVelocity(targetAngularRate);
 
-                double error = outtake.getAverageVelocity() - targetAngularRate;
+
+                double error = Math.abs(outtake.getAverageVelocity() - targetAngularRate);
 
                 telemetry.addData("Range", webcam.getRange());
                 telemetry.addData("Bearing", webcam.getBearing());
@@ -176,20 +188,119 @@ public class MainComp extends BaseTeleOp
                 telemetry.addData("Target Angular Rate", targetAngularRate);
                 telemetry.addData("Error", error);
 
+                if (Math.abs(pastTargetAngularRate - targetAngularRate) > 20)
+                    t.reset();
+
+                if (gamepads.justPressed(Button.GP1_A))
+                    t.reset();
+
                 if (gamepads.isPressed(Button.GP1_A))
                 {
-                    if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE)
+
+//                    if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE)
+//                    {
+//                        intake.forwardLaunch();
+//                        gamepad1.stopRumble();
+//                    }
+//                    else
+//                    {
+//                        intake.stop();
+//                        if (!gamepad1.isRumbling())
+//                        {
+//                            gamepad1.rumble(500);
+//                        }
+//                    }
+                    double MOE;
+                    double exitMOE;
+
+                    switch (Outtake.getRange(webcam.getRange()))
                     {
-                        intake.forwardLaunch();
-                        gamepad1.stopRumble();
-                    }
-                    else
-                    {
-                        intake.stop();
-                        if (!gamepad1.isRumbling())
-                        {
-                            gamepad1.rumble(500);
-                        }
+                        case 3:
+                            exitMOE = 0.15 * targetAngularRate;
+                            MOE = 0.075 * targetAngularRate;
+                            withinMOE = withinMOE ? error < exitMOE : error < MOE;
+                            if (error < MOE)
+                                outtake.hoodUp();
+                            else
+                                outtake.hoodDown();
+
+                            if (!withinMOE)
+                            {
+                                t.reset();
+                                intake.stop();
+                                if (!gamepad1.isRumbling())
+                                {
+                                    gamepad1.rumble(500);
+                                }
+                            }
+                            else
+                            {
+                                gamepad1.stopRumble();
+                                if (t.time() >= READY_TIME_MS)
+                                {
+                                    intake.forwardLaunch();
+                                }
+                                else
+                                {
+                                    intake.stop();
+                                }
+                            }
+
+                            break;
+                        case 2:
+                            MOE = 70;
+                            exitMOE = 400;
+                            withinMOE = withinMOE ? error < exitMOE : error < MOE;
+
+                            if (error < MOE)
+                                outtake.hoodUp();
+                            else
+                                outtake.hoodDown();
+
+                            if (withinMOE)
+                            {
+                                intake.forwardLaunch();
+                                gamepad1.stopRumble();
+                            }
+                            else
+                            {
+                                intake.stop();
+                                if (!gamepad1.isRumbling())
+                                {
+                                    gamepad1.rumble(500);
+                                }
+                            }
+
+                            break;
+                        case 1:
+                            outtake.hoodUp();
+                            MOE = 70;
+                            exitMOE = 400;
+                            withinMOE = withinMOE ? error < exitMOE : error < MOE;
+
+                            if (withinMOE)
+                            {
+                                intake.forwardLaunch();
+                                gamepad1.stopRumble();
+                            }
+                            else
+                            {
+                                intake.stop();
+                                if (!gamepad1.isRumbling())
+                                {
+                                    gamepad1.rumble(500);
+                                }
+                            }
+
+                            break;
+                        case 0:
+                            if (!gamepad1.isRumbling())
+                            {
+                                gamepad1.rumble(500);
+                            }
+                            intake.stop();
+
+
                     }
                 }
                 else
@@ -198,10 +309,13 @@ public class MainComp extends BaseTeleOp
                     gamepad1.stopRumble();
                 }
 
+
+
                 if (detection != null)
                 {
                     lastValidDetection = detection;
                 }
+                pastTargetAngularRate = targetAngularRate;
             })
             .transition(() ->
                     !gamepads.exceedsThreshold(Analog.GP1_RIGHT_TRIGGER, Outtake.TRIGGER_THRESHOLD),

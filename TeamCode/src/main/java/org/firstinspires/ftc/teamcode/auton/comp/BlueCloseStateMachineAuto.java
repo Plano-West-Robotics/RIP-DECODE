@@ -156,7 +156,8 @@ public class BlueCloseStateMachineAuto extends BaseAuto
 
         states[4] = new BaseState("TO_SCORE1")
                 .setDuring(() -> {
-                    //outtake.setVelocity(Outtake.MANUAL_ANGULAR_RATE);
+                    intake.stop();
+                    outtake.setVelocity(Outtake.MANUAL_ANGULAR_RATE);
                 })
                 .addTransition(new Transition(() -> !follower.isBusy(), "AT_SCORE1"));
 

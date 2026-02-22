@@ -138,10 +138,6 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
                 else
                     outtake.hoodDown();
             }
-            else if (hoodDown)
-            {
-                outtake.hoodDown();
-            }
             else
                 outtake.hoodUp();
 

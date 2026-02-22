@@ -32,6 +32,7 @@ public class BlueFarStateMachineAuto extends BaseAuto
         fsm = new StateMachine(buildMachine());
         follower.setStartingPose(poses[0][0]);
         Drawing.init();
+        webcam.toggleGoalId();
     }
 
     @Override
@@ -77,22 +78,40 @@ public class BlueFarStateMachineAuto extends BaseAuto
             AutonConstants.FAR_BLUE_START, AutonConstants.FAR_BLUE_SCORE
         };
 
-        headings[pathCount] = new double[] {AutonConstants.FAR_BLUE_SCORE.getHeading(), AutonConstants.FAR_BLUE_LINEUP.getHeading()};
+        headings[pathCount] = new double[] {AutonConstants.FAR_BLUE_SCORE.getHeading(), AutonConstants.FAR_BLUE_LINEUP1.getHeading()};
         poses[pathCount++] = new Pose[]
         {
-            AutonConstants.FAR_BLUE_SCORE, AutonConstants.FAR_BLUE_LINEUP
+            AutonConstants.FAR_BLUE_SCORE, AutonConstants.FAR_BLUE_LINEUP1
         };
 
-        headings[pathCount] = new double[] {AutonConstants.FAR_BLUE_LINEUP.getHeading()};
+        headings[pathCount] = new double[] {AutonConstants.FAR_BLUE_LINEUP1.getHeading()};
         poses[pathCount++] = new Pose[]
         {
-            AutonConstants.FAR_BLUE_LINEUP, AutonConstants.FAR_BLUE_INTAKE
+            AutonConstants.FAR_BLUE_LINEUP1, AutonConstants.FAR_BLUE_INTAKE1
         };
 
-        headings[pathCount] = new double[] {AutonConstants.FAR_BLUE_INTAKE.getHeading(), AutonConstants.FAR_BLUE_SCORE.getHeading()};
+        headings[pathCount] = new double[] {AutonConstants.FAR_BLUE_INTAKE1.getHeading(), AutonConstants.FAR_BLUE_SCORE.getHeading()};
         poses[pathCount++] = new Pose[]
         {
-            AutonConstants.FAR_BLUE_INTAKE, AutonConstants.RED_SCORE
+            AutonConstants.FAR_BLUE_INTAKE1, AutonConstants.FAR_BLUE_SCORE
+        };
+
+        headings[pathCount] = new double[] {AutonConstants.FAR_BLUE_SCORE.getHeading(), AutonConstants.FAR_BLUE_LINEUP2.getHeading()};
+        poses[pathCount++] = new Pose[]
+        {
+                AutonConstants.FAR_BLUE_SCORE, AutonConstants.FAR_BLUE_LINEUP2
+        };
+
+        headings[pathCount] = new double[] {AutonConstants.FAR_BLUE_LINEUP2.getHeading()};
+        poses[pathCount++] = new Pose[]
+        {
+                AutonConstants.FAR_BLUE_LINEUP2, AutonConstants.FAR_BLUE_INTAKE2
+        };
+
+        headings[pathCount] = new double[] {AutonConstants.FAR_BLUE_INTAKE2.getHeading(), AutonConstants.FAR_BLUE_SCORE.getHeading()};
+        poses[pathCount++] = new Pose[]
+        {
+                AutonConstants.FAR_BLUE_INTAKE2, AutonConstants.FAR_BLUE_SCORE
         };
 
         headings[pathCount] = new double[] {AutonConstants.FAR_BLUE_SCORE.getHeading(), AutonConstants.FAR_BLUE_LEAVE.getHeading()};
@@ -118,7 +137,7 @@ public class BlueFarStateMachineAuto extends BaseAuto
 
     public State[] buildMachine()
     {
-        State[] states = new State[8];
+        State[] states = new State[12];
 
         states[0] = new BaseState("START")
                 .setEntry(() -> {
@@ -169,14 +188,45 @@ public class BlueFarStateMachineAuto extends BaseAuto
                 .setExit(() -> {
                     intake.stop();
                     outtake.setVelocity(0);
-                    follower.followPath(paths[4], true);
+                    follower.followPath(paths[4]);
+                })
+                .addTransition(new Transition(() -> pathTimer.getElapsedTimeSeconds() > AutonConstants.FIRST_THREE_SCORE_TIME, "TO_LINEUP2"));
+
+        states[6] = new BaseState("TO_LINEUP2")
+                .setExit(() -> {
+                    follower.followPath(paths[5]);
+                })
+                .addTransition(new Transition(() -> !follower.isBusy(), "TO_INTAKE2"));
+
+        states[7] = new BaseState("TO_INTAKE2")
+                .setExit(() -> {
+                    follower.followPath(paths[6]);
+                    pathTimer.resetTimer();
+                })
+                .addTransition(new Transition(() -> !follower.isBusy(), "TO_SCORE2"));
+
+        states[8] = new BaseState("TO_SCORE2")
+                .setDuring(() -> {
+                    //outtake.setVelocity(Outtake.MANUAL_ANGULAR_RATE);
+                })
+                .addTransition(new Transition(() -> !follower.isBusy(), "AT_SCORE2"));
+
+        states[9] = new BaseState("AT_SCORE2")
+                .setEntry(() -> {
+                    pathTimer.resetTimer();
+                })
+                .setDuring(this::shootArtifacts)
+                .setExit(() -> {
+                    intake.stop();
+                    outtake.setVelocity(0);
+                    follower.followPath(paths[7], true);
                 })
                 .addTransition(new Transition(() -> pathTimer.getElapsedTimeSeconds() > AutonConstants.FIRST_THREE_SCORE_TIME, "LEAVE_LINE"));
 
-        states[6] = new BaseState("LEAVE_LINE")
+        states[10] = new BaseState("LEAVE_LINE")
                 .addTransition(new Transition(() -> !follower.isBusy(), "STOP"));
 
-        states[7] = new BaseState("STOP");
+        states[11] = new BaseState("STOP");
 
         return states;
     }

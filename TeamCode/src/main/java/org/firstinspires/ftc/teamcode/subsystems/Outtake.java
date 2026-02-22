@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.core.wrappers.MotorWrapper;
 import org.firstinspires.ftc.teamcode.core.wrappers.ServoWrapper;
 import org.firstinspires.ftc.teamcode.hardware.Hardware;
 import org.firstinspires.ftc.teamcode.hardware.RightStopper;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 public class Outtake
 {
@@ -24,6 +25,8 @@ public class Outtake
     public static final double TICKS_PER_RADIAN = TICKS_PER_REVOLUTION / (2 * Math.PI);
     public static final double MAX_ANGULAR_RATE = 2800; // ticks/sec; This is determined from OuttakeMaxVelocityTest
 
+    public static final double SLOW_ANGULAR_RATE = 800;
+    public static final double FAST_ANGULAR_RATE = 1560;
     public static final double MANUAL_ANGULAR_RATE = 1130;
     public static final double TRIGGER_THRESHOLD = 0.5;
     public static final double NORMAL_ERROR_TOLERANCE = 30; // ticks/sec
@@ -36,8 +39,8 @@ public class Outtake
     public static final double DELTA_Y = 0.8636; // meters; final height - initial height
     public static final double EXTRA_DISTANCE = 0.1905; // the distance from the april tag to the center of the goal from a bird's-eye' view
 
-    public static final double F = 12;
-    public static final double P = 46;
+    public static final double F = 12.5;
+    public static final double P = 60;
     public static final double I = 0.1;
     public static final double D = 0;
 
@@ -193,7 +196,14 @@ public class Outtake
             D,
             F //* (IDEAL_VOLTAGE / batteryVoltage));
         );
+
+
     }
+
+    /*public void update(Gamepads gamepads, AprilTagWebcam webcam, AprilTagDetection detection)
+    {
+
+    }*/
 
     /**
      * @param dx robot's distance from the goal (meters)
@@ -225,9 +235,11 @@ public class Outtake
         */
 
         if (dx < LOWEST_WEBCAM_RANGE)
-            return 0;
+            return SLOW_ANGULAR_RATE;
         if (dx > MEDIUM_WEBCAM_RANGE)
             return piecewise2CalculateFlywheelTangentialVelocityExperimental(dx);
+
+        dx = dx + 0.1;
 
         double quadraticTerm = 128.2753 * dx * dx;
         double linearTerm = -163.94281 * dx;
@@ -281,7 +293,7 @@ public class Outtake
             return piecewise3CalculateFlywheelTangentialVelocityExperimental(dx);
         }
         if (dx > MAX_WEBCAM_RANGE)
-            return 0;
+            return FAST_ANGULAR_RATE;
 
         double quadraticTerm = -16.38633 * dx * dx;
         double linearTerm = 227.99804 * dx;
@@ -289,6 +301,21 @@ public class Outtake
 
         return quadraticTerm + linearTerm + yIntercept;
     }
+
+    public static int getRange(double dx)
+    {
+        if (dx >= MAX_WEBCAM_RANGE)
+            return 0;
+        if (dx >= HIGH_LOW_WEBCAM_RANGE)
+            return 3;
+        if (dx >= MEDIUM_WEBCAM_RANGE)
+            return 2;
+        if (dx >= LOWEST_WEBCAM_RANGE)
+            return 1;
+        return 0;
+    }
+
+
 
 
 

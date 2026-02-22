@@ -33,7 +33,7 @@ public class DashboardHoodedShooterTuner extends BaseTeleOp
           outtake.updatePIDFCoefficients(P, I, D, F);
           outtake.setVelocity(targetAngularRate);
 
-          intake.forwardLaunch();
+          //intake.forwardLaunch();
 
           telemetry.addData("Target Rate", targetAngularRate);
           telemetry.addData("Outtake Motor Avg. Angular Velocity (ticks/sec)", outtake.getAverageVelocity());
