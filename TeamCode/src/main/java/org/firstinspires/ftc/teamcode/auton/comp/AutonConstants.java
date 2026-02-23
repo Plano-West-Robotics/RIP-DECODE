@@ -28,7 +28,7 @@ public class AutonConstants
     public static final double PICKUP_X_POS = 130;
     public static final double REVERSE_INTAKE_SECONDS = 0.21;
 
-    public static final double BLUE_PICKUP_Y_POS_1 = 85.7;
+    public static final double BLUE_PICKUP_Y_POS_1 = 88;
     public static final double BLUE_PICKUP_X_POS = 14;
 
     public static final double FAR_PRELOAD_SCORE_TIME = 15;

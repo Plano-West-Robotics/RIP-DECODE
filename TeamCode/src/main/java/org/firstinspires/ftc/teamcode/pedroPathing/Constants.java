@@ -47,42 +47,42 @@ public class Constants {
             .yVelocity(49);
 
 
-    public static TwoWheelConstants localizerConstants = new TwoWheelConstants()
-            .forwardEncoder_HardwareMapName("fr")
-            .strafeEncoder_HardwareMapName("fl")
-            .IMU_HardwareMapName("imu")
-            .IMU_Orientation(
-                    new RevHubOrientationOnRobot(
-                            RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
-                            RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
-                    )
-            )
-            .strafePodX(1.4)
-            .forwardPodY(4)
-            .forwardEncoderDirection(Encoder.FORWARD)
-            .strafeEncoderDirection(Encoder.FORWARD)
-//            .forwardTicksToInches(0.00195616)
-//            .strafeTicksToInches(0.00305353222)
-//OLD            .forwardTicksToInches(0.0029938)
-            .forwardTicksToInches(0.003)
-            .strafeTicksToInches(0.002); //TODO: update necessary
-
-
-//    public static PinpointConstants localizerConstants = new PinpointConstants()
-//            .forwardPodY(4)
+//    public static TwoWheelConstants localizerConstants = new TwoWheelConstants()
+//            .forwardEncoder_HardwareMapName("fr")
+//            .strafeEncoder_HardwareMapName("fl")
+//            .IMU_HardwareMapName("imu")
+//            .IMU_Orientation(
+//                    new RevHubOrientationOnRobot(
+//                            RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+//                            RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
+//                    )
+//            )
 //            .strafePodX(1.4)
-//            .distanceUnit(DistanceUnit.INCH)
-//            .hardwareMapName("pinpoint")
-//            .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
-//            .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
-//            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);
+//            .forwardPodY(4)
+//            .forwardEncoderDirection(Encoder.FORWARD)
+//            .strafeEncoderDirection(Encoder.FORWARD)
+////            .forwardTicksToInches(0.00195616)
+////            .strafeTicksToInches(0.00305353222)
+////OLD            .forwardTicksToInches(0.0029938)
+//            .forwardTicksToInches(0.003)
+//            .strafeTicksToInches(0.002); //TODO: update necessary
+
+
+    public static PinpointConstants localizerConstants = new PinpointConstants()
+            .forwardPodY(4)
+            .strafePodX(1.4)
+            .distanceUnit(DistanceUnit.INCH)
+            .hardwareMapName("pinpoint")
+            .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
+            .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
+            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
     public static Follower createFollower(HardwareMap hardwareMap) {
         return new FollowerBuilder(followerConstants, hardwareMap)
                 .pathConstraints(pathConstraints)
                 .mecanumDrivetrain(driveConstants)
-                .twoWheelLocalizer(localizerConstants)
-                //.pinpointLocalizer(localizerConstants)
+                //.twoWheelLocalizer(localizerConstants)
+                .pinpointLocalizer(localizerConstants)
                 .build();
     }
 }
