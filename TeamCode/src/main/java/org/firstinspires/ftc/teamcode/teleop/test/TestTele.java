@@ -216,8 +216,8 @@ public class TestTele extends BaseTeleOp
                     switch (Outtake.getRange(webcam.getRange()))
                     {
                         case 3:
-                            exitMOE = 0.15 * targetAngularRate;
-                            MOE = 0.075 * targetAngularRate;
+                            exitMOE = 400;
+                            MOE = 70;
                             withinMOE = withinMOE ? error < exitMOE : error < MOE;
                             if (error < MOE)
                                 outtake.hoodUp();
