@@ -94,11 +94,35 @@ public class BlueCloseStateMachineAuto extends BaseAuto
             AutonConstants.BLUE_INTAKE_1, AutonConstants.BLUE_SCORE
         };
 
+        headings[pathCount] = new double[] {AutonConstants.BLUE_SCORE.getHeading(), AutonConstants.BLUE_LINEUP_2.getHeading()};
+        poses[pathCount++] = new Pose[]
+                {
+                        AutonConstants.BLUE_SCORE, AutonConstants.BLUE_LINEUP_2
+                };
+
+        headings[pathCount] = new double[] {AutonConstants.BLUE_LINEUP_2.getHeading()};
+        poses[pathCount++] = new Pose[]
+                {
+                        AutonConstants.BLUE_LINEUP_2, AutonConstants.BLUE_INTAKE_2
+                };
+
+        headings[pathCount] = new double[] {AutonConstants.BLUE_INTAKE_2.getHeading(), AutonConstants.BLUE_INTERMEDIATE_2.getHeading()};
+        poses[pathCount++] = new Pose[]
+                {
+                        AutonConstants.BLUE_INTAKE_2, AutonConstants.BLUE_INTERMEDIATE_2
+                };
+
+        headings[pathCount] = new double[] {AutonConstants.BLUE_INTERMEDIATE_2.getHeading(), AutonConstants.BLUE_SCORE.getHeading()};
+        poses[pathCount++] = new Pose[]
+                {
+                        AutonConstants.BLUE_INTERMEDIATE_2, AutonConstants.BLUE_SCORE
+                };
+
         headings[pathCount] = new double[] {AutonConstants.BLUE_SCORE.getHeading(), AutonConstants.BLUE_LEAVE_1.getHeading()};
         poses[pathCount++] = new Pose[]
-        {
-            AutonConstants.BLUE_SCORE, AutonConstants.BLUE_LEAVE_1
-        };
+                {
+                        AutonConstants.BLUE_SCORE, AutonConstants.BLUE_LEAVE_1
+                };
 
         for (int i = 0; i < pathCount; i++)
         {
@@ -113,11 +137,12 @@ public class BlueCloseStateMachineAuto extends BaseAuto
             PATH MODIFICATIONS
         */
         paths[2].setVelocityConstraint(AutonConstants.INTAKE_1_VEL_CONSTRAINT);
+        paths[5].setVelocityConstraint(AutonConstants.INTAKE_1_VEL_CONSTRAINT);
     }
 
     public State[] buildMachine()
     {
-        State[] states = new State[8];
+        State[] states = new State[13];
 
         states[0] = new BaseState("START")
                 .setEntry(() -> {
@@ -167,16 +192,56 @@ public class BlueCloseStateMachineAuto extends BaseAuto
                 })
                 .setDuring(this::shootArtifacts)
                 .setExit(() -> {
+                    intake.forwardRegular();
+                    outtake.setVelocity(-800);
+                    follower.followPath(paths[4]);
+                })
+                .addTransition(new Transition(() -> pathTimer.getElapsedTimeSeconds() > AutonConstants.FIRST_THREE_SCORE_TIME, "TO_LINEUP2"));
+
+        states[6] = new BaseState("TO_LINEUP2")
+                .setExit(() -> {
+                    follower.followPath(paths[5]);
+                })
+                .addTransition(new Transition(() -> !follower.isBusy(), "TO_INTAKE2"));
+
+        states[7] = new BaseState("TO_INTAKE2")
+                .setExit(() -> {
+                    follower.followPath(paths[6]);
+                    pathTimer.resetTimer();
+                })
+                .addTransition(new Transition(() -> !follower.isBusy(), "TO_INTERMEDIATE2"));
+
+        states[8] = new BaseState("TO_INTERMEDIATE2")
+                .setDuring(() -> {
+                    intake.stop();
+                    outtake.setVelocity(Outtake.MANUAL_ANGULAR_RATE);
+                })
+                .setExit(() -> {
+                    follower.followPath(paths[7]);
+                    pathTimer.resetTimer();
+                })
+                .addTransition(new Transition(() -> !follower.isBusy(), "TO_SCORE2"));
+
+        states[9] = new BaseState("TO_SCORE2")
+
+                .addTransition(new Transition(() -> !follower.isBusy(), "AT_SCORE2"));
+
+        states[10] = new BaseState("AT_SCORE2")
+                .setEntry(() -> {
+                    pathTimer.resetTimer();
+                })
+                .setDuring(this::shootArtifacts)
+                .setExit(() -> {
                     intake.stop();
                     outtake.setVelocity(0);
-                    follower.followPath(paths[4], true);
+                    follower.followPath(paths[8], true);
                 })
                 .addTransition(new Transition(() -> pathTimer.getElapsedTimeSeconds() > AutonConstants.FIRST_THREE_SCORE_TIME, "LEAVE_LINE"));
 
-        states[6] = new BaseState("LEAVE_LINE")
+        states[11] = new BaseState("LEAVE_LINE")
                 .addTransition(new Transition(() -> !follower.isBusy(), "STOP"));
 
-        states[7] = new BaseState("STOP");
+        states[12] = new BaseState("STOP");
 
         return states;
     }

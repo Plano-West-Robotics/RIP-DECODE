@@ -290,8 +290,8 @@ public class RedCloseStateMachineAuto extends BaseAuto
 
             if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE)
                 intake.forwardLaunch();
-            else
-                intake.stop();
+            //else
+                //.intake.stop();
 
             telemetry.addData("Range", range);
             telemetry.addData("Target Angular Rate", targetAngularRate);

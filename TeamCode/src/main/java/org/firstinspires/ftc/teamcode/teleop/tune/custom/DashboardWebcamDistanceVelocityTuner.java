@@ -29,6 +29,8 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
 
     public static boolean hoodDown;
 
+    public static boolean enableFlywheel;
+
     public static double marginOfErrorTPS = 70;
     public static double marginOfErrorExitTPS = 120;
     public static double setpointChangeResetTPS = 10;
@@ -37,6 +39,8 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
     public static boolean farRange; //TODO: at vineet's figure out what far range actually is
 
     public boolean withinMOE = false;
+
+    public static boolean correctWebcam;
 
     public double rx = 0;
 
@@ -68,7 +72,6 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
     @Override
     public void run()
     {
-
         AprilTagDetection detection = webcam.getEitherGoalDetection();
 
         if (detection == null)
@@ -82,7 +85,14 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
             telemetry.addData("Goal ID Is Detected", true);
             telemetry.addLine();
 
-            webcam.updateRange(detection.ftcPose.range);
+            if (correctWebcam)
+            {
+                webcam.updateRangeWithoutTolerance(detection.ftcPose.range);
+            }
+            else
+            {
+                webcam.updateRange(detection.ftcPose.range);
+            }
             webcam.updateBearing(detection.ftcPose.bearing);
             rx = bearingController.calculate(webcam.getBearing(), 0);
 
@@ -90,11 +100,18 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
             telemetry.addLine();
         }
 
-        drive.drive(0, 0, rx);
+        if (correctHeading)
+            drive.drive(0, 0, rx);
+        else
+            drive.drive(0, 0, 0);
 
         double calculatedVel = Outtake.piecewise1CalculateFlywheelTangentialVelocityExperimental(webcam.getRange());
         double setpoint = useCalculated ? calculatedVel : targetAngularRate;
-        outtake.setVelocity(setpoint);
+
+        if (enableFlywheel)
+            outtake.setVelocity(setpoint);
+        else
+            outtake.setVelocity(0);
 
         telemetry.addData("Left Motor Velocity", outtake.getLeftMotorVelocity());
         telemetry.addData("Right Motor Velocity", outtake.getRightMotorVelocity());
@@ -131,15 +148,20 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
 
         if (launch)
         {
-            if (hoodAdjustment)
-            {
-                if (error < marginOfErrorTPS)
-                    outtake.hoodUp();
-                else
-                    outtake.hoodDown();
-            }
+            if (hoodDown)
+                outtake.hoodDown();
             else
-                outtake.hoodUp();
+            {
+                if (hoodAdjustment)
+                {
+                    if (error < marginOfErrorTPS)
+                        outtake.hoodUp();
+                    else
+                        outtake.hoodDown();
+                }
+                else
+                    outtake.hoodUp();
+            }
 
             if (!withinMOE)
             {

@@ -49,8 +49,8 @@ public class AprilTagWebcam
     public static final int BLUE_GOAL_ID = 20;
     public static final int RED_GOAL_ID = 24;
 
-    public static final double BEARING_NOISE_TOLERANCE = 1.5; // degrees
-    public static final double RANGE_NOISE_TOLERANCE = 0.15; // meters
+    public static final double BEARING_NOISE_TOLERANCE = 1; // degrees
+    public static final double RANGE_NOISE_TOLERANCE = 0.05; // meters
 
     public WebcamName camera;
     public AprilTagProcessor processor;
@@ -111,6 +111,14 @@ public class AprilTagWebcam
     public void updateRange(double newRange)
     {
         if (Math.abs(newRange - range) > RANGE_NOISE_TOLERANCE) range = newRange;
+    }
+
+    /**
+     * Make sure {@code newRange} is in meters
+     */
+    public void updateRangeWithoutTolerance(double newRange)
+    {
+        range = newRange;
     }
 
     public void toggleGoalId()
