@@ -110,6 +110,7 @@ public class Outtake
 
     public void hoodUp() { hood.setPosition(HOOD_UP); }
     public void hoodDown() { hood.setPosition(HOOD_DOWN); }
+    public void hoodHalfway() { hood.setPosition(HOOD_DOWN/2); }
 
 
     public ControlMode getMode()

@@ -94,7 +94,10 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
                 webcam.updateRange(detection.ftcPose.range);
             }
             webcam.updateBearing(detection.ftcPose.bearing);
-            rx = bearingController.calculate(webcam.getBearing(), 0);
+            if (correctHeading)
+                rx = bearingController.calculate(webcam.getBearing(), 0);
+            else
+                rx = 0;
 
             telemetry.addData("Range: ", webcam.getRange());
             telemetry.addLine();
