@@ -334,6 +334,7 @@ public class TestTele extends BaseTeleOp
     @Override
     public void init_loop()
     {
+        webcam.update(gamepads);
         telemetry.addData("Goal Color", webcam.getGoalId() == AprilTagWebcam.RED_GOAL_ID ? "RED" : "BLUE");
 
         boolean cameraIsReady = webcam.portal.getCameraState() == VisionPortal.CameraState.STREAMING;
