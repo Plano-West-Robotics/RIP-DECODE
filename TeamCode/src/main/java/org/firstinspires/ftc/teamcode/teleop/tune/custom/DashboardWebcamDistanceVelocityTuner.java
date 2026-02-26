@@ -34,9 +34,9 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
     public static double marginOfErrorTPS = 70;
     public static double marginOfErrorExitTPS = 120;
     public static double setpointChangeResetTPS = 10;
-    public static double readyTimeMs;
+    public static double readyTimeMs = 750;
     public double farRangeExitMOE;
-    public static boolean farRange; //TODO: at vineet's figure out what far range actually is
+    public static boolean farRange;
 
     public boolean withinMOE = false;
 
@@ -65,8 +65,7 @@ public class DashboardWebcamDistanceVelocityTuner extends BaseTeleOp
                 DashboardWebcamBearingPIDFTuner.D,
                 DashboardWebcamBearingPIDFTuner.F
         );
-        readyTimeMs = 750;
-        outtake.hoodUp();
+        outtake.hoodDown();
     }
 
     @Override

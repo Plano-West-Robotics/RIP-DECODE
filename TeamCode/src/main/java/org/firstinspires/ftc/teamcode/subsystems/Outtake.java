@@ -44,7 +44,7 @@ public class Outtake
     public static final double I = 0.1;
     public static final double D = 0;
 
-    public static final double LOWEST_WEBCAM_RANGE = 0.9; // meters
+    public static final double LOWEST_WEBCAM_RANGE = 0.735; // meters
     public static final double MEDIUM_WEBCAM_RANGE = 1.8;
     public static final double HIGH_LOW_WEBCAM_RANGE = 2.35;
     public static final double HIGH_HIGH_WEBCAM_RANGE = 2.7;
@@ -240,11 +240,9 @@ public class Outtake
         if (dx > MEDIUM_WEBCAM_RANGE)
             return piecewise2CalculateFlywheelTangentialVelocityExperimental(dx);
 
-        dx = dx + 0.1;
-
-        double quadraticTerm = 128.2753 * dx * dx;
-        double linearTerm = -163.94281 * dx;
-        double yIntercept = 1256.42264;
+        double quadraticTerm = 32.33354 * dx * dx;
+        double linearTerm = 111.46984 * dx;
+        double yIntercept = 987.84007;
 
         return quadraticTerm + linearTerm + yIntercept;
     }

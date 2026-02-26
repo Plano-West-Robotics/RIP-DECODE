@@ -73,7 +73,7 @@ public class TestTele extends BaseTeleOp
                 outtake.update(gamepads);
                 outtake.setVelocity(-400);
                 webcam.update(gamepads);
-                outtake.hoodUp();
+                outtake.hoodDown();
             })
             .transition(() ->
                 gamepads.exceedsThreshold(Analog.GP1_RIGHT_TRIGGER, Outtake.TRIGGER_THRESHOLD)
@@ -216,7 +216,7 @@ public class TestTele extends BaseTeleOp
                     switch (Outtake.getRange(webcam.getRange()))
                     {
                         case 3:
-                            exitMOE = 400;
+                            exitMOE = 1000;
                             MOE = 70;
                             withinMOE = withinMOE ? error < exitMOE : error < MOE;
                             if (error < MOE)
@@ -273,9 +273,9 @@ public class TestTele extends BaseTeleOp
 
                             break;
                         case 1:
-                            outtake.hoodUp();
+                            outtake.hoodDown();
                             MOE = 70;
-                            exitMOE = 400;
+                            exitMOE = 1000;
                             withinMOE = withinMOE ? error < exitMOE : error < MOE;
 
                             if (withinMOE)
