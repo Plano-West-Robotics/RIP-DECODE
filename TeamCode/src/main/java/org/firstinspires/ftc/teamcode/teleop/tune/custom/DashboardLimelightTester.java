@@ -40,10 +40,24 @@ public class DashboardLimelightTester extends BaseTeleOp {
             double tx = result.getTx(); // How far left or right the target is (degrees)
             double ty = result.getTy(); // How far up or down the target is (degrees)
             double ta = result.getTa(); // How big the target looks (0%-100% of the image)
+            double limelightMountAngleDegrees = 13.0;
+
+            // distance from the center of the Limelight lens to the floor
+            double limelightLensHeightInches = 11.625;
+
+            // distance from the target to the floor
+            double goalHeightInches = 29.5;
+
+            double angleToGoalDegrees = limelightMountAngleDegrees + ty;
+            double angleToGoalRadians = angleToGoalDegrees * (Math.PI / 180.0);
+
+            double distanceFromLimelightToGoalInches = (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
 
             telemetry.addData("Target X", tx);
             telemetry.addData("Target Y", ty);
             telemetry.addData("Target Area", ta);
+
+            telemetry.addData("Target Distance", distanceFromLimelightToGoalInches);
         } else {
             telemetry.addData("Limelight", "No Targets");
         }
