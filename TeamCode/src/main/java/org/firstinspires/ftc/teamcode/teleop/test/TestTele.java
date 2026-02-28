@@ -71,7 +71,8 @@ public class TestTele extends BaseTeleOp
                 drive.update(gamepads);
                 intake.update(gamepads);
                 outtake.update(gamepads);
-                outtake.setVelocity(-400);
+                if (intake.isSpinning)
+                    outtake.setVelocity(-400);
                 webcam.update(gamepads);
                 outtake.hoodDown();
             })

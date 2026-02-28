@@ -22,6 +22,8 @@ public class RedFarStateMachineAuto extends BaseAuto
     public double[][] headings = new double[AutonConstants.PATH_COUNT_UPPER_BOUND][];
     public Path[] paths = new Path[AutonConstants.PATH_COUNT_UPPER_BOUND];
     public int pathCount;
+    public double hoodPos;
+    public double pastHoodPos = -1;
 
     public StateMachine fsm;
 
@@ -55,7 +57,7 @@ public class RedFarStateMachineAuto extends BaseAuto
     @Override
     public void while_running()
     {
-        Drawing.drawDebug(follower); // TODO: Check if the drawing shows up in Panels, then remove it when no longer necessary because it slows loop times
+//        Drawing.drawDebug(follower); // TODO: Check if the drawing shows up in Panels, then remove it when no longer necessary because it slows loop times
         fsm.run();
 
         telemetry.addData("Current State", fsm.currentState());
@@ -144,6 +146,7 @@ public class RedFarStateMachineAuto extends BaseAuto
         states[0] = new BaseState("START")
                 .setEntry(() -> {
                     follower.followPath(paths[0]);
+                    outtake.hoodUp();
                 })
                 .setDuring(() -> {
                     outtake.setVelocity(Outtake.MANUAL_ANGULAR_RATE_FAR);
@@ -153,13 +156,14 @@ public class RedFarStateMachineAuto extends BaseAuto
         states[1] = new BaseState("AT_PRELOAD_SCORE")
                 .setEntry(() -> {
                     pathTimer.resetTimer();
-                    outtake.hoodDown();
+                    outtake.hoodUp();
                 })
                 .setDuring(this::shootArtifacts)
                 .setExit(() -> {
                     intake.forwardRegular();
                     outtake.setVelocity(-800);
                     follower.followPath(paths[1]);
+                    outtake.hoodUp();
                 })
                 .addTransition(new Transition(() -> pathTimer.getElapsedTimeSeconds() > AutonConstants.PRELOAD_SCORE_TIME, "TO_LINEUP1"));
 
@@ -172,13 +176,14 @@ public class RedFarStateMachineAuto extends BaseAuto
         states[3] = new BaseState("TO_INTAKE1")
                 .setExit(() -> {
                     follower.followPath(paths[3]);
+                    intake.stop();
                     pathTimer.resetTimer();
                 })
                 .addTransition(new Transition(() -> !follower.isBusy(), "TO_SCORE1"));
 
         states[4] = new BaseState("TO_SCORE1")
                 .setDuring(() -> {
-                    outtake.setVelocity(-200);
+                    outtake.setVelocity(Outtake.MANUAL_ANGULAR_RATE_FAR);
                 })
                 .addTransition(new Transition(() -> !follower.isBusy(), "AT_SCORE1"));
 
@@ -188,28 +193,31 @@ public class RedFarStateMachineAuto extends BaseAuto
                 })
                 .setDuring(this::shootArtifacts)
                 .setExit(() -> {
-                    intake.stop();
-                    outtake.setVelocity(0);
+                    intake.forwardRegular();
+                    outtake.setVelocity(-200);
                     follower.followPath(paths[4]);
+                    outtake.hoodUp();
                 })
-                .addTransition(new Transition(() -> pathTimer.getElapsedTimeSeconds() > AutonConstants.FIRST_THREE_SCORE_TIME, "TO_LINEUP2"));
+                .addTransition(new Transition(() -> pathTimer.getElapsedTimeSeconds() > AutonConstants.FAR_THREE_SCORE_TIME, "TO_LINEUP2"));
 
         states[6] = new BaseState("TO_LINEUP2")
                 .setExit(() -> {
                     follower.followPath(paths[5]);
                 })
+                .setDuring(() -> outtake.setVelocity(-200))
                 .addTransition(new Transition(() -> !follower.isBusy(), "TO_INTAKE2"));
 
         states[7] = new BaseState("TO_INTAKE2")
                 .setExit(() -> {
                     follower.followPath(paths[6]);
                     pathTimer.resetTimer();
+                    intake.stop();
                 })
                 .addTransition(new Transition(() -> !follower.isBusy(), "TO_SCORE2"));
 
         states[8] = new BaseState("TO_SCORE2")
                 .setDuring(() -> {
-                    outtake.setVelocity(-200);
+                    outtake.setVelocity(Outtake.MANUAL_ANGULAR_RATE_FAR);
                 })
                 .addTransition(new Transition(() -> !follower.isBusy(), "AT_SCORE2"));
 
@@ -222,8 +230,9 @@ public class RedFarStateMachineAuto extends BaseAuto
                     intake.stop();
                     outtake.setVelocity(0);
                     follower.followPath(paths[7], true);
+                    outtake.hoodUp();
                 })
-                .addTransition(new Transition(() -> pathTimer.getElapsedTimeSeconds() > AutonConstants.FIRST_THREE_SCORE_TIME, "LEAVE_LINE"));
+                .addTransition(new Transition(() -> pathTimer.getElapsedTimeSeconds() > AutonConstants.FAR_THREE_SCORE_TIME, "LEAVE_LINE"));
 
         states[10] = new BaseState("LEAVE_LINE")
                 .addTransition(new Transition(() -> !follower.isBusy(), "STOP"));
@@ -260,6 +269,7 @@ public class RedFarStateMachineAuto extends BaseAuto
 
     public void shootArtifacts()
     {
+        hoodPos = outtake.hood.getPosition();
         AprilTagDetection detection = webcam.getGoalDetection();
         if (detection != null)
         {
@@ -273,13 +283,24 @@ public class RedFarStateMachineAuto extends BaseAuto
             double error = outtake.getAverageVelocity() - targetAngularRate;
 
             if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE)
-                intake.forwardLaunch();
+            {
+                if (Math.abs(hoodPos) < 0.05)
+                    intake.forwardLaunch();
+            }
+            if (Math.abs(error) < Outtake.FAR_ERROR_TOLERANCE)
+            {
+                outtake.hoodUp();
+            }
             else
-                intake.stop();
+            {
+                outtake.hoodDown();
+            }
+
 
             telemetry.addData("Range", range);
             telemetry.addData("Target Angular Rate", targetAngularRate);
             telemetry.addData("Error", error);
+            pastHoodPos = hoodPos;
         }
     }
 }

@@ -4,14 +4,18 @@ import com.pedropathing.geometry.Pose;
 
 public class AutonConstants
 {
-    public static final Pose RED_START = new Pose(122.1927409261577, 124.35544430538174, Math.toRadians(37));
-    public static final Pose RED_SCORE = new Pose(94.77570093457945, 104.74766355140187, Math.toRadians(37));
+    public static final Pose RED_START = new Pose(122.1927409261577, 124.35544430538174, Math.toRadians(AutonConstants.CLOSE_SCORE_ANGLE));
+    public static final Pose RED_SCORE = new Pose(94.77570093457945, 104.74766355140187, Math.toRadians(AutonConstants.CLOSE_SCORE_ANGLE));
     public static final Pose RED_LINEUP_1 = new Pose(93.29085681426106, AutonConstants.RED_PICKUP_Y_POS_1, Math.toRadians(0));
     public static final Pose RED_INTAKE_1 = new Pose(AutonConstants.RED_PICKUP_X_POS, AutonConstants.RED_PICKUP_Y_POS_1, Math.toRadians(0));
-    public static final Pose RED_LINEUP_2 = new Pose(93.29085681426106, AutonConstants.RED_PICKUP_Y_POS_2, Math.toRadians(0));
+    public static final Pose RED_LINEUP_2 = new Pose(91.29085681426106, AutonConstants.RED_PICKUP_Y_POS_2, Math.toRadians(0));
     public static final Pose RED_INTAKE_2 = new Pose(AutonConstants.RED_PICKUP_X_POS + 6, AutonConstants.RED_PICKUP_Y_POS_2, Math.toRadians(0));
     public static final Pose RED_INTERMEDIATE_2 = new Pose(112.09271523178808, AutonConstants.RED_PICKUP_Y_POS_2, Math.toRadians(0));
+    public static final Pose RED_LINEUP_3 = new Pose(90.33644859813084, AutonConstants.RED_PICKUP_Y_POS_3, Math.toRadians(0));
+    public static final Pose RED_INTAKE_3 = new Pose(AutonConstants.RED_PICKUP_X_POS, AutonConstants.RED_PICKUP_Y_POS_3, Math.toRadians(0));
     public static final Pose RED_LEAVE_1 = new Pose(120, 80, Math.toRadians(0));
+    public static final Pose RED_CLEAR_LINEUP = new Pose(90, 68, Math.toRadians(0));
+    public static final Pose RED_CLEAR_GOAL = new Pose (115, 68, Math.toRadians(0));
 
     public static final Pose BLUE_START = new Pose(21.807259073842303, 124.35544430538174, Math.toRadians(143));
     public static final Pose BLUE_SCORE = new Pose(49.22429906542055, 104.74766355140187, Math.toRadians(143));
@@ -23,13 +27,16 @@ public class AutonConstants
     public static final Pose BLUE_LEAVE_1 = new Pose(24, 80, Math.toRadians(180));
 
     public static final double INTAKE_1_VEL_CONSTRAINT = 2.0;
-    public static final double PRELOAD_SCORE_TIME = 3.5;
-    public static final double FIRST_THREE_SCORE_TIME = 5.25;
+    public static final double PRELOAD_SCORE_TIME = 1.5;
+    public static final double FIRST_THREE_SCORE_TIME = 1.5;
+    public static final double FAR_THREE_SCORE_TIME = 4.0;
     public static final double DISABLE_INTAKE_SECONDS = 0.30;
-    public static final double RED_PICKUP_Y_POS_1 = 84.5;
-    public static final double RED_PICKUP_Y_POS_2 = 60.5;
-    public static final double RED_PICKUP_X_POS = 130;
+    public static final double RED_PICKUP_Y_POS_1 = 83.5;
+    public static final double RED_PICKUP_Y_POS_2 = 59.5;
+    public static final double RED_PICKUP_Y_POS_3 = 35.728971962616825;
+    public static final double RED_PICKUP_X_POS = 120;
     public static final double REVERSE_INTAKE_SECONDS = 0.21;
+    public static final double CLOSE_SCORE_ANGLE = 35;
 
     public static final double BLUE_PICKUP_Y_POS_1 = 88;
     public static final double BLUE_PICKUP_Y_POS_2 = 60.5;
@@ -46,10 +53,10 @@ public class AutonConstants
 
     public static final Pose FAR_RED_START = new Pose(START_X_POS_FAR, 9, Math.toRadians(90));
     public static final Pose FAR_RED_SCORE = new Pose(START_X_POS_FAR, SCORE_Y_POS_FAR, Math.toRadians(SCORE_ANGLE_DEG));
-    public static final Pose FAR_RED_LINEUP1 = new Pose(START_X_POS_FAR, PICKUP_Y_POS_FAR, Math.toRadians(0));
-    public static final Pose FAR_RED_INTAKE1 = new Pose(136, PICKUP_Y_POS_FAR, Math.toRadians(0));
-    public static final Pose FAR_RED_LINEUP2 = RED_LINEUP_2;
-    public static final Pose FAR_RED_INTAKE2 = RED_INTAKE_2;
+    public static final Pose FAR_RED_LINEUP1 = RED_LINEUP_3.withY(RED_LINEUP_3.getY()-4);
+    public static final Pose FAR_RED_INTAKE1 = RED_INTAKE_3.withY(RED_INTAKE_3.getY()-4);
+    public static final Pose FAR_RED_LINEUP2 = RED_LINEUP_2.withY(RED_LINEUP_2.getY()-4);
+    public static final Pose FAR_RED_INTAKE2 = RED_INTAKE_2.withY(RED_INTAKE_2.getY()-4);
     public static final Pose FAR_RED_LEAVE = new Pose(106, 34, Math.toRadians(0));
 
     //public static final Pose FAR_RED_SCORE_1 = new Pose(SCORE_X_POS_FAR, PICKUP_Y_POS_FAR, Math.toRadians(SCORE_ANGLE_DEG));
