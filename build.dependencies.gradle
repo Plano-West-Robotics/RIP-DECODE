@@ -25,7 +25,7 @@ dependencies {
     implementation 'com.bylazar:fullpanels:1.0.6'
 
     // FTC Dashboard
-    implementation 'com.acmerobotics.dashboard:dashboard:0.5.0'
+    //implementation 'com.acmerobotics.dashboard:dashboard:0.5.0'
 
     // State Factory
     implementation 'com.github.StateFactory-Dev:StateFactory:0.3.9'
