@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.core.control.Analog;
 import org.firstinspires.ftc.teamcode.core.control.Button;
 import org.firstinspires.ftc.teamcode.core.control.Gamepads;
 import org.firstinspires.ftc.teamcode.core.wrappers.MotorWrapper;
@@ -13,10 +12,11 @@ public class Intake
     public static final double LAUNCH_POWER = 1;
     public static final double REGULAR_POWER = 0.85;
     public static final double SLOW_POWER = 0.3;
+    public static final double TRANSFER_POWER = 0.2;
 
     public static final double REVERSE_TIME_SEC = 0.5;
 
-    public MotorWrapper motor;
+    public MotorWrapper motor, tMotor;
     public double motorPower;
     public boolean isSpinning;
     public boolean timerActive;
@@ -27,6 +27,7 @@ public class Intake
     {
         motor = hardware.intakeMotor;
         motor.reverse();
+        tMotor = hardware.transferMotor;
         motorPower = REGULAR_POWER;
         isSpinning = false;
         timer = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
@@ -143,9 +144,28 @@ public class Intake
         updateMotor();
     }
 
+    public void forwardRegularTransfer()
+    {
+        tMotor.setPower(TRANSFER_POWER);
+    }
+
+    public void forwardLaunchTransfer()
+    {
+        tMotor.setPower(LAUNCH_POWER);
+    }
+
+    public void reverseRegularTransfer()
+    {
+        tMotor.setPower(-TRANSFER_POWER);
+    }
+
+    public void stopTransfer()
+    {
+        tMotor.setPower(0);
+    }
+
     public double getPower()
     {
         return motorPower;
     }
-
 }

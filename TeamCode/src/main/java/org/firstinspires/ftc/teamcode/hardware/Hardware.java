@@ -18,7 +18,7 @@ public class Hardware
     public IMU.Parameters imuParameters;
     public WebcamName webcam;
     public DrivetrainMotors drivetrainMotors;
-    public MotorWrapper intakeMotor;
+    public MotorWrapper intakeMotor, transferMotor;
     public MotorPairWrapper outtakeMotors;
     public VoltageSensor vs;
     public ServoPairWrapper stoppers;
@@ -49,6 +49,7 @@ public class Hardware
         drivetrainMotors = new DrivetrainMotors(hardwareMap);
 
         intakeMotor = new MotorWrapper(hardwareMap, "i", false);
+        transferMotor = new MotorWrapper(hardwareMap, "t", false);
 
         outtakeMotors = new MotorPairWrapper(hardwareMap, "o2", "o1");
         outtakeMotors.getLeft().noEncoder();

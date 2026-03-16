@@ -70,11 +70,11 @@ public class TestTele extends BaseTeleOp
             .loop(() -> {
                 drive.update(gamepads);
                 intake.update(gamepads);
+                intake.reverseRegularTransfer();
                 outtake.update(gamepads);
-                if (intake.isSpinning)
-                    outtake.setVelocity(-400);
-                webcam.update(gamepads);
+                outtake.setVelocity(Outtake.SLOW_ANGULAR_RATE);
                 outtake.hoodDown();
+                webcam.update(gamepads);
             })
             .transition(() ->
                 gamepads.exceedsThreshold(Analog.GP1_RIGHT_TRIGGER, Outtake.TRIGGER_THRESHOLD)
@@ -107,11 +107,13 @@ public class TestTele extends BaseTeleOp
                     if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE)
                     {
                         intake.forwardLaunch();
+                        intake.forwardLaunchTransfer();
                         gamepad1.stopRumble();
                     }
                     else
                     {
                         intake.stop();
+                        intake.reverseRegularTransfer();
                         if (!gamepad1.isRumbling())
                         {
                             gamepad1.rumble(500);
@@ -121,6 +123,7 @@ public class TestTele extends BaseTeleOp
                 else
                 {
                     intake.stop();
+                    intake.reverseRegularTransfer();
                     gamepad1.stopRumble();
                 }
             })
@@ -154,6 +157,7 @@ public class TestTele extends BaseTeleOp
 
                     telemetry.addData("AprilTag Found", false);
                     intake.stop();
+                    intake.reverseRegularTransfer();
                     return;
                 }
 
@@ -229,6 +233,7 @@ public class TestTele extends BaseTeleOp
                             {
                                 t.reset();
                                 intake.stop();
+                                intake.reverseRegularTransfer();
                                 if (!gamepad1.isRumbling())
                                 {
                                     gamepad1.rumble(500);
@@ -240,10 +245,12 @@ public class TestTele extends BaseTeleOp
                                 if (t.time() >= READY_TIME_MS)
                                 {
                                     intake.forwardLaunch();
+                                    intake.forwardLaunchTransfer();
                                 }
                                 else
                                 {
                                     intake.stop();
+                                    intake.reverseRegularTransfer();
                                 }
                             }
 
@@ -261,11 +268,13 @@ public class TestTele extends BaseTeleOp
                             if (withinMOE)
                             {
                                 intake.forwardLaunch();
+                                intake.forwardLaunchTransfer();
                                 gamepad1.stopRumble();
                             }
                             else
                             {
                                 intake.stop();
+                                intake.reverseRegularTransfer();
                                 if (!gamepad1.isRumbling())
                                 {
                                     gamepad1.rumble(500);
@@ -282,11 +291,13 @@ public class TestTele extends BaseTeleOp
                             if (withinMOE)
                             {
                                 intake.forwardLaunch();
+                                intake.forwardLaunchTransfer();
                                 gamepad1.stopRumble();
                             }
                             else
                             {
                                 intake.stop();
+                                intake.reverseRegularTransfer();
                                 if (!gamepad1.isRumbling())
                                 {
                                     gamepad1.rumble(500);
@@ -300,6 +311,7 @@ public class TestTele extends BaseTeleOp
                                 gamepad1.rumble(500);
                             }
                             intake.stop();
+                            intake.reverseRegularTransfer();
 
 
                     }
@@ -307,6 +319,7 @@ public class TestTele extends BaseTeleOp
                 else
                 {
                     intake.stop();
+                    intake.reverseRegularTransfer();
                     gamepad1.stopRumble();
                 }
 
@@ -323,8 +336,8 @@ public class TestTele extends BaseTeleOp
                 State.STANDBY
             )
             .onExit(() -> {
-                intake.forwardRegular();
-                //intake.stop();
+//                intake.forwardRegular();
+                intake.stop();
                 outtake.stop();
                 if (!gamepad2.isRumbling())
                     gamepad2.rumble(1000);
