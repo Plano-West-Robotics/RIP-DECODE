@@ -51,8 +51,8 @@ public class ExampleTeleOp extends OpMode {
     public StateMachine fsm;
 
     public AprilTagDetection lastValidDetection;
-    private Pose redGoalPose = new Pose(-1, -1);
-    private Pose blueGoalPose = new Pose(-1, -1);
+    private Pose redGoalPose = new Pose(133, 134);
+    private Pose blueGoalPose = new Pose(11, 134);
 
     public enum State
     {
@@ -326,6 +326,13 @@ public class ExampleTeleOp extends OpMode {
     {
         double yPosDifference = redGoalPose.getY() - follower.getPose().getY();
         double xPosDifference = redGoalPose.getX() - follower.getPose().getX();
+        return Math.atan2(yPosDifference, xPosDifference);
+    }
+
+    public double calculateBlueAngleInRadians()
+    {
+        double yPosDifference = blueGoalPose.getY() - follower.getPose().getY();
+        double xPosDifference = blueGoalPose.getX() - follower.getPose().getX();
         return Math.atan2(yPosDifference, xPosDifference);
     }
 }
