@@ -40,7 +40,7 @@ public class Outtake
     public static final double EXTRA_DISTANCE = 0.1905; // the distance from the april tag to the center of the goal from a bird's-eye' view
 
     public static final double F = 12.5;
-    public static final double P = 60;
+    public static final double P = 45; //60;
     public static final double I = 0.1;
     public static final double D = 0;
 
