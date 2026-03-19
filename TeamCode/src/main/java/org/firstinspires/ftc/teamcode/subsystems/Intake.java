@@ -10,10 +10,12 @@ import org.firstinspires.ftc.teamcode.hardware.Hardware;
 public class Intake
 {
     public static final double LAUNCH_POWER = 1;
-    public static final double REGULAR_POWER = 0.85;
+//    public static final double REGULAR_POWER = 0.85;
+    public static final double REGULAR_POWER = 1;
     public static final double SLOW_POWER = 0.3;
 
-    public static final double TRANSFER_LAUNCH_POWER = 0.42;
+//    public static final double TRANSFER_LAUNCH_POWER = 0.42;
+public static final double TRANSFER_LAUNCH_POWER = 1;
     public static final double TRANSFER_REVERSE_POWER = 0.2;
 
     public static final double REVERSE_TIME_SEC = 0.5;

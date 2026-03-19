@@ -149,7 +149,7 @@ public class BlueCloseStateMachineAuto extends BaseAuto
                     follower.followPath(paths[0]);
                 })
                 .setDuring(() -> {
-                    outtake.setVelocity(Outtake.MANUAL_ANGULAR_RATE);
+                    outtake.setVelocity(Outtake.AUTO_CLOSE_ANGULAR_RATE);
                 })
                 .addTransition(new Transition(() -> !follower.isBusy(), "AT_PRELOAD_SCORE"));
 
@@ -161,7 +161,7 @@ public class BlueCloseStateMachineAuto extends BaseAuto
                 .setDuring(this::shootArtifacts)
                 .setExit(() -> {
                     intake.forwardRegular();
-                    outtake.setVelocity(-800);
+                    intake.reverseRegularTransfer();
                     follower.followPath(paths[1]);
                 })
                 .addTransition(new Transition(() -> pathTimer.getElapsedTimeSeconds() > AutonConstants.PRELOAD_SCORE_TIME, "TO_LINEUP1"));
@@ -182,7 +182,7 @@ public class BlueCloseStateMachineAuto extends BaseAuto
         states[4] = new BaseState("TO_SCORE1")
                 .setDuring(() -> {
                     intake.stop();
-                    outtake.setVelocity(Outtake.MANUAL_ANGULAR_RATE);
+                    outtake.setVelocity(Outtake.AUTO_CLOSE_ANGULAR_RATE);
                 })
                 .addTransition(new Transition(() -> !follower.isBusy(), "AT_SCORE1"));
 
@@ -193,7 +193,7 @@ public class BlueCloseStateMachineAuto extends BaseAuto
                 .setDuring(this::shootArtifacts)
                 .setExit(() -> {
                     intake.forwardRegular();
-                    outtake.setVelocity(-800);
+                    intake.reverseRegularTransfer();
                     follower.followPath(paths[4]);
                 })
                 .addTransition(new Transition(() -> pathTimer.getElapsedTimeSeconds() > AutonConstants.FIRST_THREE_SCORE_TIME, "TO_LINEUP2"));
@@ -214,7 +214,7 @@ public class BlueCloseStateMachineAuto extends BaseAuto
         states[8] = new BaseState("TO_INTERMEDIATE2")
                 .setDuring(() -> {
                     intake.stop();
-                    outtake.setVelocity(Outtake.MANUAL_ANGULAR_RATE);
+                    outtake.setVelocity(Outtake.AUTO_CLOSE_ANGULAR_RATE);
                 })
                 .setExit(() -> {
                     follower.followPath(paths[7]);
@@ -233,7 +233,7 @@ public class BlueCloseStateMachineAuto extends BaseAuto
                 .setDuring(this::shootArtifacts)
                 .setExit(() -> {
                     intake.stop();
-                    outtake.setVelocity(0);
+                    intake.reverseRegularTransfer();
                     follower.followPath(paths[8], true);
                 })
                 .addTransition(new Transition(() -> pathTimer.getElapsedTimeSeconds() > AutonConstants.FIRST_THREE_SCORE_TIME, "LEAVE_LINE"));
@@ -281,20 +281,23 @@ public class BlueCloseStateMachineAuto extends BaseAuto
             double range = webcam.getRange();
 
             double targetAngularRate = Outtake.toAngularRate(
-                    Outtake.calculateIdealFlywheelTangentialVelocity(range));
+                Outtake.calculateIdealFlywheelTangentialVelocity(range));
 
-            outtake.setVelocity(Outtake.MANUAL_ANGULAR_RATE);
+            outtake.setVelocity(Outtake.AUTO_CLOSE_ANGULAR_RATE);
 
-            double error = outtake.getAverageVelocity() - Outtake.MANUAL_ANGULAR_RATE;
+            double error = outtake.getAverageVelocity() - Outtake.AUTO_CLOSE_ANGULAR_RATE;
 
+            intake.forwardLaunch();
             if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE)
-                intake.forwardLaunch();
+                intake.forwardLaunchTransfer();
             else
-                intake.stop();
+                intake.reverseRegularTransfer();
 
             telemetry.addData("Range", range);
             telemetry.addData("Target Angular Rate", targetAngularRate);
             telemetry.addData("Error", error);
         }
+        else telemetry.addLine("No detection");
+        telemetry.update();
     }
 }

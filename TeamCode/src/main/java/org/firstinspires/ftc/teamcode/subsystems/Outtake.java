@@ -33,6 +33,8 @@ public class Outtake
     public static final double FAR_ERROR_TOLERANCE = 160; // ticks/sec
     public static final double MANUAL_ANGULAR_RATE_FAR = 1300;
 
+    public static final double AUTO_CLOSE_ANGULAR_RATE = 1050;
+
     public static final double FLYWHEEL_RADIUS = 0.0508; // meters
     public static final double HALF_GRAVITY = 4.903325; // meters per second squared
     public static final double LAUNCH_ANGLE = Math.PI / 3; // radians
@@ -40,7 +42,7 @@ public class Outtake
     public static final double EXTRA_DISTANCE = 0.1905; // the distance from the april tag to the center of the goal from a bird's-eye' view
 
     public static final double F = 12.5;
-    public static final double P = 45; //60;
+    public static final double P = 60;
     public static final double I = 0.1;
     public static final double D = 0;
 

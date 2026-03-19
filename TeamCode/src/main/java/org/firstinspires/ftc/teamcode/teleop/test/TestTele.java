@@ -70,7 +70,10 @@ public class TestTele extends BaseTeleOp
             .loop(() -> {
                 drive.update(gamepads);
                 intake.update(gamepads);
-                intake.reverseRegularTransfer();
+                if (intake.isSpinning)
+                    intake.reverseRegularTransfer();
+                else
+                    intake.stopTransfer();
                 outtake.update(gamepads);
                 outtake.setVelocity(Outtake.SLOW_ANGULAR_RATE);
                 outtake.hoodDown();
@@ -88,6 +91,7 @@ public class TestTele extends BaseTeleOp
             )
             .onExit(() -> {
                 intake.stop();
+                intake.stopTransfer();
             })
 
 
@@ -113,7 +117,7 @@ public class TestTele extends BaseTeleOp
                     else
                     {
                         intake.stop();
-                        intake.reverseRegularTransfer();
+                        intake.stopTransfer();
                         if (!gamepad1.isRumbling())
                         {
                             gamepad1.rumble(500);
@@ -123,7 +127,7 @@ public class TestTele extends BaseTeleOp
                 else
                 {
                     intake.stop();
-                    intake.reverseRegularTransfer();
+                    intake.stopTransfer();
                     gamepad1.stopRumble();
                 }
             })
@@ -133,7 +137,7 @@ public class TestTele extends BaseTeleOp
             )
             .onExit(() -> {
                 intake.forwardRegular();
-                intake.stop();
+                intake.reverseRegularTransfer();
                 outtake.stop();
                 if (!gamepad2.isRumbling())
                     gamepad2.rumble(1000);
@@ -336,8 +340,8 @@ public class TestTele extends BaseTeleOp
                 State.STANDBY
             )
             .onExit(() -> {
-//                intake.forwardRegular();
-                intake.stop();
+                intake.forwardRegular();
+                intake.reverseRegularTransfer();
                 outtake.stop();
                 if (!gamepad2.isRumbling())
                     gamepad2.rumble(1000);
