@@ -342,8 +342,10 @@ public class RedCloseStateMachineAuto extends BaseAuto
 
             double error = outtake.getAverageVelocity() - Outtake.MANUAL_ANGULAR_RATE;
 
-            if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE)
+            if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE) {
                 intake.forwardLaunch();
+                intake.forwardLaunchTransfer();
+            }
             //else
                 //.intake.stop();
 
@@ -351,5 +353,7 @@ public class RedCloseStateMachineAuto extends BaseAuto
             telemetry.addData("Target Angular Rate", targetAngularRate);
             telemetry.addData("Error", error);
         }
+        else telemetry.addLine("No detection");
+        telemetry.update();
     }
 }
