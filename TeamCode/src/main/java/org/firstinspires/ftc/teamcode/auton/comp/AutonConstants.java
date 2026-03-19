@@ -27,8 +27,8 @@ public class AutonConstants
     public static final Pose BLUE_LEAVE_1 = new Pose(24, 80, Math.toRadians(180));
 
     public static final double INTAKE_1_VEL_CONSTRAINT = 2.0;
-    public static final double PRELOAD_SCORE_TIME = 1.5;
-    public static final double FIRST_THREE_SCORE_TIME = 1.5;
+    public static final double PRELOAD_SCORE_TIME = 3;
+    public static final double FIRST_THREE_SCORE_TIME = 3;
     public static final double FAR_THREE_SCORE_TIME = 4.0;
     public static final double DISABLE_INTAKE_SECONDS = 0.30;
     public static final double RED_PICKUP_Y_POS_1 = 83.5;
