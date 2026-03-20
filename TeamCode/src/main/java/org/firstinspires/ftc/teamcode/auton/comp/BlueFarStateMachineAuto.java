@@ -56,7 +56,7 @@ public class BlueFarStateMachineAuto extends BaseAuto
     @Override
     public void while_running()
     {
-        Drawing.drawDebug(follower); // TODO: Check if the drawing shows up in Panels, then remove it when no longer necessary because it slows loop times
+        // Drawing.drawDebug(follower); // TODO: Check if the drawing shows up in Panels, then remove it when no longer necessary because it slows loop times
         fsm.run();
 
         telemetry.addData("Current State", fsm.currentState());

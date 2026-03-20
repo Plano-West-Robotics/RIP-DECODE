@@ -16,7 +16,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @Autonomous
-public class BlueFarBackNForthStateMachineAuto extends BaseAuto
+public class BlueFarBNFStateMachineAuto extends BaseAuto
 {
     public Pose[][] poses = new Pose[AutonConstants.PATH_COUNT_UPPER_BOUND][2];
     public double[][] headings = new double[AutonConstants.PATH_COUNT_UPPER_BOUND][];
@@ -56,7 +56,7 @@ public class BlueFarBackNForthStateMachineAuto extends BaseAuto
     @Override
     public void while_running()
     {
-        Drawing.drawDebug(follower); // TODO: Check if the drawing shows up in Panels, then remove it when no longer necessary because it slows loop times
+        // Drawing.drawDebug(follower); // TODO: Check if the drawing shows up in Panels, then remove it when no longer necessary because it slows loop times
         fsm.run();
 
         telemetry.addData("Current State", fsm.currentState());
@@ -84,7 +84,7 @@ public class BlueFarBackNForthStateMachineAuto extends BaseAuto
                 AutonConstants.FAR_BLUE_SCORE, AutonConstants.FAR_BLUE_BNF_INTERMEDIATE
             };
 
-        headings[pathCount] = new double[] {AutonConstants.FAR_BLUE_BNF_INTERMEDIATE.getHeading(), AutonConstants.FAR_BLUE_BNF_LINEUP.getHeading()};
+        headings[pathCount] = new double[] {AutonConstants.FAR_BLUE_BNF_INTERMEDIATE.getHeading()};
         poses[pathCount++] = new Pose[]
             {
                 AutonConstants.FAR_BLUE_BNF_INTERMEDIATE, AutonConstants.FAR_BLUE_BNF_LINEUP
@@ -214,36 +214,10 @@ public class BlueFarBackNForthStateMachineAuto extends BaseAuto
 
     public void shootArtifacts()
     {
-        AprilTagDetection detection = webcam.getGoalDetection();
-        if (detection != null)
+        outtake.setVelocity(Outtake.AUTO_FAR_ANGULAR_RATE);
+        double error = outtake.getAverageVelocity() - Outtake.AUTO_FAR_ANGULAR_RATE;
+        if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE)
         {
-            webcam.updateRange(detection.ftcPose.range);
-            double range = webcam.getRange();
-
-            double targetAngularRate = Outtake.piecewise1CalculateFlywheelTangentialVelocityExperimental(range);
-
-//            outtake.setVelocity(targetAngularRate);
-            outtake.setVelocity(Outtake.AUTO_FAR_ANGULAR_RATE);
-
-            double error = outtake.getAverageVelocity() - targetAngularRate;
-
-            if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE)
-            {
-                intake.forwardLaunch();
-                intake.forwardLaunchTransfer();
-            }
-
-            telemetry.addData("Range", range);
-            telemetry.addData("Target Angular Rate", targetAngularRate);
-            telemetry.addData("Error", error);
-        }
-    }
-
-    public void asdf()
-    {
-        outtake.setVelocity(Outtake.AUTO_MANUAL_ANGULAR_RATE);
-        double error = outtake.getAverageVelocity() - Outtake.AUTO_MANUAL_ANGULAR_RATE;
-        if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE) {
             intake.forwardLaunch();
             intake.forwardLaunchTransfer();
         }
