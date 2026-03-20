@@ -35,6 +35,7 @@ public class Outtake
     public static final double MANUAL_ANGULAR_RATE_FAR = 1300;
 
     public static final double AUTO_CLOSE_ANGULAR_RATE = 1050;
+    public static final double AUTO_FAR_ANGULAR_RATE = 1500;
 
     public static final double FLYWHEEL_RADIUS = 0.0508; // meters
     public static final double HALF_GRAVITY = 4.903325; // meters per second squared

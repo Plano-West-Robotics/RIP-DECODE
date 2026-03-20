@@ -66,6 +66,10 @@ public class AutonConstants
     public static final Pose FAR_RED_INTAKE2 = RED_INTAKE_2.withY(RED_INTAKE_2.getY()-4);
     public static final Pose FAR_RED_LEAVE = new Pose(106, 34, Math.toRadians(0));
 
+    public static final Pose FAR_RED_BNF_INTERMEDIATE = new Pose(88, 24, Math.toRadians(0));
+    public static final Pose FAR_RED_BNF_LINEUP = new Pose(88, 23.7, Math.toRadians(0));
+    public static final Pose FAR_RED_BNF_INTAKE = new Pose(140, 23.7, Math.toRadians(0));
+
     //public static final Pose FAR_RED_SCORE_1 = new Pose(SCORE_X_POS_FAR, PICKUP_Y_POS_FAR, Math.toRadians(SCORE_ANGLE_DEG));
 
 
@@ -77,6 +81,10 @@ public class AutonConstants
     public static final Pose FAR_BLUE_LINEUP2 = new Pose(50.7091431857, AutonConstants.BLUE_PICKUP_Y_POS_2, Math.toRadians(180));
     public static final Pose FAR_BLUE_INTAKE2 = new Pose(8, AutonConstants.BLUE_PICKUP_Y_POS_2, Math.toRadians(180));
     public static final Pose FAR_BLUE_LEAVE = new Pose(38, 34, Math.toRadians(180));
+
+    public static final Pose FAR_BLUE_BNF_INTERMEDIATE = new Pose(56, 24, Math.toRadians(180));
+    public static final Pose FAR_BLUE_BNF_LINEUP = new Pose(56, 23.7, Math.toRadians(180));
+    public static final Pose FAR_BLUE_BNF_INTAKE = new Pose(4, 23.7, Math.toRadians(180));
 
     public static final int PATH_COUNT_UPPER_BOUND = 40;
 
