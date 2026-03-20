@@ -16,7 +16,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @Autonomous
-public class BlueCloseStateMachineAuto extends BaseAuto
+public class BlueCloseYesClearStateMachineAuto extends BaseAuto
 {
     public Pose[][] poses = new Pose[AutonConstants.PATH_COUNT_UPPER_BOUND][2];
     public double[][] headings = new double[AutonConstants.PATH_COUNT_UPPER_BOUND][];
