@@ -28,6 +28,7 @@ public class Outtake
     public static final double SLOW_ANGULAR_RATE = 800;
     public static final double FAST_ANGULAR_RATE = 1560;
     public static final double MANUAL_ANGULAR_RATE = 1130;
+    public static final double AUTO_MANUAL_ANGULAR_RATE = 1080;
     public static final double TRIGGER_THRESHOLD = 0.5;
     public static final double NORMAL_ERROR_TOLERANCE = 30; // ticks/sec
     public static final double FAR_ERROR_TOLERANCE = 160; // ticks/sec

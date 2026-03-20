@@ -149,7 +149,7 @@ public class BlueCloseStateMachineAuto extends BaseAuto
                     follower.followPath(paths[0]);
                 })
                 .setDuring(() -> {
-                    outtake.setVelocity(Outtake.MANUAL_ANGULAR_RATE);
+                    outtake.setVelocity(Outtake.AUTO_MANUAL_ANGULAR_RATE);
                 })
                 .addTransition(new Transition(() -> !follower.isBusy(), "AT_PRELOAD_SCORE"));
 
@@ -182,7 +182,7 @@ public class BlueCloseStateMachineAuto extends BaseAuto
         states[4] = new BaseState("TO_SCORE1")
                 .setDuring(() -> {
                     intake.stop();
-                    outtake.setVelocity(Outtake.MANUAL_ANGULAR_RATE);
+                    outtake.setVelocity(Outtake.AUTO_MANUAL_ANGULAR_RATE);
                 })
                 .addTransition(new Transition(() -> !follower.isBusy(), "AT_SCORE1"));
 
@@ -214,7 +214,7 @@ public class BlueCloseStateMachineAuto extends BaseAuto
         states[8] = new BaseState("TO_INTERMEDIATE2")
                 .setDuring(() -> {
                     intake.stop();
-                    outtake.setVelocity(Outtake.MANUAL_ANGULAR_RATE);
+                    outtake.setVelocity(Outtake.AUTO_MANUAL_ANGULAR_RATE);
                 })
                 .setExit(() -> {
                     follower.followPath(paths[7]);
@@ -279,9 +279,9 @@ public class BlueCloseStateMachineAuto extends BaseAuto
         {
             webcam.updateRange(detection.ftcPose.range);
 
-            outtake.setVelocity(Outtake.MANUAL_ANGULAR_RATE);
+            outtake.setVelocity(Outtake.AUTO_MANUAL_ANGULAR_RATE);
 
-            double error = outtake.getAverageVelocity() - Outtake.MANUAL_ANGULAR_RATE;
+            double error = outtake.getAverageVelocity() - Outtake.AUTO_MANUAL_ANGULAR_RATE;
 
             if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE) {
                 intake.forwardLaunch();
