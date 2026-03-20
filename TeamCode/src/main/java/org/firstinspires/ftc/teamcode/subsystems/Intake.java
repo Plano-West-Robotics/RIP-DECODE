@@ -16,7 +16,7 @@ public class Intake
 
 //    public static final double TRANSFER_LAUNCH_POWER = 0.42;
 public static final double TRANSFER_LAUNCH_POWER = 1;
-    public static final double TRANSFER_REVERSE_POWER = 0.2;
+    public static final double TRANSFER_REVERSE_POWER = 0.75;
 
     public static final double REVERSE_TIME_SEC = 0.5;
 

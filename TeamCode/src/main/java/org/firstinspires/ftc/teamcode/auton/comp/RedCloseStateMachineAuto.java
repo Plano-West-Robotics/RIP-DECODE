@@ -169,7 +169,7 @@ public class RedCloseStateMachineAuto extends BaseAuto
                     follower.followPath(paths[0]);
                 })
                 .setDuring(() -> {
-                    outtake.setVelocity(Outtake.AUTO_CLOSE_ANGULAR_RATE);
+                    outtake.setVelocity(Outtake.MANUAL_ANGULAR_RATE);
                 })
                 .addTransition(new Transition(() -> !follower.isBusy(), "AT_PRELOAD_SCORE"));
 
@@ -202,7 +202,7 @@ public class RedCloseStateMachineAuto extends BaseAuto
         states[4] = new BaseState("TO_SCORE1")
                 .setDuring(() -> {
                     intake.stop();
-                    outtake.setVelocity(Outtake.AUTO_CLOSE_ANGULAR_RATE);
+                    outtake.setVelocity(Outtake.MANUAL_ANGULAR_RATE);
                 })
                 .addTransition(new Transition(() -> !follower.isBusy(), "AT_SCORE1"));
 
@@ -234,7 +234,7 @@ public class RedCloseStateMachineAuto extends BaseAuto
         states[8] = new BaseState("TO_INTERMEDIATE2")
                 .setDuring(() -> {
                     intake.stop();
-                    outtake.setVelocity(Outtake.AUTO_CLOSE_ANGULAR_RATE);
+                    outtake.setVelocity(Outtake.MANUAL_ANGULAR_RATE);
                 })
                 .setExit(() -> {
                     follower.followPath(paths[7]);
@@ -277,7 +277,7 @@ public class RedCloseStateMachineAuto extends BaseAuto
                 .setDuring(() ->
                 {
                     intake.stop();
-                    outtake.setVelocity(Outtake.AUTO_CLOSE_ANGULAR_RATE);
+                    outtake.setVelocity(Outtake.MANUAL_ANGULAR_RATE);
                 })
                 .addTransition(new Transition(() -> !follower.isBusy(), "AT_SCORE3"));
 
@@ -333,26 +333,16 @@ public class RedCloseStateMachineAuto extends BaseAuto
         if (detection != null)
         {
             webcam.updateRange(detection.ftcPose.range);
-            double range = webcam.getRange();
 
-            double targetAngularRate = Outtake.toAngularRate(
-                    Outtake.calculateIdealFlywheelTangentialVelocity(range));
+            outtake.setVelocity(Outtake.MANUAL_ANGULAR_RATE);
 
-            outtake.setVelocity(Outtake.AUTO_CLOSE_ANGULAR_RATE);
-
-            double error = outtake.getAverageVelocity() - Outtake.AUTO_CLOSE_ANGULAR_RATE;
+            double error = outtake.getAverageVelocity() - Outtake.MANUAL_ANGULAR_RATE;
 
             if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE) {
                 intake.forwardLaunch();
                 intake.forwardLaunchTransfer();
             }
-            else {
-                intake.stop();
-                intake.stopTransfer();
-            }
 
-            telemetry.addData("Range", range);
-            telemetry.addData("Target Angular Rate", targetAngularRate);
             telemetry.addData("Error", error);
         }
         else telemetry.addLine("No detection");

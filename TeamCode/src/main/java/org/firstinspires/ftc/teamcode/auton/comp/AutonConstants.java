@@ -12,7 +12,7 @@ public class AutonConstants
     public static final Pose RED_INTAKE_2 = new Pose(AutonConstants.RED_PICKUP_X_POS + 6, AutonConstants.RED_PICKUP_Y_POS_2, Math.toRadians(0));
     public static final Pose RED_INTERMEDIATE_2 = new Pose(112.09271523178808, AutonConstants.RED_PICKUP_Y_POS_2, Math.toRadians(0));
     public static final Pose RED_LINEUP_3 = new Pose(90.33644859813084, AutonConstants.RED_PICKUP_Y_POS_3, Math.toRadians(0));
-    public static final Pose RED_INTAKE_3 = new Pose(AutonConstants.RED_PICKUP_X_POS, AutonConstants.RED_PICKUP_Y_POS_3, Math.toRadians(0));
+    public static final Pose RED_INTAKE_3 = new Pose(AutonConstants.RED_PICKUP_X_POS_DEEP, AutonConstants.RED_PICKUP_Y_POS_3, Math.toRadians(0));
     public static final Pose RED_LEAVE_1 = new Pose(120, 80, Math.toRadians(0));
     public static final Pose RED_CLEAR_LINEUP = new Pose(90, 68, Math.toRadians(0));
     public static final Pose RED_CLEAR_GOAL = new Pose (115, 68, Math.toRadians(0));
@@ -27,14 +27,15 @@ public class AutonConstants
     public static final Pose BLUE_LEAVE_1 = new Pose(24, 80, Math.toRadians(180));
 
     public static final double INTAKE_1_VEL_CONSTRAINT = 2.0;
-    public static final double PRELOAD_SCORE_TIME = 3;
-    public static final double FIRST_THREE_SCORE_TIME = 3;
+    public static final double PRELOAD_SCORE_TIME = 1.5;
+    public static final double FIRST_THREE_SCORE_TIME = 1.5;
     public static final double FAR_THREE_SCORE_TIME = 4.0;
     public static final double DISABLE_INTAKE_SECONDS = 0.30;
     public static final double RED_PICKUP_Y_POS_1 = 83.5;
     public static final double RED_PICKUP_Y_POS_2 = 59.5;
     public static final double RED_PICKUP_Y_POS_3 = 35.728971962616825;
     public static final double RED_PICKUP_X_POS = 120;
+    public static final double RED_PICKUP_X_POS_DEEP = 130;
     public static final double REVERSE_INTAKE_SECONDS = 0.21;
     public static final double CLOSE_SCORE_ANGLE = 35;
 
