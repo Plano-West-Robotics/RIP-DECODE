@@ -27,6 +27,8 @@ public class AutonConstants
     public static final Pose BLUE_LINEUP_3 = new Pose(53.6635514019, AutonConstants.BLUE_PICKUP_Y_POS_3, Math.toRadians(180));
     public static final Pose BLUE_INTAKE_3 = new Pose(AutonConstants.BLUE_PICKUP_X_POS_DEEP, AutonConstants.BLUE_PICKUP_Y_POS_3, Math.toRadians(180));
     public static final Pose BLUE_LEAVE_1 = new Pose(24, 80, Math.toRadians(180));
+    public static final Pose BLUE_CLEAR_LINEUP = new Pose(54, 68, Math.toRadians(180));
+    public static final Pose BLUE_CLEAR_GOAL = new Pose (25, 68, Math.toRadians(180));
 
     public static final double INTAKE_1_VEL_CONSTRAINT = 2.0;
     public static final double PRELOAD_SCORE_TIME = 1.5;

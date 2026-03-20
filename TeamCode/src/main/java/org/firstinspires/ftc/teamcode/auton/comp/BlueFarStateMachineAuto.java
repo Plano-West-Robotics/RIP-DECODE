@@ -271,13 +271,26 @@ public class BlueFarStateMachineAuto extends BaseAuto
             double error = outtake.getAverageVelocity() - targetAngularRate;
 
             if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE)
+            {
                 intake.forwardLaunch();
-            else
-                intake.stop();
+                intake.forwardLaunchTransfer();
+            }
 
             telemetry.addData("Range", range);
             telemetry.addData("Target Angular Rate", targetAngularRate);
             telemetry.addData("Error", error);
         }
+    }
+
+    public void asdf()
+    {
+        outtake.setVelocity(Outtake.AUTO_MANUAL_ANGULAR_RATE);
+        double error = outtake.getAverageVelocity() - Outtake.AUTO_MANUAL_ANGULAR_RATE;
+        if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE) {
+            intake.forwardLaunch();
+            intake.forwardLaunchTransfer();
+        }
+        telemetry.addData("Error", error);
+        telemetry.update();
     }
 }
