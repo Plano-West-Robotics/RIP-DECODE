@@ -21,9 +21,11 @@ public class AutonConstants
     public static final Pose BLUE_SCORE = new Pose(49.22429906542055, 104.74766355140187, Math.toRadians(143));
     public static final Pose BLUE_LINEUP_1 = new Pose(50.70914318573894, AutonConstants.BLUE_PICKUP_Y_POS_1, Math.toRadians(180));
     public static final Pose BLUE_INTAKE_1 = new Pose(AutonConstants.BLUE_PICKUP_X_POS, AutonConstants.BLUE_PICKUP_Y_POS_1, Math.toRadians(180));
-    public static final Pose BLUE_LINEUP_2 = new Pose(50.70914318573894, AutonConstants.BLUE_PICKUP_Y_POS_2, Math.toRadians(180));
+    public static final Pose BLUE_LINEUP_2 = new Pose(52.7091431857, AutonConstants.BLUE_PICKUP_Y_POS_2, Math.toRadians(180));
     public static final Pose BLUE_INTAKE_2 = new Pose(AutonConstants.BLUE_PICKUP_X_POS + 6, AutonConstants.BLUE_PICKUP_Y_POS_2, Math.toRadians(180));
     public static final Pose BLUE_INTERMEDIATE_2 = new Pose(31.9072847682, AutonConstants.BLUE_PICKUP_Y_POS_2, Math.toRadians(180));
+    public static final Pose BLUE_LINEUP_3 = new Pose(53.6635514019, AutonConstants.BLUE_PICKUP_Y_POS_3, Math.toRadians(180));
+    public static final Pose BLUE_INTAKE_3 = new Pose(AutonConstants.BLUE_PICKUP_X_POS_DEEP, AutonConstants.BLUE_PICKUP_Y_POS_3, Math.toRadians(180));
     public static final Pose BLUE_LEAVE_1 = new Pose(24, 80, Math.toRadians(180));
 
     public static final double INTAKE_1_VEL_CONSTRAINT = 2.0;
@@ -41,7 +43,9 @@ public class AutonConstants
 
     public static final double BLUE_PICKUP_Y_POS_1 = 88;
     public static final double BLUE_PICKUP_Y_POS_2 = 60.5;
+    public static final double BLUE_PICKUP_Y_POS_3 = 36.7289719626;
     public static final double BLUE_PICKUP_X_POS = 14;
+    public static final double BLUE_PICKUP_X_POS_DEEP = 4;
 
     public static final double FAR_PRELOAD_SCORE_TIME = 15;
     public static final double FAR_TPS = 1600;

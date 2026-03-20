@@ -329,23 +329,13 @@ public class RedCloseStateMachineAuto extends BaseAuto
 
     public void shootArtifacts()
     {
-        AprilTagDetection detection = webcam.getGoalDetection();
-        if (detection != null)
-        {
-            webcam.updateRange(detection.ftcPose.range);
-
-            outtake.setVelocity(Outtake.AUTO_MANUAL_ANGULAR_RATE);
-
-            double error = outtake.getAverageVelocity() - Outtake.AUTO_MANUAL_ANGULAR_RATE;
-
-            if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE) {
-                intake.forwardLaunch();
-                intake.forwardLaunchTransfer();
-            }
-
-            telemetry.addData("Error", error);
+        outtake.setVelocity(Outtake.AUTO_MANUAL_ANGULAR_RATE);
+        double error = outtake.getAverageVelocity() - Outtake.AUTO_MANUAL_ANGULAR_RATE;
+        if (Math.abs(error) < Outtake.NORMAL_ERROR_TOLERANCE) {
+            intake.forwardLaunch();
+            intake.forwardLaunchTransfer();
         }
-        else telemetry.addLine("No detection");
+        telemetry.addData("Error", error);
         telemetry.update();
     }
 }
