@@ -114,7 +114,6 @@ public class BlueFarBNFStateMachineAuto extends BaseAuto
         /*
             PATH MODIFICATIONS
         */
-        paths[2].setVelocityConstraint(AutonConstants.INTAKE_1_VEL_CONSTRAINT);
     }
 
     public State[] buildMachine()

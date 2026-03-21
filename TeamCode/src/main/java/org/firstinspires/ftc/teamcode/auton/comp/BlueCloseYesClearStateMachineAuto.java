@@ -213,13 +213,12 @@ public class BlueCloseYesClearStateMachineAuto extends BaseAuto
         states[4] = new BaseState("TO_CLEAR_LINEUP")
             .setExit(() -> {
                 follower.followPath(paths[4]);
+                intake.stop();
+                intake.stopTransfer();
             })
             .addTransition(new Transition(() -> !follower.isBusy(), "TO_CLEAR_GOAL"));
 
         states[5] = new BaseState("TO_CLEAR_GOAL")
-            .setDuring(() -> {
-                intake.stop();
-            })
             .setExit(() -> {
                 follower.followPath(paths[5]);
             })
@@ -266,6 +265,7 @@ public class BlueCloseYesClearStateMachineAuto extends BaseAuto
         states[11] = new BaseState("TO_SCORE2")
             .setDuring(() -> {
                 intake.stop();
+                intake.stopTransfer();
                 outtake.setVelocity(Outtake.AUTO_MANUAL_ANGULAR_RATE);
             })
             .addTransition(new Transition(() -> !follower.isBusy(), "AT_SCORE2"));
@@ -301,6 +301,7 @@ public class BlueCloseYesClearStateMachineAuto extends BaseAuto
             .setDuring(() ->
             {
                 intake.stop();
+                intake.stopTransfer();
                 outtake.setVelocity(Outtake.AUTO_MANUAL_ANGULAR_RATE);
             })
             .addTransition(new Transition(() -> !follower.isBusy(), "AT_SCORE3"));
@@ -312,6 +313,7 @@ public class BlueCloseYesClearStateMachineAuto extends BaseAuto
             .setDuring(this::shootArtifacts)
             .setExit(() -> {
                 intake.stop();
+                intake.stopTransfer();
                 outtake.setVelocity(0);
                 follower.followPath(paths[13]);
             })

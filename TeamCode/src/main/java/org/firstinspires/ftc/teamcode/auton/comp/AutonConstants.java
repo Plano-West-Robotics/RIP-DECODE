@@ -13,7 +13,7 @@ public class AutonConstants
     public static final Pose RED_INTERMEDIATE_2 = new Pose(112.09271523178808, AutonConstants.RED_PICKUP_Y_POS_2, Math.toRadians(0));
     public static final Pose RED_LINEUP_3 = new Pose(90.33644859813084, AutonConstants.RED_PICKUP_Y_POS_3, Math.toRadians(0));
     public static final Pose RED_INTAKE_3 = new Pose(AutonConstants.RED_PICKUP_X_POS_DEEP, AutonConstants.RED_PICKUP_Y_POS_3, Math.toRadians(0));
-    public static final Pose RED_LEAVE_1 = new Pose(120, 80, Math.toRadians(0));
+    public static final Pose RED_LEAVE_1 = new Pose(97, 70, Math.toRadians(0));
     public static final Pose RED_CLEAR_LINEUP = new Pose(90, 62, Math.toRadians(0));
     public static final Pose RED_CLEAR_GOAL = new Pose (115, 62, Math.toRadians(0));
 
@@ -29,9 +29,11 @@ public class AutonConstants
     public static final Pose BLUE_INTAKE_3 = new Pose(AutonConstants.BLUE_PICKUP_X_POS_DEEP, AutonConstants.BLUE_PICKUP_Y_POS_3, Math.toRadians(180));
     public static final Pose BLUE_LEAVE_1 = new Pose(24, 80, Math.toRadians(180));
     public static final Pose BLUE_CLEAR_LINEUP = new Pose(32, 70, Math.toRadians(180));
-    public static final Pose BLUE_CLEAR_GOAL = new Pose (9, 70, Math.toRadians(180));
+    public static final Pose BLUE_CLEAR_GOAL = new Pose (12, 70, Math.toRadians(180));
 
     public static final double INTAKE_1_VEL_CONSTRAINT = 2.0;
+    public static final double BNF_VEL_CONSTRAINT = 3.3;
+
     public static final double PRELOAD_SCORE_TIME = 1.5;
     public static final double FIRST_THREE_SCORE_TIME = 1.5;
     public static final double FAR_THREE_SCORE_TIME = 4.0;
@@ -82,7 +84,7 @@ public class AutonConstants
     public static final Pose FAR_BLUE_INTAKE2 = new Pose(8, AutonConstants.BLUE_PICKUP_Y_POS_2, Math.toRadians(180));
     public static final Pose FAR_BLUE_LEAVE = new Pose(38, 34, Math.toRadians(180));
 
-    public static final Pose FAR_BLUE_BNF_INTERMEDIATE = new Pose(56, 24, Math.toRadians(180));
+    public static final Pose FAR_BLUE_BNF_INTERMEDIATE = new Pose(56, 25, Math.toRadians(180));
     public static final Pose FAR_BLUE_BNF_LINEUP = new Pose(56, 23.7, Math.toRadians(180));
     public static final Pose FAR_BLUE_BNF_INTAKE = new Pose(4, 23.7, Math.toRadians(180));
 
